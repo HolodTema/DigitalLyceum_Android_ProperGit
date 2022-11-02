@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="lyceumClasses">
+        <item>8А</item>
+        <item>8Б</item>
+        <item>8В</item>
+        <item>9А</item>
+        <item>9Б</item>
+        <item>9В</item>
+        <item>10А</item>
+        <item>10Б</item>
+        <item>10В</item>
+        <item>11А</item>
+        <item>11Б</item>
+        <item>11В</item>
+    </string-array>
+</resources>

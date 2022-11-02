@@ -1,0 +1,29 @@
+package com.example.lyceumapp
+
+class Const {
+    companion object{
+        const val AMOUNT_ATTEMPTS_TO_CONNECT_BEFORE_TIMING = 5
+
+        const val SH_PREFERENCES_NAME = "shPreferencesSettings"
+        const val SH_PREFERENCES_KEY_SCHOOL_ID = "shPreferencesKeySchoolId"
+        const val SH_PREFERENCES_KEY_GRADE_ID = "shPreferencesKeyGradeId"
+        const val SH_PREFERENCES_KEY_SCHOOL_NAME = "shPreferencesKeySchoolName"
+        const val SH_PREFERENCES_KEY_SCHOOL_ADDRESS ="shPreferencesKeySchoolAddress"
+        const val SH_PREFERENCES_KEY_SCHOOL_PHONE_NUMBER = "shPreferencesKeySchoolPhoneNumber"
+
+
+        const val INTENT_KEY_LESSONS_FOR_GRADE = "intentKeyLessonsForGrade"
+
+        const val BUNDLE_KEY_SCHOOLS_LIST = "bundleKeySchoolsList"
+        const val BUNDLE_KEY_GRADES_LIST = "bundleKeyGradesList"
+        const val BUNDLE_KEY_LESSONS_FOR_ONE_DAY_OF_GRADE = "bundleKeyLessonsForOneDayOfGrade"
+
+        const val DB_NAME = "lyceumDatabase"
+
+        const val DELAY_SECONDS_MANY_ATTEMPTS_TO_CONNECT = 20
+
+        const val NETWORK_CONNECT_TIMEOUT_SECONDS = 30L
+        const val NETWORK_READ_TIMEOUT_SECONDS = 30L
+        const val NETWORK_WRITE_TIMEOUT_SECONDS = 30L
+    }
+}

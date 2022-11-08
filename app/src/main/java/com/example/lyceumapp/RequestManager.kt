@@ -102,13 +102,13 @@ object RequestManager {
             val minutesForLessonSinceBeginningOfWeek = lesson.daysOfWeek*24*60+lesson.startHour*60+lesson.startMinute
             val minutesForCurrentTimeSinceBeginningOfWeek = currentDayOrdinal*24*60+currentHour*60+currentMinute
             return if(minutesForCurrentTimeSinceBeginningOfWeek>minutesForLessonSinceBeginningOfWeek) {
-                7*24*60-(minutesForCurrentTimeSinceBeginningOfWeek-minutesForLessonSinceBeginningOfWeek)
+                (7*24*60-minutesForCurrentTimeSinceBeginningOfWeek)+minutesForLessonSinceBeginningOfWeek
             }
             else minutesForLessonSinceBeginningOfWeek-minutesForCurrentTimeSinceBeginningOfWeek
         }
 
         val calendar = Calendar.getInstance()
-        val currentDayOrdinal = calendar.get(Calendar.DAY_OF_WEEK)
+        val currentDayOrdinal = calendar.get(Calendar.DAY_OF_WEEK)-1
         val currentHour = calendar.get(Calendar.HOUR)
         val currentMinute = calendar.get(Calendar.MINUTE)
 

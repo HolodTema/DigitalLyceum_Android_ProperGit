@@ -21,8 +21,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportActionBar?.hide()
         setContentView(R.layout.activity_download)
+        supportActionBar?.hide()
         CoroutineScope(Dispatchers.Main).launch {
             val deferred = async(Dispatchers.IO){
                 val shPreferences = getSharedPreferences(Const.SH_PREFERENCES_NAME, MODE_PRIVATE)
@@ -153,6 +153,10 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+    }
+
+    companion object{
+        private var isCoroutineAlreadyLaunched = false
     }
 }
 

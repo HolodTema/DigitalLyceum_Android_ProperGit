@@ -37,67 +37,63 @@ object RetrofitManager {
         }
     }
 
-    fun getScheduleForGrade(gradeId: Int, listener: OnRetrofitResponseGotListener<ScheduleJson?>) {
+    fun getScheduleForGrade(gradeId: Int, listener: (ScheduleJson?) -> Unit) {
         createClient()
         val service = retrofit?.create(ScheduleForGradeService::class.java)
         val call = service?.getScheduleForGrade(gradeId) ?: throw CantCreateRetrofitRequestException()
         call.enqueue(object: Callback<ScheduleJson>{
             override fun onResponse(call: Call<ScheduleJson>, response: Response<ScheduleJson>) {
-                listener.onRetrofitResponseGot(response.body())
+                listener(response.body())
             }
 
             override fun onFailure(call: Call<ScheduleJson>, t: Throwable) {
-                listener.onRetrofitResponseGot(null)
+                listener(null)
             }
         })
     }
 
-    fun getGradesForSchool(schoolId: Int, listener: OnRetrofitResponseGotListener<SchoolGradesJson?>) {
+    fun getGradesForSchool(schoolId: Int, listener: (SchoolGradesJson?) -> Unit) {
         createClient()
         val service = retrofit?.create(GradesForSchoolService::class.java)
         val call = service?.getGradesForSchool(schoolId) ?: throw CantCreateRetrofitRequestException()
         call.enqueue(object: Callback<SchoolGradesJson>{
             override fun onResponse(call: Call<SchoolGradesJson>, response: Response<SchoolGradesJson>) {
-                listener.onRetrofitResponseGot(response.body())
+                listener(response.body())
             }
 
             override fun onFailure(call: Call<SchoolGradesJson>, t: Throwable) {
-                listener.onRetrofitResponseGot(null)
+                listener(null)
             }
 
         })
     }
 
-    fun getScheduleForSchool(schoolId: Int, listener: OnRetrofitResponseGotListener<ScheduleJson?>) {
+    fun getScheduleForSchool(schoolId: Int, listener: (ScheduleJson?) -> Unit) {
         createClient()
         val service = retrofit?.create(ScheduleForSchoolService::class.java)
         val call = service?.getScheduleForSchool(schoolId) ?: throw CantCreateRetrofitRequestException()
         call.enqueue(object: Callback<ScheduleJson> {
             override fun onResponse(call: Call<ScheduleJson>, response: Response<ScheduleJson>) {
-                listener.onRetrofitResponseGot(response.body())
+                listener(response.body())
             }
 
             override fun onFailure(call: Call<ScheduleJson>, t: Throwable) {
-                listener.onRetrofitResponseGot(null)
+                listener(null)
             }
         })
     }
 
-    fun getSchools(listener: OnRetrofitResponseGotListener<SchoolsListJson?>) {
+    fun getSchools(listener: (SchoolsListJson?) -> Unit) {
         createClient()
         val service = retrofit?.create(SchoolsService::class.java)
         val call = service?.getSchools() ?: throw CantCreateRetrofitRequestException()
         call.enqueue(object: Callback<SchoolsListJson>{
             override fun onResponse(call: Call<SchoolsListJson>, response: Response<SchoolsListJson>) {
-                listener.onRetrofitResponseGot(response.body())
+                listener(response.body())
             }
             override fun onFailure(call: Call<SchoolsListJson>, t: Throwable) {
-                listener.onRetrofitResponseGot(null)
+                listener(null)
             }
         })
-    }
-
-    interface OnRetrofitResponseGotListener<T> {
-        fun onRetrofitResponseGot(obj: T?) //if we got null, response is onFailure
     }
 }

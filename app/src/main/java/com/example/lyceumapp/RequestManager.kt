@@ -20,36 +20,30 @@ object RequestManager {
     var isRequestScheduleForGradeAlreadyGot = false
     private set
 
-    fun getGradesForSchool(schoolId: Int, listener: OnResponseGotListener<List<GradeJson>?>) {
-        RetrofitManager.getGradesForSchool(schoolId, object: RetrofitManager.OnRetrofitResponseGotListener<SchoolGradesJson?> {
-            override fun onRetrofitResponseGot(obj: SchoolGradesJson?) {
-                listener.onResponseGot(obj?.schoolGrades)
-            }
-
-        })
+    fun getGradesForSchool(schoolId: Int, listener: (List<GradeJson>?) -> Unit) {
+        RetrofitManager.getGradesForSchool(schoolId) {
+            listener(it?.schoolGrades)
+        }
     }
 
-    fun getSchools(listener: OnResponseGotListener<List<SchoolJson>?>) {
-        RetrofitManager.getSchools(object: RetrofitManager.OnRetrofitResponseGotListener<SchoolsListJson?>{
-            override fun onRetrofitResponseGot(obj: SchoolsListJson?) {
-                listener.onResponseGot(obj?.schools)
-            }
-        })
+    fun getSchools(listener: (List<SchoolJson>?) -> Unit) {
+        RetrofitManager.getSchools{
+            listener(it?.schools)
+        }
     }
 
-    fun getScheduleForGrade(context: Context, gradeId: Int, listener: OnResponseGotListener<ArrayList<LessonDB>?>) {
+    fun getScheduleForGrade(context: Context, gradeId: Int, listener: (ArrayList<LessonDB>?) -> Unit) {
         if(isRequestScheduleForGradeAlreadyGot) {
             CoroutineScope(Dispatchers.Main).launch {
                 val deferred = CoroutineScope(Dispatchers.IO).async {
                     DatabaseClient.getInstance(context).lessonDao().getBySchoolGradeId(gradeId)
                 }
-                listener.onResponseGot(deferred.await() as ArrayList<LessonDB>)
+                listener(deferred.await() as ArrayList<LessonDB>)
             }
         }
-        else RetrofitManager.getScheduleForGrade(gradeId, object: RetrofitManager.OnRetrofitResponseGotListener<ScheduleJson?> {
-            override fun onRetrofitResponseGot(obj: ScheduleJson?) {
-                CoroutineScope(Dispatchers.Main).launch {
-                    if(obj==null) {
+        else RetrofitManager.getScheduleForGrade(gradeId) {
+            CoroutineScope(Dispatchers.Main).launch {
+                    if(it==null) {
                         val deferredAreLessonsOfSchoolGradeIdInDb = CoroutineScope(Dispatchers.IO).async {
                             DatabaseClient.getInstance(context).lessonDao().areLessonsOfSchoolGradeIdInDatabase(gradeId)
                         }
@@ -59,15 +53,15 @@ object RequestManager {
                             val deferredGetLessonsByGradeId = CoroutineScope(Dispatchers.IO).async {
                                 DatabaseClient.getInstance(context).lessonDao().getBySchoolGradeId(gradeId)
                             }
-                            listener.onResponseGot(deferredGetLessonsByGradeId.await() as ArrayList<LessonDB> )
+                            listener(deferredGetLessonsByGradeId.await() as ArrayList<LessonDB> )
                         }
                         else {
-                            listener.onResponseGot(null)
+                            listener(null)
                         }
                     }
                     else {
                         val deferredGetConvertedLessonDBList = CoroutineScope(Dispatchers.IO).async {
-                            val convertedLessons = convertLessonsJsonToSimpleFormat(obj.lessons)
+                            val convertedLessons = convertLessonsJsonToSimpleFormat(it.lessons)
 
                             if(DatabaseClient.getInstance(context).lessonDao().areLessonsOfSchoolGradeIdInDatabase(gradeId)) {
                                 DatabaseClient.getInstance(context).lessonDao().getBySchoolGradeId(gradeId).forEach {
@@ -81,11 +75,10 @@ object RequestManager {
                             convertedLessons
                         }
                         isRequestScheduleForGradeAlreadyGot = true
-                        listener.onResponseGot(deferredGetConvertedLessonDBList.await())
+                        listener(deferredGetConvertedLessonDBList.await())
                     }
                 }
-            }
-        })
+        }
     }
 
     fun getLessonsForOneDayOfGrade(lessonsForGrade: ArrayList<LessonDB>, daysOfWeekOrdinal: Int): ArrayList<LessonDB> {
@@ -169,10 +162,6 @@ object RequestManager {
         }
 
         return result
-    }
-
-    interface OnResponseGotListener<T> {
-        fun onResponseGot(obj: T)
     }
 
     enum class DaysOfWeek{

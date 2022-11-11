@@ -39,6 +39,10 @@ android {
 
 apply plugin: 'kotlin-kapt'
 dependencies {
+    //to use ViewModel architecture
+    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
+
+
     // Required -- JUnit 4 framework
     testImplementation "junit:junit:4.12"
 

@@ -26,17 +26,16 @@ class MainMenuActivity : AppCompatActivity() {
 
     private fun getScheduleForGrade(gradeId: Int) {
         setContentView(R.layout.activity_download)
-        RequestManager.getScheduleForGrade(applicationContext, gradeId, object : RequestManager.OnResponseGotListener<ArrayList<LessonDB>?> {
-            override fun onResponseGot(obj: ArrayList<LessonDB>?) {
-                if (obj == null) {
-                    val binding = ActivityNoResponseBinding.inflate(layoutInflater)
-                    setContentView(binding.root)
-                    binding.textLikeButtonNoResponseTryAgain.setOnClickListener {
-                        getScheduleForGrade(gradeId)
-                    }
-                } else doWhenWeGotScheduleForGrade(obj)
-            }
-        })
+        RequestManager.getScheduleForGrade(applicationContext, gradeId) {
+            if (it == null) {
+                val binding = ActivityNoResponseBinding.inflate(layoutInflater)
+                setContentView(binding.root)
+                binding.textLikeButtonNoResponseTryAgain.setOnClickListener {
+                    getScheduleForGrade(gradeId)
+                }
+            } else doWhenWeGotScheduleForGrade(it)
+
+        }
     }
 
     private fun doWhenWeGotScheduleForGrade(obj: ArrayList<LessonDB>) {

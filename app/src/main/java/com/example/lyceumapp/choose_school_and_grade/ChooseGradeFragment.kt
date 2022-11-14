@@ -14,23 +14,31 @@ import com.example.lyceumapp.R
 import com.example.lyceumapp.databinding.FragmentChooseGradeBinding
 import com.example.lyceumapp.databinding.RecyclerElementGradesBinding
 import com.example.lyceumapp.json.grades.GradeJson
+import com.example.lyceumapp.viewmodel.ChooseGradeViewModel
 
-class ChooseGradeFragment : Fragment() {
-    var adapter: ChooseGradeAdapter? = null
+class ChooseGradeFragment() : Fragment() {
+    lateinit var adapter: ChooseGradeAdapter
+
+    private lateinit var viewModel: ChooseGradeViewModel
+
+    constructor(viewModel: ChooseGradeViewModel): this() {
+        this.viewModel = viewModel
+    }
 
    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_choose_grade, container, false)
         val binding = FragmentChooseGradeBinding.bind(view)
 
-        adapter = ChooseGradeAdapter(requireArguments().getParcelableArrayList(Const.BUNDLE_KEY_GRADES_LIST)!!, activity?.layoutInflater!!) //we mustn't let the situation to throw NullPointer here.
+        adapter = ChooseGradeAdapter(requireArguments().getParcelableArrayList(Const.BUNDLE_KEY_GRADES_LIST)!!, layoutInflater, viewModel) //we mustn't let the situation to throw NullPointer here.
         binding.recyclerChooseGrade.adapter = adapter
         binding.recyclerChooseGrade.layoutManager = LinearLayoutManager(context)
         binding.recyclerChooseGrade.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         return view
     }
 
-    class ChooseGradeAdapter(private val grades: ArrayList<GradeJson>, private val inflater: LayoutInflater): RecyclerView.Adapter<ChooseGradeAdapter.GradeJsonHolder>() {
-        var gradeId = grades[0].id
+    class ChooseGradeAdapter(private val grades: ArrayList<GradeJson>, private val inflater: LayoutInflater, private val viewModel: ChooseGradeViewModel): RecyclerView.Adapter<ChooseGradeAdapter.GradeJsonHolder>() {
+        var gradeId = viewModel.chosenGradeId
+
         private var checkedRadioButton: CompoundButton? = null
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
@@ -38,18 +46,18 @@ class ChooseGradeFragment : Fragment() {
 
 
         override fun onBindViewHolder(holder: GradeJsonHolder, position: Int) {
-            holder.bindingGradeElement.textRecyclerElementGradesName.text =
-                grades[position].toString()
-            holder.bindingGradeElement.radioButtonRecyclerElementGrade.isChecked =
-                grades[position].id == gradeId
+            holder.bindingGradeElement.textRecyclerElementGradesName.text = grades[position].toString()
+            holder.bindingGradeElement.radioButtonRecyclerElementGrade.isChecked = grades[position].id == gradeId
             if (holder.bindingGradeElement.radioButtonRecyclerElementGrade.isChecked) {
                 checkedRadioButton = holder.bindingGradeElement.radioButtonRecyclerElementGrade
                 gradeId = grades[position].id
+                viewModel.chosenGradeId = gradeId
             }
             holder.bindingGradeElement.radioButtonRecyclerElementGrade.setOnCheckedChangeListener { compoundButton, b ->
                 checkedRadioButton?.isChecked = false
                 checkedRadioButton = compoundButton
                 gradeId = grades[position].id
+                viewModel.chosenGradeId = gradeId
             }
         }
 

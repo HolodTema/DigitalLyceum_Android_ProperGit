@@ -13,6 +13,9 @@ class Const {
 
 
         const val INTENT_KEY_LESSONS_FOR_GRADE = "intentKeyLessonsForGrade"
+        const val INTENT_KEY_NO_RESPONSE_TYPE = "intentKeyNoResponseType"
+        const val INTENT_KEY_AMOUNT_ATTEMPTS_TO_CONNECT = "intentKeyAmountAttemptsToConnect"
+        const val INTENT_KEY_CHOSEN_SCHOOL = "intentKeyChosenSchool"
 
         const val BUNDLE_KEY_SCHOOLS_LIST = "bundleKeySchoolsList"
         const val BUNDLE_KEY_GRADES_LIST = "bundleKeyGradesList"
@@ -25,5 +28,10 @@ class Const {
         const val NETWORK_CONNECT_TIMEOUT_SECONDS = 30L
         const val NETWORK_READ_TIMEOUT_SECONDS = 30L
         const val NETWORK_WRITE_TIMEOUT_SECONDS = 30L
+    }
+
+    enum class NoResponseType{
+        GetSchools,
+        GetGrades
     }
 }

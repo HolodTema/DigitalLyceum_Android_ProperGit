@@ -6,6 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".activity.MainMenuActivity">
 
+    <!--HolodTema todo нужно переделать разметку главного меню в соответствии с дизайном от Кати-->
+    <!--HolodTema todo можешь переписывать styles.xml как хочешь, так как Катин дизайн - совершенно новый.-->
+    <!--HolodTema todo а ну и горизонтальную ориентацию можно попробовать сделать, чисто посмотреть, как это будет выглядеть в таком положении экрана-->
+
+    <!--HolodTema todo этот textView @+id/textWarningLessonsMustNotBeActual вверху экрана оставить - он показывается, если нет подключения к инету, но при этом расписание уже кешировано в локальную БД-->
     <TextView
         android:id="@+id/textWarningLessonsMustNotBeActual"
         style="@style/textWarning"

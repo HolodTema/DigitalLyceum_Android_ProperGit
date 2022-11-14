@@ -16,7 +16,7 @@ import com.example.lyceumapp.json.schools.SchoolJson
 
 
 class ChooseSchoolFragment : Fragment() {
-    var adapter: SchoolJsonAdapter? = null
+    lateinit var adapter: SchoolJsonAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,

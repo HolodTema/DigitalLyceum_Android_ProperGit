@@ -16,7 +16,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 
 object RetrofitManager {
-    private const val BASE_URL = "https://api.lava-land.ru"
+    private const val BASE_URL = "https://async-api.lava-land.ru"
 
 
     private var retrofit: Retrofit? = null

@@ -9,10 +9,11 @@
         style="@style/textPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
         android:gravity="center"
         android:text="@string/we_are_downloading_data_please_wait"
-        app:layout_constraintBottom_toTopOf="@+id/progressBar"
-        android:layout_marginBottom="40dp"/>
+        android:textColor="?attr/colorStandardText"
+        app:layout_constraintBottom_toTopOf="@+id/progressBar" />
 
     <ProgressBar
         android:id="@+id/progressBar"

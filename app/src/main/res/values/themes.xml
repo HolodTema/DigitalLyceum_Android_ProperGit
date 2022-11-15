@@ -15,5 +15,6 @@
         <item name="colorStroke">@color/color_stroke_light</item>
         <item name="colorTextSecondary">@color/color_text_secondary_light</item>
         <item name="colorOnPrimaryDark">@color/color_on_primary_dark_light</item>
+        <item name="colorStandardText">@color/color_standard_text_light</item>
     </style>
 </resources>

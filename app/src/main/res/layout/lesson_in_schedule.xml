@@ -8,29 +8,35 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/textLessonNumber"
             style="@style/textPrimary"
-            android:text="1"
-            android:layout_margin="10dp"/>
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="1"
+            android:textColor="?attr/colorStandardText" />
+
+        <TextView
+            android:id="@+id/textLessonName"
+            style="@style/textPrimary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:layout_weight="1"
             android:text="mathematics"
-            style="@style/textPrimary"
-            android:layout_margin="10dp"
-            android:id="@+id/textLessonName"/>
+            android:textColor="?attr/colorStandardText" />
     </LinearLayout>
+
     <TextView
+        android:id="@+id/textLessonTime"
+        style="@style/textPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:text="01:00 - 01:40"
-        style="@style/textPrimary"
-        android:id="@+id/textLessonTime"/>
+        android:textColor="?attr/colorStandardText" />
     <TextView
         android:id="@+id/textLessonTeacher"
         android:layout_width="match_parent"

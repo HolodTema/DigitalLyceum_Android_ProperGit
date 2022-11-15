@@ -11,11 +11,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="30dp"
+        android:layout_marginBottom="10dp"
         android:gravity="center"
         android:text="@string/no_response_header"
+        android:textColor="?attr/colorStandardText"
         android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@id/textNoResponseDescription"
-        android:layout_marginBottom="10dp"/>
+        tools:layout_editor_absoluteX="30dp" />
 
     <TextView
         android:id="@+id/textNoResponseDescription"
@@ -26,7 +28,9 @@
         android:layout_marginBottom="30dp"
         android:gravity="center"
         android:text="@string/no_response_description"
-        app:layout_constraintBottom_toTopOf="@id/textLikeButtonNoResponseTryAgain" />
+        android:textColor="?attr/colorStandardText"
+        app:layout_constraintBottom_toTopOf="@id/textLikeButtonNoResponseTryAgain"
+        tools:layout_editor_absoluteX="50dp" />
 
     <TextView
         android:id="@+id/textLikeButtonNoResponseTryAgain"

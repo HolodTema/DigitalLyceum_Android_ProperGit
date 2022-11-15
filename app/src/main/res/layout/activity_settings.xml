@@ -12,13 +12,15 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:paddingBottom="20dp">
+
             <TextView
+                style="@style/textPrimary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="10dp"
                 android:text="Настройки:"
-                style="@style/textPrimary"/>
+                android:textColor="?attr/colorStandardText" />
 
             <TextView
                 android:id="@+id/textLikeButtonChangeSchoolAndGrade"
@@ -30,12 +32,13 @@
                 android:layout_marginStart="10dp"/>
 
             <TextView
+                style="@style/textPrimary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/textPrimary"
-                android:text="О приложении:"
                 android:layout_marginHorizontal="10dp"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginTop="10dp"
+                android:text="О приложении:"
+                android:textColor="?attr/colorStandardText" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -45,12 +48,13 @@
                 android:layout_marginTop="10dp"/>
 
             <TextView
+                style="@style/textPrimary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/textPrimary"
-                android:text="Ссылки на другие части проекта:"
                 android:layout_marginHorizontal="10dp"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:text="Ссылки на другие части проекта:"
+                android:textColor="?attr/colorStandardText" />
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

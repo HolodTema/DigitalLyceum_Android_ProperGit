@@ -10,7 +10,7 @@ import com.example.lyceumapp.json.schools.SchoolJson
 class ChooseGradeViewModel(application: Application, chosenSchool: SchoolJson): AndroidViewModel(application) {
     val liveDataListGrades = MutableLiveData<List<GradeJson>?>()
     var amountAttemptsToConnect = 1
-    var chosenGradeId: Int? = null
+    lateinit var chosenGrade: GradeJson
 
     init{
         downloadGrades(chosenSchool.id)
@@ -18,7 +18,7 @@ class ChooseGradeViewModel(application: Application, chosenSchool: SchoolJson): 
 
     private fun downloadGrades(schoolId: Int) {
         RequestManager.getGradesForSchool(schoolId) {
-            if(it!=null) chosenGradeId
+            if(it!=null) chosenGrade = it[0]
             liveDataListGrades.value = it
         }
     }

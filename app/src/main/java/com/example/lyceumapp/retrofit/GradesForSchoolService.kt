@@ -6,6 +6,6 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface GradesForSchoolService {
-    @GET("school/{school_id}/school_class")
+    @GET("school/{school_id}/class")
     fun getGradesForSchool(@Path("school_id") schoolId: Int): Call<SchoolGradesJson>
 }

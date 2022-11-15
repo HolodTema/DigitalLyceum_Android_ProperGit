@@ -2,6 +2,8 @@ package com.example.lyceumapp
 
 class Const {
     companion object{
+        const val LOG_TAG_RETROFIT_ON_FAILURE = "logTagRetrofitOnFailure"
+
         const val AMOUNT_ATTEMPTS_TO_CONNECT_BEFORE_TIMING = 5
 
         const val SH_PREFERENCES_NAME = "shPreferencesSettings"

@@ -1,5 +1,6 @@
 package com.example.lyceumapp.retrofit
 
+import android.util.Log
 import com.example.lyceumapp.CantCreateRetrofitRequestException
 import com.example.lyceumapp.Const
 import com.example.lyceumapp.json.grades.SchoolGradesJson
@@ -47,6 +48,7 @@ object RetrofitManager {
             }
 
             override fun onFailure(call: Call<ScheduleJson>, t: Throwable) {
+                Log.e(Const.LOG_TAG_RETROFIT_ON_FAILURE, t.toString())
                 listener(null)
             }
         })
@@ -62,6 +64,7 @@ object RetrofitManager {
             }
 
             override fun onFailure(call: Call<SchoolGradesJson>, t: Throwable) {
+                Log.e(Const.LOG_TAG_RETROFIT_ON_FAILURE, t.toString())
                 listener(null)
             }
 
@@ -78,6 +81,7 @@ object RetrofitManager {
             }
 
             override fun onFailure(call: Call<ScheduleJson>, t: Throwable) {
+                Log.e(Const.LOG_TAG_RETROFIT_ON_FAILURE, t.toString())
                 listener(null)
             }
         })
@@ -92,6 +96,7 @@ object RetrofitManager {
                 listener(response.body())
             }
             override fun onFailure(call: Call<SchoolsListJson>, t: Throwable) {
+                Log.e(Const.LOG_TAG_RETROFIT_ON_FAILURE, t.toString())
                 listener(null)
             }
         })

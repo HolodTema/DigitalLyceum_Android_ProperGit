@@ -5,7 +5,7 @@ import android.os.Parcelable
 import com.squareup.moshi.Json
 
 data class SchoolJson(
-    @Json(name = "id") val id: Int,
+    @Json(name = "school_id") val id: Int,
     @Json(name = "name") val name: String,
     @Json(name = "address") val address: String
 ): Parcelable {

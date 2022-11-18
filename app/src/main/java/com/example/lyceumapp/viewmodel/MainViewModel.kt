@@ -16,6 +16,7 @@ class MainViewModel(application: Application, private val modeToOpenShPreference
     val liveDataListSchools = MutableLiveData<List<SchoolJson>?>()
 
     var amountAttemptsToConnect = 1
+    lateinit var chosenSchool: SchoolJson
 
     init{
         checkIfShPreferencesContainsData()
@@ -33,13 +34,16 @@ class MainViewModel(application: Application, private val modeToOpenShPreference
             }
             val result = deferred.await()
             liveDataDoWeHaveDataInShPreferences.value = result
-            if(!result) downloadSchools()
+            if(!result) {
+                downloadSchools()
+            }
 
         }
     }
 
     private fun downloadSchools() {
         RequestManager.getSchools{
+            if(it!=null) chosenSchool = it[0]
             liveDataListSchools.value = it
         }
     }

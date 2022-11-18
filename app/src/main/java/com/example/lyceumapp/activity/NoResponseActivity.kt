@@ -9,11 +9,13 @@ import com.example.lyceumapp.Const
 import com.example.lyceumapp.MainActivity
 import com.example.lyceumapp.R
 import com.example.lyceumapp.databinding.ActivityNoResponseBinding
+import com.example.lyceumapp.json.schools.SchoolJson
 import com.example.lyceumapp.viewmodel.NoResponseViewModel
 import com.example.lyceumapp.viewmodel.NoResponseViewModelFactory
 
 class NoResponseActivity : AppCompatActivity() {
     private lateinit var viewModel: NoResponseViewModel
+    private lateinit var chosenSchool: SchoolJson
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,13 +24,18 @@ class NoResponseActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this, NoResponseViewModelFactory(application))[NoResponseViewModel::class.java]
 
+        // TODO: in NoResponseViewModel init{} we check amountAttemptsToConnect and it's always = 1 there!. We need to pass amountAttemptsToConnect to viewModel's constructor
         val amountAttemptsToConnect = intent.extras?.getInt(Const.INTENT_KEY_AMOUNT_ATTEMPTS_TO_CONNECT)
         if(amountAttemptsToConnect!=null) {
             viewModel.amountAttemptsToConnect = amountAttemptsToConnect
         }
 
         val noResponseType = intent.extras?.getSerializable(Const.INTENT_KEY_NO_RESPONSE_TYPE) as Const.NoResponseType
-        if(noResponseType!=null) viewModel.noResponseType = noResponseType
+        viewModel.noResponseType = noResponseType
+
+        if(viewModel.noResponseType==Const.NoResponseType.GetGrades) {
+            chosenSchool = intent.extras?.getParcelable(Const.INTENT_KEY_CHOSEN_SCHOOL)!!
+        }
 
         if(viewModel.amountAttemptsToConnect>=Const.AMOUNT_ATTEMPTS_TO_CONNECT_BEFORE_TIMING) {
             binding.textLikeButtonNoResponseTryAgain.visibility = View.GONE
@@ -44,9 +51,10 @@ class NoResponseActivity : AppCompatActivity() {
                     Intent(this, MainActivity::class.java)
                 }
                 Const.NoResponseType.GetGrades -> {
-                    Intent(this, ChooseGradeActivity::class.java)
+                    Intent(this, ChooseGradeActivity::class.java).putExtra(Const.INTENT_KEY_CHOSEN_SCHOOL, chosenSchool)
                 }
             }
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
             intent.putExtra(Const.INTENT_KEY_AMOUNT_ATTEMPTS_TO_CONNECT, viewModel.amountAttemptsToConnect)
             startActivity(intent)
         }

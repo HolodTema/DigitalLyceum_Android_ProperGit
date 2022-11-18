@@ -7,13 +7,12 @@
     android:orientation="vertical">
 
     <TextView
-        style="@style/textPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
         android:text="@string/choose_your_grade"
-        android:textColor="?attr/colorStandardText" />
+        style="@style/textPrimary"
+        android:gravity="center"
+        android:layout_marginTop="20dp"/>
     <androidx.recyclerview.widget.RecyclerView
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"

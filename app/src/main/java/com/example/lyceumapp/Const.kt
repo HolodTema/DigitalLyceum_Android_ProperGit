@@ -4,8 +4,6 @@ class Const {
     companion object{
         const val LOG_TAG_RETROFIT_ON_FAILURE = "logTagRetrofitOnFailure"
 
-        const val AMOUNT_ATTEMPTS_TO_CONNECT_BEFORE_TIMING = 5
-
         const val SH_PREFERENCES_NAME = "shPreferencesSettings"
         const val SH_PREFERENCES_KEY_SCHOOL_ID = "shPreferencesKeySchoolId"
         const val SH_PREFERENCES_KEY_GRADE_ID = "shPreferencesKeyGradeId"
@@ -25,6 +23,7 @@ class Const {
 
         const val DB_NAME = "lyceumDatabase"
 
+        const val AMOUNT_ATTEMPTS_TO_CONNECT_BEFORE_TIMING = 5
         const val DELAY_SECONDS_MANY_ATTEMPTS_TO_CONNECT = 20
 
         const val NETWORK_CONNECT_TIMEOUT_SECONDS = 30L

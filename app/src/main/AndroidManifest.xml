@@ -15,6 +15,9 @@
         android:theme="@style/Theme.LyceumApp"
         tools:targetApi="31">
         <activity
+            android:name=".activity.NoGradesForSchoolActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.ChooseGradeActivity"
             android:exported="false" />
         <activity

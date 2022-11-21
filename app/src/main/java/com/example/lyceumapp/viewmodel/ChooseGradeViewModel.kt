@@ -9,6 +9,7 @@ import com.example.lyceumapp.json.schools.SchoolJson
 
 class ChooseGradeViewModel(application: Application, chosenSchool: SchoolJson): AndroidViewModel(application) {
     val liveDataListGrades = MutableLiveData<List<GradeJson>?>()
+    //if even this attempt of downloading grades is the first (this case amountAttemptsToConnect from intent is always = null) , we still have default value = 1
     var amountAttemptsToConnect = 1
     lateinit var chosenGrade: GradeJson
 
@@ -18,7 +19,7 @@ class ChooseGradeViewModel(application: Application, chosenSchool: SchoolJson): 
 
     private fun downloadGrades(schoolId: Int) {
         RequestManager.getGradesForSchool(schoolId) {
-            if(it!=null) chosenGrade = it[0]
+            if(it!=null && it.isNotEmpty()) chosenGrade = it[0]
             liveDataListGrades.value = it
         }
     }

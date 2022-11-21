@@ -28,7 +28,8 @@ object RequestManager {
 
     fun getSchools(listener: (List<SchoolJson>?) -> Unit) {
         RetrofitManager.getSchools{
-            listener(it?.schools)
+            if(it==null || it.schools.isEmpty()) listener(null)
+            else listener(it.schools)
         }
     }
 

@@ -18,6 +18,9 @@ class MainViewModel(application: Application, private val modeToOpenShPreference
     var amountAttemptsToConnect = 1
     lateinit var chosenSchool: SchoolJson
 
+    //first we need to check if some info about school and grade exists in sharedPreferences
+    //if yes - user has already chosen school and grade before - we need to start MainMenuActivity
+    //if no - user hasn't chosen school and grade yet. - we need to download schools from server
     init{
         checkIfShPreferencesContainsData()
     }
@@ -35,12 +38,16 @@ class MainViewModel(application: Application, private val modeToOpenShPreference
             val result = deferred.await()
             liveDataDoWeHaveDataInShPreferences.value = result
             if(!result) {
+                //if user hasn't chosen school and grade yet:
                 downloadSchools()
             }
 
         }
     }
 
+
+    //RequestManager is like Repository or Model in MVVM pattern
+    //default value of chosenSchool is the first object from the list of schools
     private fun downloadSchools() {
         RequestManager.getSchools{
             if(it!=null) chosenSchool = it[0]

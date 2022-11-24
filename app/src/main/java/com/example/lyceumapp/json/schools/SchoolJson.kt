@@ -21,8 +21,8 @@ data class SchoolJson(
         override fun createFromParcel(parcel: Parcel?): SchoolJson {
             return SchoolJson(
                 parcel?.readInt()!!,
-                parcel?.readString()!!,
-                parcel?.readString()!!
+                parcel.readString()!!,
+                parcel.readString()!!
             )
         }
 

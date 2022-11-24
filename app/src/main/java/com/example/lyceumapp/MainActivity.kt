@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.lyceumapp.activity.ChooseGradeActivity
 import com.example.lyceumapp.activity.MainMenuActivity
 import com.example.lyceumapp.activity.NoResponseActivity
+import com.example.lyceumapp.activity.NoSchoolsActivity
 import com.example.lyceumapp.viewmodel.MainViewModel
 import com.example.lyceumapp.databinding.ActivityChooseSchoolsOrGradesBinding
 import com.example.lyceumapp.databinding.RecyclerElementSchoolsBinding
@@ -73,7 +74,14 @@ class MainActivity : AppCompatActivity() {
                 intent.putExtra(Const.INTENT_KEY_NO_RESPONSE_TYPE, Const.NoResponseType.GetSchools)
                 intent.putExtra(Const.INTENT_KEY_AMOUNT_ATTEMPTS_TO_CONNECT, viewModel.amountAttemptsToConnect)
                 startActivity(intent)
-            } else {
+            } else if(schools.isEmpty()) {
+                //here the unlikely situation, where the server works, but returns an empty school list
+                //this case we need to launch very simple activity - NoSchoolsActivity
+                val intent = Intent(this, NoSchoolsActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                startActivity(intent)
+            }
+            else {
                 //we got schools successfully!
                 //ViewBinding is very cool technique from Google. We can use it instead of findViewById() calls
                 val binding = ActivityChooseSchoolsOrGradesBinding.inflate(layoutInflater)

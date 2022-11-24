@@ -8,8 +8,7 @@ data class GradeJson(
     @Json(name = "class_id") val id: Int,
     @Json(name = "number") val number: Int,
     @Json(name = "letter") val letter: String,
-    @Json(name = "school_id") val schoolId: Int,
-    @Json(name = "teacher_id") val teacherId: Int?
+    @Json(name = "class_type") val gradeType: String
 ): Parcelable {
     override fun toString() = number.toString()+letter
     override fun describeContents() = 0
@@ -18,13 +17,12 @@ data class GradeJson(
         parcel?.writeInt(id)
         parcel?.writeInt(number)
         parcel?.writeString(letter)
-        parcel?.writeInt(schoolId)
-        if(teacherId!=null) parcel?.writeInt(teacherId)
+        parcel?.writeString(gradeType)
     }
 
     companion object CREATOR: Parcelable.Creator<GradeJson> {
         override fun createFromParcel(parcel: Parcel?): GradeJson {
-            return GradeJson(parcel?.readInt()!!, parcel.readInt(), parcel.readString()!!, parcel.readInt(), parcel.readInt())
+            return GradeJson(parcel?.readInt()!!, parcel.readInt(), parcel.readString()!!, parcel.readString()!!)
         }
 
         override fun newArray(size: Int) = arrayOfNulls<GradeJson>(size)

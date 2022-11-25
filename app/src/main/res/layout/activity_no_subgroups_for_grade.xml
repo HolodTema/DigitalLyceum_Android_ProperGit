@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.NoGradesForSchoolActivity">
+    tools:context=".activity.NoSubgroupsForGradeActivity">
 
     <TextView
-        android:id="@+id/textNoGradesForSchoolHeader"
+        android:id="@+id/textNoSubgroupsForGradeHeader"
         style="@style/textPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,30 +16,28 @@
         android:gravity="center"
         android:text="@string/no_response_header"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/textNoGradesForSchoolDescription"
+        app:layout_constraintBottom_toTopOf="@+id/textNoSubgroupsForGradeDescription"
         android:layout_marginBottom="10dp"/>
-
     <TextView
-        android:id="@+id/textNoGradesForSchoolDescription"
+        android:id="@+id/textNoSubgroupsForGradeDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_marginBottom="10dp"
         android:layout_marginHorizontal="10dp"
-        android:text="@string/no_grades_for_school_description"
-        app:layout_constraintBottom_toTopOf="@+id/textLikeButtonPickSchoolAgain"
+        android:text="@string/no_subgroups_for_grade_description"
+        app:layout_constraintBottom_toTopOf="@+id/textLikeButtonPickGradeOrSchoolAgain"
         style="@style/textSecondary"/>
 
     <TextView
-        android:id="@+id/textLikeButtonPickSchoolAgain"
+        android:id="@+id/textLikeButtonPickGradeOrSchoolAgain"
         style="@style/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Выбрать другую образовательную организацию"
+        android:text="@string/choose_another_school"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -50,7 +50,7 @@ class MainViewModel(application: Application, private val modeToOpenShPreference
     //default value of chosenSchool is the first object from the list of schools
     private fun downloadSchools() {
         RequestManager.getSchools{
-            if(it!=null) {
+            if(it!=null && it.isNotEmpty()) {
                 chosenSchool = it[0]
             }
             liveDataListSchools.value = it

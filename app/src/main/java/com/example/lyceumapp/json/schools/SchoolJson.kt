@@ -8,9 +8,8 @@ data class SchoolJson(
     @Json(name = "school_id") val id: Int,
     @Json(name = "name") val name: String,
     @Json(name = "address") val address: String
-): Parcelable {
+): Parcelable, Comparable<SchoolJson> {
     override fun describeContents() = 0
-
     override fun writeToParcel(parcel: Parcel?, flags: Int) {
         parcel?.writeInt(id)
         parcel?.writeString(name)
@@ -27,5 +26,9 @@ data class SchoolJson(
         }
 
         override fun newArray(size: Int) = arrayOfNulls<SchoolJson>(size)
+    }
+
+    override fun compareTo(other: SchoolJson): Int {
+        return name.compareTo(other.name)
     }
 }

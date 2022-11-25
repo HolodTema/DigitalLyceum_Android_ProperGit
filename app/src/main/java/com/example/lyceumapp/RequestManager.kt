@@ -10,6 +10,7 @@ import com.example.lyceumapp.json.schools.SchoolsListJson
 import com.example.lyceumapp.retrofit.RetrofitManager
 import com.example.lyceumapp.database.LessonDB
 import com.example.lyceumapp.json.lessons.LessonJson
+import com.example.lyceumapp.json.subgroups.SubgroupJson
 import kotlinx.coroutines.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -20,6 +21,12 @@ object RequestManager {
     var isRequestScheduleForGradeAlreadyGot = false
     private set
 
+    fun getSubgroupsForGrade(gradeId: Int, listener: (List<SubgroupJson>?) -> Unit) {
+        RetrofitManager.getSubgroupsForGrade(gradeId) {
+            listener(it?.subgroups)
+        }
+    }
+
     fun getGradesForSchool(schoolId: Int, listener: (List<GradeJson>?) -> Unit) {
         RetrofitManager.getGradesForSchool(schoolId) {
             listener(it?.schoolGrades)
@@ -28,8 +35,8 @@ object RequestManager {
 
     fun getSchools(listener: (List<SchoolJson>?) -> Unit) {
         RetrofitManager.getSchools{
-            if(it==null || it.schools.isEmpty()) listener(null)
-            else listener(it.schools)
+            if(it!=null) listener(it.schools.sorted())
+            else listener(null)
         }
     }
 

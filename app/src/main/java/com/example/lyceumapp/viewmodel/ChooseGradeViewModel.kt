@@ -20,6 +20,7 @@ class ChooseGradeViewModel(application: Application, chosenSchool: SchoolJson): 
     private fun downloadGrades(schoolId: Int) {
         RequestManager.getGradesForSchool(schoolId) {
             if(it!=null && it.isNotEmpty()) chosenGrade = it[0]
+
             liveDataListGrades.value = it
         }
     }

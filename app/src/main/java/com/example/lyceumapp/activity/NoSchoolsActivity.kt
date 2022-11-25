@@ -12,6 +12,7 @@ class NoSchoolsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivityNoSchoolsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        supportActionBar?.hide()
 
         binding.textLikeButtonTryAgain.setOnClickListener{
             val intent = Intent(this, MainActivity::class.java)

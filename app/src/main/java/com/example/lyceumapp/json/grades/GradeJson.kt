@@ -9,7 +9,7 @@ data class GradeJson(
     @Json(name = "number") val number: Int,
     @Json(name = "letter") val letter: String,
     @Json(name = "class_type") val gradeType: String
-): Parcelable {
+): Parcelable, Comparable<GradeJson> {
     override fun toString() = number.toString()+letter
     override fun describeContents() = 0
 
@@ -26,5 +26,15 @@ data class GradeJson(
         }
 
         override fun newArray(size: Int) = arrayOfNulls<GradeJson>(size)
+    }
+
+    override fun compareTo(other: GradeJson): Int {
+        val compareNumbersResult = number.compareTo(other.number)
+        return if(compareNumbersResult==0) {
+            letter.compareTo(other.letter)
+        }
+        else {
+            compareNumbersResult
+        }
     }
 }

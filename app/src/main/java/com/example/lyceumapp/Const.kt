@@ -7,6 +7,7 @@ class Const {
         const val SH_PREFERENCES_NAME = "shPreferencesSettings"
         const val SH_PREFERENCES_KEY_SCHOOL_ID = "shPreferencesKeySchoolId"
         const val SH_PREFERENCES_KEY_GRADE_ID = "shPreferencesKeyGradeId"
+        const val SH_PREFERENCES_KEY_SUBGROUP_ID = "shPreferencesKeySubgroupId"
         const val SH_PREFERENCES_KEY_SCHOOL_NAME = "shPreferencesKeySchoolName"
         const val SH_PREFERENCES_KEY_SCHOOL_ADDRESS ="shPreferencesKeySchoolAddress"
         const val SH_PREFERENCES_KEY_SCHOOL_PHONE_NUMBER = "shPreferencesKeySchoolPhoneNumber"
@@ -16,6 +17,8 @@ class Const {
         const val INTENT_KEY_NO_RESPONSE_TYPE = "intentKeyNoResponseType"
         const val INTENT_KEY_AMOUNT_ATTEMPTS_TO_CONNECT = "intentKeyAmountAttemptsToConnect"
         const val INTENT_KEY_CHOSEN_SCHOOL = "intentKeyChosenSchool"
+        const val INTENT_KEY_CHOSEN_GRADE = "intentKeyChosenGrade"
+        const val INTENT_KEY_AMOUNT_GRADES = "intentKeyAmountGrades"
 
         const val BUNDLE_KEY_SCHOOLS_LIST = "bundleKeySchoolsList"
         const val BUNDLE_KEY_GRADES_LIST = "bundleKeyGradesList"
@@ -33,6 +36,7 @@ class Const {
 
     enum class NoResponseType{
         GetSchools,
-        GetGrades
+        GetGrades,
+        GetSubgroups
     }
 }

@@ -9,6 +9,7 @@ import com.example.lyceumapp.Const
 import com.example.lyceumapp.MainActivity
 import com.example.lyceumapp.R
 import com.example.lyceumapp.databinding.ActivityNoResponseBinding
+import com.example.lyceumapp.json.grades.GradeJson
 import com.example.lyceumapp.json.schools.SchoolJson
 import com.example.lyceumapp.viewmodel.NoResponseViewModel
 import com.example.lyceumapp.viewmodel.NoResponseViewModelFactory
@@ -20,6 +21,7 @@ class NoResponseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivityNoResponseBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        supportActionBar?.hide()
 
         //we have '!!' here, because we need to get amountAttemptsToConnect every onCreate() call
         //because we need to pass it into viewModel constructor
@@ -40,6 +42,14 @@ class NoResponseActivity : AppCompatActivity() {
             //green color of variable in Android studio - Kotlin smartCast (usually smartCast to non-null type, like from 'Int?' to 'Int')
             if(chosenSchool!=null) viewModel.chosenSchool = chosenSchool
         }
+        else if(viewModel.noResponseType==Const.NoResponseType.GetSubgroups) {
+            val chosenSchool = intent.extras?.getParcelable<SchoolJson>(Const.INTENT_KEY_CHOSEN_SCHOOL)
+            if(chosenSchool!=null) viewModel.chosenSchool = chosenSchool
+            val chosenGrade = intent.extras?.getParcelable<GradeJson>(Const.INTENT_KEY_CHOSEN_GRADE)
+            if(chosenGrade!=null) viewModel.chosenGrade = chosenGrade
+            val amountGrades = intent.extras?.getInt(Const.INTENT_KEY_AMOUNT_GRADES)
+            if(amountGrades!=null) viewModel.amountGrades = amountGrades
+        }
 
         //not only timer in our ViewModel starts in case of many requests to server from user. We also need to hide some xml-elements, for example button 'Try again'
         if(viewModel.amountAttemptsToConnect>=Const.AMOUNT_ATTEMPTS_TO_CONNECT_BEFORE_TIMING) {
@@ -57,7 +67,14 @@ class NoResponseActivity : AppCompatActivity() {
                     Intent(this, MainActivity::class.java)
                 }
                 Const.NoResponseType.GetGrades -> {
-                    Intent(this, ChooseGradeActivity::class.java).putExtra(Const.INTENT_KEY_CHOSEN_SCHOOL, viewModel.chosenSchool)
+                    Intent(this, ChooseGradeActivity::class.java)
+                        .putExtra(Const.INTENT_KEY_CHOSEN_SCHOOL, viewModel.chosenSchool)
+                }
+                Const.NoResponseType.GetSubgroups -> {
+                    Intent(this, ChooseSubgroupActivity::class.java)
+                        .putExtra(Const.INTENT_KEY_CHOSEN_SCHOOL, viewModel.chosenSchool)
+                        .putExtra(Const.INTENT_KEY_CHOSEN_GRADE, viewModel.chosenGrade)
+                        .putExtra(Const.INTENT_KEY_AMOUNT_GRADES, viewModel.amountGrades)
                 }
             }
             viewModel.amountAttemptsToConnect++;

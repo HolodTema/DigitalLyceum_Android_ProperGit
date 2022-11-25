@@ -14,8 +14,8 @@ import com.example.lyceumapp.activity.ChooseGradeActivity
 import com.example.lyceumapp.activity.MainMenuActivity
 import com.example.lyceumapp.activity.NoResponseActivity
 import com.example.lyceumapp.activity.NoSchoolsActivity
+import com.example.lyceumapp.databinding.ActivityChooseSchoolsOrGradesOrSubgroupsBinding
 import com.example.lyceumapp.viewmodel.MainViewModel
-import com.example.lyceumapp.databinding.ActivityChooseSchoolsOrGradesBinding
 import com.example.lyceumapp.databinding.RecyclerElementSchoolsBinding
 import com.example.lyceumapp.json.schools.SchoolJson
 import com.example.lyceumapp.viewmodel.MainViewModelFactory
@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         //download layout is the first, because user must see that his request is downloading now
         setContentView(R.layout.activity_download)
+        supportActionBar?.hide()
 
         //we create viewModel using ViewModelProvider. Actually, MainViewModel creates only one time when activity creates the first time.
         //but we still need delegate some parameters into MainViewModelConstructor every onCreate() call
@@ -84,16 +85,16 @@ class MainActivity : AppCompatActivity() {
             else {
                 //we got schools successfully!
                 //ViewBinding is very cool technique from Google. We can use it instead of findViewById() calls
-                val binding = ActivityChooseSchoolsOrGradesBinding.inflate(layoutInflater)
+                val binding = ActivityChooseSchoolsOrGradesOrSubgroupsBinding.inflate(layoutInflater)
                 setContentView(binding.root)
 
                 //create an adapter for RecyclerView for schools list visualisation
                 adapter = SchoolJsonAdapter(schools, layoutInflater, viewModel)
-                binding.recyclerChooseSchoolOrGrade.adapter = adapter
+                binding.recyclerChooseSchoolOrGradeOrSubgroup.adapter = adapter
                 //we need to set layoutManager to recyclerView (a recycler view can be like table for example, but we need LinearLayoutManager)
-                binding.recyclerChooseSchoolOrGrade.layoutManager = LinearLayoutManager(this)
+                binding.recyclerChooseSchoolOrGradeOrSubgroup.layoutManager = LinearLayoutManager(this)
                 //here we add separating line between elements in recyclerView
-                binding.recyclerChooseSchoolOrGrade.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+                binding.recyclerChooseSchoolOrGradeOrSubgroup.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
                 //the code below works if we click button 'next' under RecyclerView. When the button clicked, we need to get chosenSchool object from adapter and start ChooseGradeActivity
                 binding.buttonNext.setOnClickListener {

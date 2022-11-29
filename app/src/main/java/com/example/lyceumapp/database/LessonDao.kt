@@ -1,26 +1,23 @@
 package com.example.lyceumapp.database
 
 import androidx.room.*
-import com.example.lyceumapp.RequestManager
+import com.example.lyceumapp.json.lessons.LessonJson
 
 @Dao
 interface LessonDao {
     @Insert
-    fun insert(lessonDB: LessonDB)
+    fun insert(lessonJson: LessonJson)
     @Update
-    fun update(lessonDB: LessonDB)
+    fun update(lessonJson: LessonJson)
     @Delete
-    fun delete(lessonDB: LessonDB)
+    fun delete(lessonJson: LessonJson)
 
-    @Query("select exists(select * from lessondb)")
+    @Query("select exists(select * from lessonjson)")
     fun areLessonsInDatabase(): Boolean
 
-    @Query("select exists(select * from lessondb where schoolGradeId = :schoolGradeId)")
-    fun areLessonsOfSchoolGradeIdInDatabase(schoolGradeId: Int): Boolean
+    @Query("select * from lessonjson")
+    fun getAll(): List<LessonJson>
 
-    @Query("select * from lessondb")
-    fun getAll(): List<LessonDB>
-
-    @Query("select * from lessondb where schoolGradeId = :schoolGradeId")
-    fun getBySchoolGradeId(schoolGradeId: Int): List<LessonDB>
+    @Query("delete from lessonjson")
+    fun deleteAll()
 }

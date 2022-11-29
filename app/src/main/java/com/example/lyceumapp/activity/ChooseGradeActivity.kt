@@ -83,6 +83,7 @@ class ChooseGradeActivity : AppCompatActivity() {
                     //we need to pass chosenGrade and chosenSchool into the ChooseSubgroupActivity
                     intent.putExtra(Const.INTENT_KEY_CHOSEN_SCHOOL, chosenSchool)
                     intent.putExtra(Const.INTENT_KEY_CHOSEN_GRADE, viewModel.chosenGrade)
+                    intent.putExtra(Const.INTENT_KEY_AMOUNT_GRADES, viewModel.liveDataListGrades.value?.size)
                     startActivity(intent)
                 }
             }

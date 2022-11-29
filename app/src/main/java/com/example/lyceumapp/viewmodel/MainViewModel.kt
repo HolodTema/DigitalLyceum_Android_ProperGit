@@ -31,6 +31,7 @@ class MainViewModel(application: Application, private val modeToOpenShPreference
                 val shPreferences = getApplication<Application>().getSharedPreferences(Const.SH_PREFERENCES_NAME, modeToOpenShPreferences)
                 val result = shPreferences.contains(Const.SH_PREFERENCES_KEY_SCHOOL_ID)
                         && shPreferences.contains(Const.SH_PREFERENCES_KEY_GRADE_ID)
+                        && shPreferences.contains(Const.SH_PREFERENCES_KEY_SUBGROUP_ID)
                         && shPreferences.contains(Const.SH_PREFERENCES_KEY_SCHOOL_ADDRESS)
                         && shPreferences.contains(Const.SH_PREFERENCES_KEY_SCHOOL_NAME)
                 result

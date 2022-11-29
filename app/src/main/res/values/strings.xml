@@ -50,4 +50,6 @@
     <string name="no_subgroups_for_grade_description">Не удалось загрузить список субгрупп для выбранного класса.\nЕсли вы считаете, что произошла ошибка, пожалуйста, свяжитесь с нами:\n</string>
     <string name="no_subgroups_for_school_description">Не удалось загрузить список субгрупп для выбранного класса.\nНо так как в данной образовательной организации всего один класс, то Вам нужно выбрать другую образовательную организацию.\nЕсли вы считаете, что произошла ошибка, пожалуйста, свяжитесь с нами:\n</string>
     <string name="choose_another_school">Выбрать другую образовательную организацию</string>
+    <string name="lesson_schedule_text_header">Класс: %s, группа: %s</string>
+    <string name="week">Неделя %d</string>
 </resources>

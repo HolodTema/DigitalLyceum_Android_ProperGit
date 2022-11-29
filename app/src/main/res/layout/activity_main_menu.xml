@@ -130,50 +130,28 @@
             android:layout_marginTop="5dp"/>
     </LinearLayout>
 
-    <TableLayout
-        android:id="@+id/tabMenuElements"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/linearMenuElementScheduleLessons"
+        style="@style/linearMainMenuElement"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/linearNextLesson"
-        android:layout_marginTop="10dp">
-        <TableRow>
-            <LinearLayout
-                android:id="@+id/linearMenuElementScheduleLessons"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/linearMainMenuElement">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearNextLesson">
 
-                <TextView
-                    style="@style/textPrimary"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Расписание\nуроков"
-                    android:textColor="?attr/colorStandardText" />
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:src="@drawable/ic_schedule_lessons" />
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/linearMenuElementScheduleBreaks"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/linearMainMenuElement">
+        <TextView
+            style="@style/textPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Расписание\nуроков"
+            android:textColor="?attr/colorStandardText" />
 
-                <TextView
-                    style="@style/textPrimary"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Расписание\nзвонков"
-                    android:textColor="?attr/colorStandardText" />
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:src="@drawable/ic_schedule_breaks" />
-            </LinearLayout>
-        </TableRow>
-    </TableLayout>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_schedule_lessons" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

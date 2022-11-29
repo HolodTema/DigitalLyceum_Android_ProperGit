@@ -10,3 +10,5 @@ class CantCreateRetrofitRequestException(): Exception()
 class GradeIdDidNotSavedInShPreferencesException(): Exception()
 class TabLayoutCanNotHaveMoreThan6TabsException(): Exception()
 class NullPresenterException: Exception()
+
+class NoDataInShPreferencesException: Exception()

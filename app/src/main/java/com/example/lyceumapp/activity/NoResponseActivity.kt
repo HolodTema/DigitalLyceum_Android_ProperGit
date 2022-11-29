@@ -76,6 +76,9 @@ class NoResponseActivity : AppCompatActivity() {
                         .putExtra(Const.INTENT_KEY_CHOSEN_GRADE, viewModel.chosenGrade)
                         .putExtra(Const.INTENT_KEY_AMOUNT_GRADES, viewModel.amountGrades)
                 }
+                Const.NoResponseType.GetLessons -> {
+                    Intent(this, MainMenuActivity::class.java)
+                }
             }
             viewModel.amountAttemptsToConnect++;
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)

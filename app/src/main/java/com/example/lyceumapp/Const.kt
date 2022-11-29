@@ -12,16 +12,14 @@ class Const {
         const val SH_PREFERENCES_KEY_SCHOOL_ADDRESS ="shPreferencesKeySchoolAddress"
         const val SH_PREFERENCES_KEY_SCHOOL_PHONE_NUMBER = "shPreferencesKeySchoolPhoneNumber"
 
-
-        const val INTENT_KEY_LESSONS_FOR_GRADE = "intentKeyLessonsForGrade"
         const val INTENT_KEY_NO_RESPONSE_TYPE = "intentKeyNoResponseType"
         const val INTENT_KEY_AMOUNT_ATTEMPTS_TO_CONNECT = "intentKeyAmountAttemptsToConnect"
         const val INTENT_KEY_CHOSEN_SCHOOL = "intentKeyChosenSchool"
         const val INTENT_KEY_CHOSEN_GRADE = "intentKeyChosenGrade"
         const val INTENT_KEY_AMOUNT_GRADES = "intentKeyAmountGrades"
+        const val INTENT_KEY_LESSONS_FOR_SUBGROUP = "intentKeyLessonsForSubgroup"
 
-        const val BUNDLE_KEY_SCHOOLS_LIST = "bundleKeySchoolsList"
-        const val BUNDLE_KEY_GRADES_LIST = "bundleKeyGradesList"
+        const val BUNDLE_KEY_LESSONS_FOR_ONE_DAY_OF_SUBGROUP = "bundleKeyLessonsForOneDayOfSubgroup"
         const val BUNDLE_KEY_LESSONS_FOR_ONE_DAY_OF_GRADE = "bundleKeyLessonsForOneDayOfGrade"
 
         const val DB_NAME = "lyceumDatabase"
@@ -37,6 +35,7 @@ class Const {
     enum class NoResponseType{
         GetSchools,
         GetGrades,
-        GetSubgroups
+        GetSubgroups,
+        GetLessons
     }
 }

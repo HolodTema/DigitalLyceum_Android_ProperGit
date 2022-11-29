@@ -3,27 +3,26 @@ package com.example.lyceumapp
 import android.content.Context
 import com.example.lyceumapp.database.DatabaseClient
 import com.example.lyceumapp.json.grades.GradeJson
-import com.example.lyceumapp.json.grades.SchoolGradesJson
-import com.example.lyceumapp.json.lessons.ScheduleJson
 import com.example.lyceumapp.json.schools.SchoolJson
-import com.example.lyceumapp.json.schools.SchoolsListJson
 import com.example.lyceumapp.retrofit.RetrofitManager
-import com.example.lyceumapp.database.LessonDB
 import com.example.lyceumapp.json.lessons.LessonJson
 import com.example.lyceumapp.json.subgroups.SubgroupJson
 import kotlinx.coroutines.*
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.math.abs
 
 object RequestManager {
     //we need this field because we don't need to make request to server EVERY time we launch MainMenuActivity. After first time we just get LessonDB from database.
     var isRequestScheduleForGradeAlreadyGot = false
     private set
 
-    fun getSubgroupsForGrade(gradeId: Int, listener: (List<SubgroupJson>?) -> Unit) {
-        RetrofitManager.getSubgroupsForGrade(gradeId) {
-            listener(it?.subgroups)
+    var isRequestScheduleForSubgroupAlreadyGot = false
+    private set
+
+    fun getSchools(listener: (List<SchoolJson>?) -> Unit) {
+        RetrofitManager.getSchools{
+            if(it!=null) listener(it.schools.sorted())
+            else listener(null)
         }
     }
 
@@ -33,151 +32,113 @@ object RequestManager {
         }
     }
 
-    fun getSchools(listener: (List<SchoolJson>?) -> Unit) {
-        RetrofitManager.getSchools{
-            if(it!=null) listener(it.schools.sorted())
-            else listener(null)
+    fun getSubgroupsForGrade(gradeId: Int, listener: (List<SubgroupJson>?) -> Unit) {
+        RetrofitManager.getSubgroupsForGrade(gradeId) {
+            listener(it?.subgroups)
         }
     }
 
-    fun getScheduleForGrade(context: Context, gradeId: Int, listener: (ArrayList<LessonDB>?) -> Unit) {
-        if(isRequestScheduleForGradeAlreadyGot) {
-            CoroutineScope(Dispatchers.Main).launch {
-                val deferred = CoroutineScope(Dispatchers.IO).async {
-                    DatabaseClient.getInstance(context).lessonDao().getBySchoolGradeId(gradeId)
-                }
-                listener(deferred.await() as ArrayList<LessonDB>)
+
+    //here the listener param of function, that contains also boolean field. That field implies "isLessonsActual" -
+    //so, it returns true if we downloaded lessons from the server recently. And it returns false in case when the server is unable to connect
+    fun getScheduleForSubgroup(context: Context, subgroupId: Int, listener: (List<LessonJson>?, Boolean) -> Unit) {
+        //we don't need to create request to the server every time we launch MainMenuActivity. We need to do it only
+        //one time during the app lifecycle
+        if(isRequestScheduleForSubgroupAlreadyGot) {
+            //here we've already made request to the server and we don't have to do it again. We can get lessons from
+            //a local database
+            getLessonsFromLocalDatabase(context) { lessonsFromLocalDatabase ->
+                listener(lessonsFromLocalDatabase, true)
             }
         }
-        else RetrofitManager.getScheduleForGrade(gradeId) {
-            CoroutineScope(Dispatchers.Main).launch {
-                    if(it==null) {
-                        val deferredAreLessonsOfSchoolGradeIdInDb = CoroutineScope(Dispatchers.IO).async {
-                            DatabaseClient.getInstance(context).lessonDao().areLessonsOfSchoolGradeIdInDatabase(gradeId)
-                        }
-                        val areLessonsOfSchoolGradeIdInDb = deferredAreLessonsOfSchoolGradeIdInDb.await()
+        else RetrofitManager.getScheduleForSubgroup(subgroupId) {
+            if(it==null) {
+                //something went wrong, for example there is no Internet. We need to check local database
+                CoroutineScope(Dispatchers.Main).launch {
+                    val deferredAreLessonsInLocalDatabase = async(Dispatchers.IO) {
+                        DatabaseClient.getInstance(context).lessonDao().areLessonsInDatabase()
+                    }
 
-                        if(areLessonsOfSchoolGradeIdInDb) {
-                            val deferredGetLessonsByGradeId = CoroutineScope(Dispatchers.IO).async {
-                                DatabaseClient.getInstance(context).lessonDao().getBySchoolGradeId(gradeId)
-                            }
-                            listener(deferredGetLessonsByGradeId.await() as ArrayList<LessonDB> )
-                        }
-                        else {
-                            listener(null)
+                    if(deferredAreLessonsInLocalDatabase.await()) {
+                        //there are lessons in database. we need to get it
+                        getLessonsFromLocalDatabase(context) { lessonsFromLocalDatabase ->
+                            listener(lessonsFromLocalDatabase, false)
                         }
                     }
                     else {
-                        val deferredGetConvertedLessonDBList = CoroutineScope(Dispatchers.IO).async {
-                            val convertedLessons = convertLessonsJsonToSimpleFormat(it.lessons)
-
-                            if(DatabaseClient.getInstance(context).lessonDao().areLessonsOfSchoolGradeIdInDatabase(gradeId)) {
-                                DatabaseClient.getInstance(context).lessonDao().getBySchoolGradeId(gradeId).forEach {
-                                    DatabaseClient.getInstance(context).lessonDao().delete(it)
-                                }
-                            }
-
-                            convertedLessons.forEach{
-                                DatabaseClient.getInstance(context).lessonDao().insert(it)
-                            }
-                            convertedLessons
-                        }
-                        isRequestScheduleForGradeAlreadyGot = true
-                        listener(deferredGetConvertedLessonDBList.await())
+                        //actually there are no lessons in database even. It's no good to do something else...
+                        //just pass the null
+                        listener(null, false)
                     }
+
                 }
+            }
+            else {
+                //everything is correct, we need to return the list of lessonJson objects to the listener
+                //and we need to cache lessons to the Room database here
+                cacheLessonsToLocalDatabase(context, it.lessons) {
+                    listener(it.lessons, true)
+                }
+
+            }
         }
     }
 
-    fun getLessonsForOneDayOfGrade(lessonsForGrade: ArrayList<LessonDB>, daysOfWeekOrdinal: Int): ArrayList<LessonDB> {
-        val result = arrayListOf<LessonDB>()
-        lessonsForGrade.forEach{
-            if(it.daysOfWeek==daysOfWeekOrdinal) result.add(it)
+    fun getLessonsForOneDayOfSubgroup(lessons: ArrayList<LessonJson>, dayOfWeek: Int): ArrayList<LessonJson> {
+        val result = ArrayList<LessonJson>()
+        for( lesson in lessons) {
+            if(lesson.weekday==dayOfWeek) result.add(lesson)
         }
         result.sort()
         return result
     }
 
-    fun getNextLessonAndTimeToIt(lessons: ArrayList<LessonDB>): Pair<LessonDB, Pair<Int, Int>> {
-        fun getMinutesBetweenLessonAndCurrentTime(lesson: LessonDB, currentDayOrdinal: Int, currentHour: Int, currentMinute: Int): Int {
-            val minutesForLessonSinceBeginningOfWeek = lesson.daysOfWeek*24*60+lesson.startHour*60+lesson.startMinute
-            val minutesForCurrentTimeSinceBeginningOfWeek = currentDayOrdinal*24*60+currentHour*60+currentMinute
-            return if(minutesForCurrentTimeSinceBeginningOfWeek>minutesForLessonSinceBeginningOfWeek) {
-                (7*24*60-minutesForCurrentTimeSinceBeginningOfWeek)+minutesForLessonSinceBeginningOfWeek
-            }
-            else minutesForLessonSinceBeginningOfWeek-minutesForCurrentTimeSinceBeginningOfWeek
+    // TODO: later Lawrence will create special request that returns amount of weeks for subgroup on the server
+    fun getAmountWeeksForSubgroup(lessons: ArrayList<LessonJson>): Int {
+        var maxWeek = 0
+        for(lesson in lessons) {
+            if(lesson.week>maxWeek) maxWeek = lesson.week
         }
-
-        val calendar = Calendar.getInstance()
-        val currentDayOrdinal = calendar.get(Calendar.DAY_OF_WEEK)-1
-        val currentHour = calendar.get(Calendar.HOUR)
-        val currentMinute = calendar.get(Calendar.MINUTE)
-
-        var nextLesson = lessons[0] //we can't put null to it, because I don't want to deal with NullSave kotlin stuff... So, I init this var like lessons[0]
-        var minTime = 24*7*60+1 //this field must be bigger than every int from fun above. We need it to our program works correctly
-        var time = 0
-        lessons.forEach{ lesson ->
-            time = getMinutesBetweenLessonAndCurrentTime(lesson, currentDayOrdinal, currentHour, currentMinute)
-            if(time<minTime) {
-                minTime = time
-                nextLesson = lesson
-            }
-        }
-        return nextLesson to (minTime/60 to minTime % 60)
+        return maxWeek
     }
 
-    private fun convertLessonsJsonToSimpleFormat(lessonForGradeJsonList: List<LessonJson>): ArrayList<LessonDB> {
-        val result = arrayListOf<LessonDB>()
+//    fun getNextLessonAndTimeToIt(lessons: List<LessonJson>): Pair<LessonJson, Int> {
+//        val calendar = Calendar.getInstance()
+//        for(lesson in lessons) {
+//
+//        }
+//    }
 
-        lessonForGradeJsonList.forEach { lessonJson ->
-            lessonJson.times.forEach { lessonTimesJson ->
-                lessonTimesJson.getDaysTimesArrayWithDayOfWeek().forEach { timesDayListWithDayOfWeek ->
-                    timesDayListWithDayOfWeek.first?.forEach { timesForOneCertainLesson ->
-                        result.add(
-                            LessonDB(
-                                0,
-                                lessonTimesJson.schoolClassId,
-                                lessonJson.name,
-                                timesForOneCertainLesson[0],
-                                timesForOneCertainLesson[1],
-                                timesForOneCertainLesson[2],
-                                timesForOneCertainLesson[3],
-                                lessonJson.teacher,
-                                lessonJson.required,
-                                timesDayListWithDayOfWeek.second.ordinal
-                            )
-                        )
-                    }
-                }
-            }
-//            lessonForGradeJson.times.getDaysTimesArrayWithDayOfWeek().forEach { timesDayListWithDayOfWeek ->
-//                timesDayListWithDayOfWeek.first?.forEach { timesForOneLesson ->
-//                    result.add(
-//                        LessonDB(
-//                            0,
-//                            lessonForGradeJson.name,
-//                            timesForOneLesson[0],
-//                            timesForOneLesson[1],
-//                            timesForOneLesson[2],
-//                            timesForOneLesson[3],
-//                            lessonForGradeJson.teacher,
-//                            lessonForGradeJson.required,
-//                            timesDayListWithDayOfWeek.second.ordinal
-//                        )
-//                    )
-//                }
-//            }
+    fun getLessonsForDefiniteWeek(lessons: ArrayList<LessonJson>, week: Int): ArrayList<LessonJson> {
+        val result = arrayListOf<LessonJson>()
+        for(lesson in lessons) {
+            if(lesson.week==week) result.add(lesson)
         }
-
         return result
     }
 
-    enum class DaysOfWeek{
-        Monday,
-        Tuesday,
-        Wednesday,
-        Thursday,
-        Friday,
-        Saturday
+    private fun cacheLessonsToLocalDatabase(context: Context, lessons: List<LessonJson>, listener: () -> Unit) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val deferredInsertLessonsIntoDatabase = async(Dispatchers.IO) {
+                val lessonDao = DatabaseClient.getInstance(context).lessonDao()
+
+                lessonDao.deleteAll()
+                for(lesson in lessons) {
+                    lesson.id = 0
+                    lessonDao.insert(lesson)
+                }
+            }
+            deferredInsertLessonsIntoDatabase.await()
+            listener()
+        }
+    }
+
+    private fun getLessonsFromLocalDatabase(context: Context, listener: (List<LessonJson>) -> Unit) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val deferredLessonsFromLocalDatabase = async(Dispatchers.IO) {
+                DatabaseClient.getInstance(context).lessonDao().getAll()
+            }
+            listener(deferredLessonsFromLocalDatabase.await())
+        }
     }
 }

@@ -49,6 +49,7 @@ class ChooseSubgroupActivity : AppCompatActivity() {
         val amountAttemptsToConnect = intent.extras?.getInt(Const.INTENT_KEY_AMOUNT_ATTEMPTS_TO_CONNECT)
         if(amountAttemptsToConnect!=null) viewModel.amountAttemptsToConnect = amountAttemptsToConnect
 
+        // TODO: we haven't made amountGrades passing through intent in ChooseGradeActivity 
         //we may have situation when there are no subgroups for a grade and a school, that have been chosen earlier, contains only one grade. This case it's no good showing
         //a list of the grades to user, we need to show list of schools to user. And that's why we need to get amountOfGrades to check this condition and do some actions if necessary
         val amountGrades = intent.extras?.getInt(Const.INTENT_KEY_AMOUNT_GRADES)
@@ -69,6 +70,7 @@ class ChooseSubgroupActivity : AppCompatActivity() {
             }
             else if(subgroups.isEmpty()) {
                 //this case we need to start NoSubgroupsForGradeActivity and we need to pass there amountGrades for property working
+                val amountGrades = viewModel.amountGrades
                 val intent = Intent(this, NoSubgroupsForGradeActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                 intent.putExtra(Const.INTENT_KEY_AMOUNT_GRADES, viewModel.amountGrades)
@@ -96,7 +98,7 @@ class ChooseSubgroupActivity : AppCompatActivity() {
                 binding.buttonNext.setOnClickListener {
                     //here we need save everything in sharedPreferences and finally start MainMenuActivity
                     saveEverythingInShPreferences(viewModel.chosenSchool.id, chosenGrade.id, viewModel.chosenSubgroup.id, viewModel.chosenSchool.address, viewModel.chosenSchool.name)
-                    startActivity(Intent(this, MainActivity::class.java))
+                    startActivity(Intent(this, MainMenuActivity::class.java))
                 }
             }
         }

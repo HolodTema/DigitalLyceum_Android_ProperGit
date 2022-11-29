@@ -5,6 +5,6 @@ import retrofit2.Call
 import retrofit2.http.GET
 
 interface SchoolsService {
-    @GET("/school")
+    @GET("api/school")
     fun getSchools(): Call<SchoolsListJson>
 }

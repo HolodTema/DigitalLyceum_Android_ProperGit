@@ -6,6 +6,6 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface SubgroupsForGradeService {
-    @GET("class/{class_id}/subgroup")
+    @GET("api/class/{class_id}/subgroup")
     fun getSubgroupsForGrade(@Path("class_id") gradeId: Int): Call<GradeSubgroupsJson>
 }

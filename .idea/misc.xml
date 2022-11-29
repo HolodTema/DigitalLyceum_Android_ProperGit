@@ -35,12 +35,15 @@
         <entry key="..\:/DAndroidStudioProjects/DigitalLyceum data/DigitalLyceum/app/src/main/res/xml/root_preferences.xml" value="0.2921875" />
         <entry key="..\:/DAndroidStudioProjects/DigitalLyceum data/DigitalLyceumProperGit/app/src/main/res/layout/activity_choose_schools_or_grades.xml" value="0.23157894736842105" />
         <entry key="..\:/DAndroidStudioProjects/DigitalLyceum data/DigitalLyceumProperGit/app/src/main/res/layout/activity_choose_subgroup.xml" value="0.23157894736842105" />
+        <entry key="..\:/DAndroidStudioProjects/DigitalLyceum data/DigitalLyceumProperGit/app/src/main/res/layout/activity_lessons_schedule.xml" value="0.23157894736842105" />
         <entry key="..\:/DAndroidStudioProjects/DigitalLyceum data/DigitalLyceumProperGit/app/src/main/res/layout/activity_main.xml" value="0.23157894736842105" />
         <entry key="..\:/DAndroidStudioProjects/DigitalLyceum data/DigitalLyceumProperGit/app/src/main/res/layout/activity_main_menu.xml" value="0.23157894736842105" />
         <entry key="..\:/DAndroidStudioProjects/DigitalLyceum data/DigitalLyceumProperGit/app/src/main/res/layout/activity_no_grades_for_school.xml" value="0.33" />
         <entry key="..\:/DAndroidStudioProjects/DigitalLyceum data/DigitalLyceumProperGit/app/src/main/res/layout/activity_no_response.xml" value="0.23157894736842105" />
         <entry key="..\:/DAndroidStudioProjects/DigitalLyceum data/DigitalLyceumProperGit/app/src/main/res/layout/activity_no_subgroups_for_grade.xml" value="0.22" />
         <entry key="..\:/DAndroidStudioProjects/DigitalLyceum data/DigitalLyceumProperGit/app/src/main/res/layout/activity_settings.xml" value="0.23157894736842105" />
+        <entry key="..\:/DAndroidStudioProjects/DigitalLyceum data/DigitalLyceumProperGit/app/src/main/res/layout/fragment_lessons_schedule.xml" value="0.2314266929651545" />
+        <entry key="..\:/DAndroidStudioProjects/DigitalLyceum data/DigitalLyceumProperGit/app/src/main/res/layout/lesson_in_schedule.xml" value="0.23157894736842105" />
         <entry key="..\:/DAndroidStudioProjects/DigitalLyceum data/DigitalLyceumProperGit/app/src/main/res/layout/recycler_element_grades.xml" value="0.23157894736842105" />
         <entry key="..\:/DAndroidStudioProjects/DigitalLyceum data/DigitalLyceumProperGit/app/src/main/res/layout/recycler_element_subgroups.xml" value="0.22" />
         <entry key="..\:/Progs/Android/DigitalLyceum_Android_ProperGit/app/src/main/res/layout/activity_choose_schools_or_grades.xml" value="0.17074275362318841" />

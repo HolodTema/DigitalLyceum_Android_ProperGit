@@ -2,69 +2,44 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@drawable/main_menu_round_white_background">
+    android:orientation="horizontal"
+    android:padding="20dp">
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_gravity="center">
         <TextView
-            android:id="@+id/textLessonNumber"
-            style="@style/textPrimary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="1"
-            android:textColor="?attr/colorStandardText" />
-
-        <TextView
             android:id="@+id/textLessonName"
             style="@style/textPrimary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:text="mathematics"
-            android:textColor="?attr/colorStandardText" />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/textLessonTime"
-        style="@style/textPrimary"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="01:00 - 01:40"
-        android:textColor="?attr/colorStandardText" />
-    <TextView
-        android:id="@+id/textLessonTeacher"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/textSecondary"
-        android:text="Zubakova Maria Alexandrovna"
-        android:layout_margin="10dp"/>
-    <LinearLayout
-        android:id="@+id/linearLessonIsNotRequired"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_schedule_lessons"
-            android:layout_marginVertical="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="5dp"/>
+            android:text="Literature" />
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            style="@style/textPrimary"
-            android:textColor="?attr/colorSecondary"
-            android:text="@string/lesson_not_required"
-            android:layout_marginVertical="10dp"
-            android:layout_marginEnd="10dp"/>
-
+            android:layout_height="wrap_content"
+            android:id="@+id/textLessonChamber"
+            android:text="chamber#1"
+            style="@style/textSecondary"
+            android:layout_marginTop="5dp"/>
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textLessonStartTime"
+        style="@style/textPrimary"
+        android:layout_marginHorizontal="20dp"
+        android:layout_gravity="center"
+        android:text="8:00-8:40"/>
+
+    <ImageButton
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/buttonLessonMoreInfo"
+        android:src="@drawable/ic_next"
+        android:background="@android:color/transparent"
+        android:layout_gravity="center"/>
 
 </LinearLayout>

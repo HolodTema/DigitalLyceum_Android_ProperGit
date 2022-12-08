@@ -29,5 +29,15 @@
     <color name="color_on_primary_dark_dark">#787878</color>
     <color name="color_standard_text_dark">#FFFFFF</color>
 
+    <color name="color_primary">#D26926</color>
+    <color name="color_primary_light">#DB8751</color>
+    <color name="color_primary_dark">#A8541E</color>
+
+    <color name="color_secondary">#E0D9B9</color>
+    <color name="color_secondary_light">#E6E1C7</color>
+    <color name="color_secondary_dark">#B3AE94</color>
+
+    <color name="color_on_primary">#F3F0E3</color>
+
     <color name="red">#FF0000</color>
 </resources>

@@ -53,7 +53,7 @@ class NoResponseActivity : AppCompatActivity() {
 
         //not only timer in our ViewModel starts in case of many requests to server from user. We also need to hide some xml-elements, for example button 'Try again'
         if(viewModel.amountAttemptsToConnect>=Const.AMOUNT_ATTEMPTS_TO_CONNECT_BEFORE_TIMING) {
-            binding.textLikeButtonNoResponseTryAgain.visibility = View.GONE
+            binding.buttonTryAgain.visibility = View.GONE
             binding.textYouSendSoManyRequests.text = String.format(resources.getString(R.string.amount_attempts_to_server_limit), Const.DELAY_SECONDS_MANY_ATTEMPTS_TO_CONNECT)
         }
         else {
@@ -61,7 +61,7 @@ class NoResponseActivity : AppCompatActivity() {
         }
 
 
-        binding.textLikeButtonNoResponseTryAgain.setOnClickListener{
+        binding.buttonTryAgain.setOnClickListener{
             val intent = when(viewModel.noResponseType) {
                 Const.NoResponseType.GetSchools -> {
                     Intent(this, MainActivity::class.java)
@@ -90,7 +90,7 @@ class NoResponseActivity : AppCompatActivity() {
         viewModel.liveDataCountDownTimerSeconds.observe(this) {
             if(it==null) { //here timer has finished
                 binding.textYouSendSoManyRequests.visibility = View.GONE
-                binding.textLikeButtonNoResponseTryAgain.visibility = View.VISIBLE
+                binding.buttonTryAgain.visibility = View.VISIBLE
             }
             else { //here timer is still running. Here we just need to update text with new seconds value
                 binding.textYouSendSoManyRequests.text = String.format(resources.getString(R.string.amount_attempts_to_server_limit), it)

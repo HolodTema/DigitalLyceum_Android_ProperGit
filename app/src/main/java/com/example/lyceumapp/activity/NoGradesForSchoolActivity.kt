@@ -14,7 +14,7 @@ class NoGradesForSchoolActivity : AppCompatActivity() {
         val binding = ActivityNoGradesForSchoolBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
-        binding.textLikeButtonPickSchoolAgain.setOnClickListener{
+        binding.buttonPickSchoolAgain.setOnClickListener{
             val intent = Intent(this, MainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
             startActivity(intent)

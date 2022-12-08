@@ -14,7 +14,7 @@ import com.example.lyceumapp.activity.ChooseGradeActivity
 import com.example.lyceumapp.activity.MainMenuActivity
 import com.example.lyceumapp.activity.NoResponseActivity
 import com.example.lyceumapp.activity.NoSchoolsActivity
-import com.example.lyceumapp.databinding.ActivityChooseSchoolsOrGradesOrSubgroupsBinding
+import com.example.lyceumapp.databinding.ActivityChooseSchoolsBinding
 import com.example.lyceumapp.viewmodel.MainViewModel
 import com.example.lyceumapp.databinding.RecyclerElementSchoolsBinding
 import com.example.lyceumapp.json.schools.SchoolJson
@@ -85,16 +85,16 @@ class MainActivity : AppCompatActivity() {
             else {
                 //we got schools successfully!
                 //ViewBinding is very cool technique from Google. We can use it instead of findViewById() calls
-                val binding = ActivityChooseSchoolsOrGradesOrSubgroupsBinding.inflate(layoutInflater)
+                val binding = ActivityChooseSchoolsBinding.inflate(layoutInflater)
                 setContentView(binding.root)
 
                 //create an adapter for RecyclerView for schools list visualisation
-                adapter = SchoolJsonAdapter(schools, layoutInflater, viewModel)
-                binding.recyclerChooseSchoolOrGradeOrSubgroup.adapter = adapter
+                adapter = SchoolJsonAdapter(schools, viewModel)
+                binding.recyclerChooseSchool.adapter = adapter
                 //we need to set layoutManager to recyclerView (a recycler view can be like table for example, but we need LinearLayoutManager)
-                binding.recyclerChooseSchoolOrGradeOrSubgroup.layoutManager = LinearLayoutManager(this)
+                binding.recyclerChooseSchool.layoutManager = (LinearLayoutManager(this))
                 //here we add separating line between elements in recyclerView
-                binding.recyclerChooseSchoolOrGradeOrSubgroup.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+                binding.recyclerChooseSchool.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
                 //the code below works if we click button 'next' under RecyclerView. When the button clicked, we need to get chosenSchool object from adapter and start ChooseGradeActivity
                 binding.buttonNext.setOnClickListener {
@@ -111,27 +111,28 @@ class MainActivity : AppCompatActivity() {
 
     //our adapter for RecyclerView
     //we pass viewModel into adapter object, because chosenSchool object must be saved exactly in ViewModel - because in case of activity configuration changes it'll be saved
-    class SchoolJsonAdapter(private val schools: List<SchoolJson>, private val inflater: LayoutInflater, private val viewModel: MainViewModel) : RecyclerView.Adapter<SchoolJsonAdapter.SchoolJsonHolder>() {
+    class SchoolJsonAdapter(private val schools: List<SchoolJson>, private val viewModel: MainViewModel) : RecyclerView.Adapter<SchoolJsonAdapter.SchoolJsonHolder>() {
         //the object of checked by user RadioButton
         private var checkedRadioButton: CompoundButton? = null
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            SchoolJsonHolder(RecyclerElementSchoolsBinding.inflate(inflater))
+            SchoolJsonHolder(RecyclerElementSchoolsBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
         override fun onBindViewHolder(holder: SchoolJsonHolder, position: Int) {
             //we set school name textView in every element of our RecyclerView
-            holder.bindingSchoolElement.textRecyclerElementSchoolsName.text = schools[position].name
+            holder.bindingSchoolElement.textSchoolName.text = schools[position].name
+            holder.bindingSchoolElement.textSchoolAddress.text = schools[position].address
 
             //if school was chosen by user earlier we show it to user in our RadioButton in element of RecyclerView
             if(schools[position].id == viewModel.chosenSchool.id) {
-                holder.bindingSchoolElement.radioButtonRecyclerElementSchool.isChecked = true
-                checkedRadioButton = holder.bindingSchoolElement.radioButtonRecyclerElementSchool
+                holder.bindingSchoolElement.radioChooseSchool.isChecked = true
+                checkedRadioButton = holder.bindingSchoolElement.radioChooseSchool
             }
 
             //and there's click listener for our RadioButton
-            //we need to set viewModel's field 'chosenSchool' every time some radioButton is clicked
+            //we need to set viewModel's field 'chosenSchool' evevalry time some radioButton is clicked
             //and in adapter we always need to save the object of checked RadioButton - it saves in 'checkedRadioButton'
-            holder.bindingSchoolElement.radioButtonRecyclerElementSchool.setOnCheckedChangeListener { compoundButton, _ ->
+            holder.bindingSchoolElement.radioChooseSchool.setOnCheckedChangeListener { compoundButton, _ ->
                 checkedRadioButton?.isChecked = false
                 checkedRadioButton = compoundButton
                 viewModel.chosenSchool = schools[position]

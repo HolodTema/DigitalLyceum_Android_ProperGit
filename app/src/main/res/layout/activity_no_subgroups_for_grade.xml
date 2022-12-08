@@ -8,14 +8,13 @@
 
     <TextView
         android:id="@+id/textNoSubgroupsForGradeHeader"
-        style="@style/textPrimary"
+        style="@style/textNoResponseHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/no_response_header"
-        android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/textNoSubgroupsForGradeDescription"
         android:layout_marginBottom="10dp"/>
     <TextView
@@ -26,15 +25,15 @@
         android:layout_marginBottom="10dp"
         android:layout_marginHorizontal="10dp"
         android:text="@string/no_subgroups_for_grade_description"
-        app:layout_constraintBottom_toTopOf="@+id/textLikeButtonPickGradeOrSchoolAgain"
+        app:layout_constraintBottom_toTopOf="@+id/buttonPickGradeOrSchoolAgain"
         style="@style/textSecondary"/>
 
-    <TextView
-        android:id="@+id/textLikeButtonPickGradeOrSchoolAgain"
-        style="@style/button"
+    <Button
+        android:id="@+id/buttonPickGradeOrSchoolAgain"
+        style="@style/button_rectangle_round"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/choose_another_school"
+        android:text="@string/pick_grade_again"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

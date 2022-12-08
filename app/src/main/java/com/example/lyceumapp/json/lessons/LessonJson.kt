@@ -41,16 +41,16 @@ class LessonJson(
 
     override fun describeContents() = 0
 
-    override fun writeToParcel(parcel: Parcel?, p1: Int) {
-        parcel?.writeInt(id)
-        parcel?.writeString(name)
-        parcel?.writeInt(startHour)
-        parcel?.writeInt(startMinute)
-        parcel?.writeInt(endHour)
-        parcel?.writeInt(endMinute)
-        parcel?.writeInt(week)
-        parcel?.writeInt(weekday)
-        parcel?.writeInt(teacherId)
+    override fun writeToParcel(parcel: Parcel, p1: Int) {
+        parcel.writeInt(id)
+        parcel.writeString(name)
+        parcel.writeInt(startHour)
+        parcel.writeInt(startMinute)
+        parcel.writeInt(endHour)
+        parcel.writeInt(endMinute)
+        parcel.writeInt(week)
+        parcel.writeInt(weekday)
+        parcel.writeInt(teacherId)
     }
 
     companion object CREATOR: Parcelable.Creator<LessonJson> {

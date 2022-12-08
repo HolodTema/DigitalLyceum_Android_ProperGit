@@ -2,7 +2,8 @@ package com.example.lyceumapp
 
 class Const {
     companion object{
-        const val LOG_TAG_RETROFIT_ON_FAILURE = "logTagRetrofitOnFailure"
+        const val LOG_TAG_DRAWER_INCORRECT_MENU_ITEM_ID = "DrawerMenuItemId"
+        const val LOG_TAG_RETROFIT_ON_FAILURE = "RetrofitOnFailure"
 
         const val SH_PREFERENCES_NAME = "shPreferencesSettings"
         const val SH_PREFERENCES_KEY_SCHOOL_ID = "shPreferencesKeySchoolId"

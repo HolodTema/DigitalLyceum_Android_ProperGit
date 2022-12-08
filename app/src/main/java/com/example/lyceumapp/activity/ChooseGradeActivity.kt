@@ -11,8 +11,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lyceumapp.Const
+import com.example.lyceumapp.MainActivity
 import com.example.lyceumapp.R
-import com.example.lyceumapp.databinding.ActivityChooseSchoolsOrGradesOrSubgroupsBinding
+import com.example.lyceumapp.databinding.ActivityChooseGradesOrSubgroupsBinding
 import com.example.lyceumapp.databinding.RecyclerElementGradesBinding
 import com.example.lyceumapp.json.grades.GradeJson
 import com.example.lyceumapp.json.schools.SchoolJson
@@ -64,26 +65,34 @@ class ChooseGradeActivity : AppCompatActivity() {
             else {
                 //and here we got full list of grades for certain school
                 //we need to update our layout, because earlier there were downloading layout
-                val binding = ActivityChooseSchoolsOrGradesOrSubgroupsBinding.inflate(layoutInflater)
+                val binding = ActivityChooseGradesOrSubgroupsBinding.inflate(layoutInflater)
                 setContentView(binding.root)
 
                 //create an adapter for our RecyclerView
-                adapter = ChooseGradeAdapter(grades, layoutInflater, viewModel)
-                binding.recyclerChooseSchoolOrGradeOrSubgroup.adapter = adapter
+                adapter = ChooseGradeAdapter(grades, viewModel)
+                binding.recyclerChooseGradeOrSubgroup.adapter = adapter
                 //our recyclerView can be different: like a table, for example. But we need exactly LinearLayoutManager here
-                binding.recyclerChooseSchoolOrGradeOrSubgroup.layoutManager = LinearLayoutManager(this)
+                binding.recyclerChooseGradeOrSubgroup.layoutManager = LinearLayoutManager(this)
                 //here we just add simple horizontal separate line between RecyclerView's elements
-                binding.recyclerChooseSchoolOrGradeOrSubgroup.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+                binding.recyclerChooseGradeOrSubgroup.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
                 //and the code below works when user clicks on "Next" button
                 binding.buttonNext.setOnClickListener {
                     //here we need to download subgroups for the chosenGrade
                     val intent = Intent(this, ChooseSubgroupActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-                    //we need to pass chosenGrade and chosenSchool into the ChooseSubgroupActivity
+                    //we need to pass chosenGrade, chosenSchool and amountGrades into the ChooseSubgroupActivity
                     intent.putExtra(Const.INTENT_KEY_CHOSEN_SCHOOL, chosenSchool)
                     intent.putExtra(Const.INTENT_KEY_CHOSEN_GRADE, viewModel.chosenGrade)
                     intent.putExtra(Const.INTENT_KEY_AMOUNT_GRADES, viewModel.liveDataListGrades.value?.size)
+                    startActivity(intent)
+                }
+
+                //the code below works when user clicks on "cancel" button
+                //this case we need to start MainActivity (there will be schools list in MainActivity)
+                binding.buttonCancel.setOnClickListener {
+                    val intent = Intent(this, MainActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                     startActivity(intent)
                 }
             }
@@ -98,11 +107,11 @@ class ChooseGradeActivity : AppCompatActivity() {
 
 
 
-    class ChooseGradeAdapter(private val grades: List<GradeJson>, private val inflater: LayoutInflater, private val viewModel: ChooseGradeViewModel): RecyclerView.Adapter<ChooseGradeAdapter.GradeJsonHolder>() {
+    class ChooseGradeAdapter(private val grades: List<GradeJson>, private val viewModel: ChooseGradeViewModel): RecyclerView.Adapter<ChooseGradeAdapter.GradeJsonHolder>() {
         private var checkedRadioButton: CompoundButton? = null
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            GradeJsonHolder(RecyclerElementGradesBinding.inflate(inflater))
+            GradeJsonHolder(RecyclerElementGradesBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
 
         override fun onBindViewHolder(holder: GradeJsonHolder, position: Int) {

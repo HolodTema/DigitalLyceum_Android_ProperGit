@@ -11,9 +11,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lyceumapp.Const
-import com.example.lyceumapp.MainActivity
 import com.example.lyceumapp.R
-import com.example.lyceumapp.databinding.ActivityChooseSchoolsOrGradesOrSubgroupsBinding
+import com.example.lyceumapp.databinding.ActivityChooseGradesOrSubgroupsBinding
 import com.example.lyceumapp.databinding.RecyclerElementSubgroupsBinding
 import com.example.lyceumapp.json.grades.GradeJson
 import com.example.lyceumapp.json.schools.SchoolJson
@@ -49,7 +48,7 @@ class ChooseSubgroupActivity : AppCompatActivity() {
         val amountAttemptsToConnect = intent.extras?.getInt(Const.INTENT_KEY_AMOUNT_ATTEMPTS_TO_CONNECT)
         if(amountAttemptsToConnect!=null) viewModel.amountAttemptsToConnect = amountAttemptsToConnect
 
-        // TODO: we haven't made amountGrades passing through intent in ChooseGradeActivity 
+        // TODO: we haven't made amountGrades passing through intent in ChooseGradeActivity
         //we may have situation when there are no subgroups for a grade and a school, that have been chosen earlier, contains only one grade. This case it's no good showing
         //a list of the grades to user, we need to show list of schools to user. And that's why we need to get amountOfGrades to check this condition and do some actions if necessary
         val amountGrades = intent.extras?.getInt(Const.INTENT_KEY_AMOUNT_GRADES)
@@ -70,7 +69,6 @@ class ChooseSubgroupActivity : AppCompatActivity() {
             }
             else if(subgroups.isEmpty()) {
                 //this case we need to start NoSubgroupsForGradeActivity and we need to pass there amountGrades for property working
-                val amountGrades = viewModel.amountGrades
                 val intent = Intent(this, NoSubgroupsForGradeActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                 intent.putExtra(Const.INTENT_KEY_AMOUNT_GRADES, viewModel.amountGrades)
@@ -84,15 +82,15 @@ class ChooseSubgroupActivity : AppCompatActivity() {
             }
             else {
                 //and here we have enough size list of subgroups (size>=2) and we need to show layout with recyclerView and adapter for this recycler view
-                val binding = ActivityChooseSchoolsOrGradesOrSubgroupsBinding.inflate(layoutInflater)
+                val binding = ActivityChooseGradesOrSubgroupsBinding.inflate(layoutInflater)
                 setContentView(binding.root)
 
                 //create an adapter for our RecyclerView
                 adapter = ChooseSubgroupAdapter(subgroups, layoutInflater, viewModel)
-                binding.recyclerChooseSchoolOrGradeOrSubgroup.adapter = adapter
+                binding.recyclerChooseGradeOrSubgroup.adapter = adapter
                 //configure our recyclerView visualisation
-                binding.recyclerChooseSchoolOrGradeOrSubgroup.layoutManager = LinearLayoutManager(this)
-                binding.recyclerChooseSchoolOrGradeOrSubgroup.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+                binding.recyclerChooseGradeOrSubgroup.layoutManager = LinearLayoutManager(this)
+                binding.recyclerChooseGradeOrSubgroup.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
                 //listener for "next" button
                 binding.buttonNext.setOnClickListener {
@@ -100,9 +98,17 @@ class ChooseSubgroupActivity : AppCompatActivity() {
                     saveEverythingInShPreferences(viewModel.chosenSchool.id, chosenGrade.id, viewModel.chosenSubgroup.id, viewModel.chosenSchool.address, viewModel.chosenSchool.name)
                     startActivity(Intent(this, MainMenuActivity::class.java))
                 }
+
+                //listener for "cancel" button.
+                binding.buttonCancel.setOnClickListener{
+                    //we need to start chooseGradeActivity with chosenSchoolId
+                    val intent = Intent(this, ChooseGradeActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                    intent.putExtra(Const.INTENT_KEY_CHOSEN_SCHOOL, viewModel.chosenSchool)
+                    startActivity(intent)
+                }
             }
         }
-
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

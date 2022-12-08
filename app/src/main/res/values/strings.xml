@@ -49,7 +49,16 @@
     <string name="no_schools_description">Нам не удалось загрузить список школ. Сервер работает, но возвращает в качестве ответа пустой список школ… Пожалуйста, попробуйте загрузить список школ снова, а если ошибка возникнет снова, то попробуйте позже. Также вы можете связаться с нами:\n</string>
     <string name="no_subgroups_for_grade_description">Не удалось загрузить список субгрупп для выбранного класса.\nЕсли вы считаете, что произошла ошибка, пожалуйста, свяжитесь с нами:\n</string>
     <string name="no_subgroups_for_school_description">Не удалось загрузить список субгрупп для выбранного класса.\nНо так как в данной образовательной организации всего один класс, то Вам нужно выбрать другую образовательную организацию.\nЕсли вы считаете, что произошла ошибка, пожалуйста, свяжитесь с нами:\n</string>
-    <string name="choose_another_school">Выбрать другую образовательную организацию</string>
     <string name="lesson_schedule_text_header">Класс: %s, группа: %s</string>
     <string name="week">Неделя %d</string>
+    <string name="pick_school_again">Выбрать другую школу</string>
+    <string name="pick_grade_again">Выбрать другой класс</string>
+    <string name="navLabelMain">Главная</string>
+    <string name="navLabelSchedule">Расписание</string>
+    <string name="navLabelTeachers">Учителя</string>
+    <string name="navLabelEvents">События</string>
+    <string name="nav_drawer_open" />
+    <string name="nav_drawer_close" />
+    <string name="schedule">Расписание</string>
+    <string name="change_grade">Сменить класс</string>
 </resources>

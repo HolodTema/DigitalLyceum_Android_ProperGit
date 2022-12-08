@@ -1,157 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawerLayoutMainMenu"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activity.MainMenuActivity">
+    android:layout_height="match_parent">
 
-    <!--HolodTema todo нужно переделать разметку главного меню в соответствии с дизайном от Кати-->
-    <!--HolodTema todo можешь переписывать styles.xml как хочешь, так как Катин дизайн - совершенно новый.-->
-    <!--HolodTema todo а ну и горизонтальную ориентацию можно попробовать сделать, чисто посмотреть, как это будет выглядеть в таком положении экрана-->
-
-    <!--HolodTema todo этот textView @+id/textWarningLessonsMustNotBeActual вверху экрана оставить - он показывается, если нет подключения к инету, но при этом расписание уже кешировано в локальную БД-->
-    <TextView
-        android:id="@+id/textWarningLessonsMustNotBeActual"
-        style="@style/textWarning"
+    <include
+        layout="@layout/app_bar_main_menu"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/warning_lessons_must_not_be_actual"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent"/>
 
-    <ImageView
-        android:id="@+id/imageSchool"
-        android:scaleType="centerCrop"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:src="@drawable/lyceum_background"
-        app:layout_constraintTop_toBottomOf="@id/textWarningLessonsMustNotBeActual"
-        tools:layout_editor_absoluteX="0dp" />
-    <ImageView
-        android:id="@+id/buttonSettings"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:backgroundTint="@color/white"
-        android:src="@drawable/ic_settings"
-        app:layout_constraintEnd_toEndOf="@id/imageSchool"
-        app:layout_constraintTop_toTopOf="@+id/imageSchool"
-        android:layout_margin="10dp" />
-
-    <LinearLayout
-        android:id="@+id/linearSchoolInfo"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginTop="230dp"
-        android:background="@drawable/main_menu_round_white_background"
-        android:elevation="20dp"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/imageSchool">
-
-        <TextView
-            android:id="@+id/textSchoolName"
-            style="@style/textPrimary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:text="Лицей 2"
-            android:textColor="?attr/colorStandardText"
-            android:textSize="30sp" />
-
-        <TextView
-            android:id="@+id/textSchoolAddress"
-            style="@style/textSecondary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="30dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"
-            android:gravity="center"
-            android:text="г. Иркутск, пер. Волконского, 7" />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textSchoolPhoneNumber"
-            android:text="8 800 555 35 35"
-            android:gravity="center"
-            style="@style/textSecondary"
-            android:layout_marginBottom="10dp"
-            android:layout_marginHorizontal="30dp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearNextLesson"
-        style="@style/linearMainMenuElement"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearSchoolInfo">
-
-        <TextView
-            style="@style/textPrimary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/next_lesson_is_in"
-            android:textColor="?attr/colorStandardText" />
-
-        <TextView
-            android:id="@+id/textNextLessonIsIn"
-            style="@style/textPrimary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/next_lesson_is_in_time"
-            android:textColor="?attr/colorStandardText"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/textNextLessonName"
-            style="@style/textPrimary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:text="Окружающий мир"
-            android:textColor="?attr/colorStandardText" />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textNextLessonTimes"
-            android:text="00:00 - 01:00"
-            style="@style/textSecondary"
-            android:gravity="center"
-            android:layout_marginTop="5dp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearMenuElementScheduleLessons"
-        style="@style/linearMainMenuElement"
+    <com.google.android.material.navigation.NavigationView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearNextLesson">
+        android:layout_height="match_parent"
+        android:id="@+id/navViewMainMenu"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header_main_menu"
+        app:menu="@menu/menu_drawer_main_menu"/>
 
-        <TextView
-            style="@style/textPrimary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Расписание\nуроков"
-            android:textColor="?attr/colorStandardText" />
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:src="@drawable/ic_schedule_lessons" />
-    </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.drawerlayout.widget.DrawerLayout>

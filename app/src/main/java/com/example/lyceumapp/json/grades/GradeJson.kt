@@ -13,11 +13,11 @@ data class GradeJson(
     override fun toString() = number.toString()+letter
     override fun describeContents() = 0
 
-    override fun writeToParcel(parcel: Parcel?, flags: Int) {
-        parcel?.writeInt(id)
-        parcel?.writeInt(number)
-        parcel?.writeString(letter)
-        parcel?.writeString(gradeType)
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeInt(id)
+        parcel.writeInt(number)
+        parcel.writeString(letter)
+        parcel.writeString(gradeType)
     }
 
     companion object CREATOR: Parcelable.Creator<GradeJson> {

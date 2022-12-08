@@ -11,9 +11,9 @@ data class SubgroupJson(
 
     override fun describeContents() = 0
 
-    override fun writeToParcel(parcel: Parcel?, p1: Int) {
-        parcel?.writeInt(id)
-        parcel?.writeString(name)
+    override fun writeToParcel(parcel: Parcel, p1: Int) {
+        parcel.writeInt(id)
+        parcel.writeString(name)
     }
 
     override fun compareTo(other: SubgroupJson): Int {

@@ -24,7 +24,8 @@ class NoSubgroupsForGradeActivity : AppCompatActivity() {
         if(amountGrades>1) {
             //here we need to show text exactly about grade, because we have more than one grade in chosenSchool
             binding.textNoSubgroupsForGradeDescription.text = resources.getString(R.string.no_subgroups_for_grade_description)
-            binding.textLikeButtonPickGradeOrSchoolAgain.setOnClickListener{
+            binding.buttonPickGradeOrSchoolAgain.text = resources.getString(R.string.pick_grade_again)
+            binding.buttonPickGradeOrSchoolAgain.setOnClickListener{
                 val intent = Intent(this, ChooseGradeActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                 intent.putExtra(Const.INTENT_KEY_CHOSEN_SCHOOL, chosenSchool)
@@ -34,7 +35,8 @@ class NoSubgroupsForGradeActivity : AppCompatActivity() {
         else {
             //here we have only one grade with empty subgroups list. We need to show a text exactly about school
             binding.textNoSubgroupsForGradeDescription.text = resources.getString(R.string.no_subgroups_for_school_description)
-            binding.textLikeButtonPickGradeOrSchoolAgain.setOnClickListener{
+            binding.buttonPickGradeOrSchoolAgain.text = resources.getString(R.string.pick_school_again)
+            binding.buttonPickGradeOrSchoolAgain.setOnClickListener{
                 val intent = Intent(this, MainActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                 startActivity(intent)

@@ -1,0 +1,590 @@
+Index: app/src/main/java/com/example/lyceumapp/json/teachers/TeacherJson.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.lyceumapp.json.teachers\r\n\r\nimport android.os.Parcel\r\nimport android.os.Parcelable\r\nimport com.squareup.moshi.Json\r\n\r\ndata class TeacherJson: Parcelable(\r\n    @Json(name = \"teacher_id\") val id: Int,\r\n    @Json(name = \"name\") val name: String\r\n) {\r\n    override fun describeContents() = 0\r\n\r\n    override fun writeToParcel(p0: Parcel, p1: Int) {\r\n        TODO(\"Not yet implemented\")\r\n    }\r\n\r\n    companion object CREATOR: Parcelable.Creator<TeacherJson> {\r\n        override fun createFromParcel(parcel: Parcel?) = TeacherJson(parcel)\r\n\r\n        override fun newArray(p0: Int) = arrayOfNulls<TeacherJson>(p0)\r\n    }\r\n}\r\n
+===================================================================
+diff --git a/app/src/main/java/com/example/lyceumapp/json/teachers/TeacherJson.kt b/app/src/main/java/com/example/lyceumapp/json/teachers/TeacherJson.kt
+--- a/app/src/main/java/com/example/lyceumapp/json/teachers/TeacherJson.kt	
++++ b/app/src/main/java/com/example/lyceumapp/json/teachers/TeacherJson.kt	
+@@ -2,20 +2,22 @@
+ 
+ import android.os.Parcel
+ import android.os.Parcelable
++import androidx.room.ColumnInfo
+ import com.squareup.moshi.Json
+ 
+-data class TeacherJson: Parcelable(
+-    @Json(name = "teacher_id") val id: Int,
+-    @Json(name = "name") val name: String
+-) {
++data class TeacherJson(
++    @ColumnInfo(name = "teacher_id") @Json(name = "teacher_id") val id: Int,
++    @ColumnInfo(name = "teacher_name") @Json(name = "name") val name: String
++): Parcelable {
+     override fun describeContents() = 0
+ 
+-    override fun writeToParcel(p0: Parcel, p1: Int) {
+-        TODO("Not yet implemented")
++    override fun writeToParcel(parcel: Parcel, flags: Int) {
++        parcel.writeInt(id)
++        parcel.writeString(name)
+     }
+ 
+     companion object CREATOR: Parcelable.Creator<TeacherJson> {
+-        override fun createFromParcel(parcel: Parcel?) = TeacherJson(parcel)
++        override fun createFromParcel(parcel: Parcel?) = TeacherJson(parcel!!.readInt(), parcel.readString()!!)
+ 
+         override fun newArray(p0: Int) = arrayOfNulls<TeacherJson>(p0)
+     }
+Index: app/src/main/java/com/example/lyceumapp/tabs/lessons/LessonsScheduleFragment.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.lyceumapp.tabs.lessons\r\n\r\nimport android.os.Bundle\r\nimport androidx.fragment.app.Fragment\r\nimport android.view.LayoutInflater\r\nimport android.view.View\r\nimport android.view.ViewGroup\r\nimport androidx.fragment.app.activityViewModels\r\nimport androidx.fragment.app.viewModels\r\nimport androidx.recyclerview.widget.DividerItemDecoration\r\nimport androidx.recyclerview.widget.LinearLayoutManager\r\nimport androidx.recyclerview.widget.RecyclerView\r\nimport com.example.lyceumapp.Const\r\nimport com.example.lyceumapp.NoLessonsWhenFragmentCreatedException\r\nimport com.example.lyceumapp.R\r\nimport com.example.lyceumapp.databinding.FragmentLessonsScheduleBinding\r\nimport com.example.lyceumapp.databinding.FragmentNoLessonsScheduleBinding\r\nimport com.example.lyceumapp.databinding.LessonInScheduleBinding\r\nimport com.example.lyceumapp.json.lessons.LessonJson\r\nimport com.example.lyceumapp.viewmodel.MainMenuViewModel\r\n\r\nclass LessonsScheduleFragment : Fragment() {\r\n    private val viewModel: MainMenuViewModel by activityViewModels()\r\n\r\n    override fun onCreateView(inflater: LayoutInflater,\r\n                              container: ViewGroup?,\r\n                              savedInstanceState: Bundle?): View {\r\n        val lessons = viewModel.liveDataLessonsForDefiniteDay.value\r\n\r\n        if(lessons!=null) {\r\n            return if(lessons.isEmpty()) FragmentNoLessonsScheduleBinding.inflate(layoutInflater).root\r\n            else {\r\n                val binding = FragmentLessonsScheduleBinding.inflate(layoutInflater)\r\n                val adapter = LessonsAdapter(layoutInflater, lessons, resources.getString(R.string.lesson_time))\r\n                binding.recyclerLessons.adapter = adapter\r\n                binding.recyclerLessons.layoutManager = LinearLayoutManager(activity)\r\n                binding.recyclerLessons.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))\r\n                binding.root\r\n            }\r\n        }\r\n        else throw NoLessonsWhenFragmentCreatedException()\r\n    }\r\n\r\n    class LessonsAdapter(private val inflater: LayoutInflater, private val lessons: List<LessonJson>, private val strTime: String): RecyclerView.Adapter<LessonsAdapter.LessonHolder>() {\r\n        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = LessonHolder(LessonInScheduleBinding.inflate(inflater))\r\n\r\n        override fun onBindViewHolder(holder: LessonHolder, position: Int) {\r\n            val lesson = lessons[position]\r\n            holder.binding.textLessonName.text = lesson.name\r\n            holder.binding.textLessonTime.text = String.format(strTime, lesson.startHour, lesson.startMinute, lesson.endHour, lesson.endMinute)\r\n        }\r\n\r\n        override fun getItemCount() = lessons.size\r\n\r\n        class LessonHolder(val binding: LessonInScheduleBinding) : RecyclerView.ViewHolder(binding.root)\r\n    }\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/example/lyceumapp/tabs/lessons/LessonsScheduleFragment.kt b/app/src/main/java/com/example/lyceumapp/tabs/lessons/LessonsScheduleFragment.kt
+--- a/app/src/main/java/com/example/lyceumapp/tabs/lessons/LessonsScheduleFragment.kt	
++++ b/app/src/main/java/com/example/lyceumapp/tabs/lessons/LessonsScheduleFragment.kt	
+@@ -47,7 +47,7 @@
+         override fun onBindViewHolder(holder: LessonHolder, position: Int) {
+             val lesson = lessons[position]
+             holder.binding.textLessonName.text = lesson.name
+-            holder.binding.textLessonTime.text = String.format(strTime, lesson.startHour, lesson.startMinute, lesson.endHour, lesson.endMinute)
++            holder.binding.textLessonTime.text = String.format(strTime, lesson.startTime.startHour, lesson.startTime.startMinute, lesson.endTime.endHour, lesson.endTime.endMinute)
+         }
+ 
+         override fun getItemCount() = lessons.size
+Index: app/src/main/res/values/strings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><resources>\r\n    <string name=\"title_activity_settings\">SettingsActivity</string>\r\n    <!-- Preference Titles -->\r\n    <string name=\"messages_header\">Messages</string>\r\n    <string name=\"sync_header\">Sync</string>\r\n    <!-- Messages Preferences -->\r\n    <string name=\"signature_title\">Your signature</string>\r\n    <string name=\"reply_title\">Default reply action</string>\r\n    <!-- Sync Preferences -->\r\n    <string name=\"sync_title\">Sync email periodically</string>\r\n    <string name=\"attachment_title\">Download incoming attachments</string>\r\n    <string name=\"attachment_summary_on\">Automatically download attachments for incoming emails\r\n    </string>\r\n    <string name=\"attachment_summary_off\">Only download attachments when manually requested</string>\r\n\r\n\r\n    <string name=\"app_name\">Lyceum App</string>\r\n    <string name=\"you_may_change_lyceum_class_in_settings\">Позже Вы сможете поменять свой класс в настройках.</string>\r\n    <string name=\"about_app\">about_app</string>\r\n    <string name=\"website_link\">http://lava-land.ru/</string>\r\n    <string name=\"website\">Сайт \\\"Лицей в цифре\\\":</string>\r\n    <string name=\"telegram_bot\">Telegram-Бот \\\"Лицей в цифре\\\":</string>\r\n    <string name=\"cancel\">назад</string>\r\n    <string name=\"monday\">Пн</string>\r\n    <string name=\"tuesday\">Вт</string>\r\n    <string name=\"thursday\">Чт</string>\r\n    <string name=\"wednesday\">Ср</string>\r\n    <string name=\"friday\">Пт</string>\r\n    <string name=\"saturday\">Сб</string>\r\n    <!-- TODO: Remove or change this placeholder text -->\r\n    <string name=\"hello_blank_fragment\">Hello blank fragment</string>\r\n    <string name=\"choose_your_school\">Выберите свою школу:</string>\r\n    <string name=\"next\">Далее</string>\r\n    <string name=\"no_response_header\">Что то пошло не так…</string>\r\n    <string name=\"no_response_description\">Проверьте подключение к Интернету или попробуйте позже.</string>\r\n    <string name=\"try_again\">Попробовать снова</string>\r\n    <string name=\"choose_your_grade\">Выберите свой класс обучения:</string>\r\n    <string name=\"lesson_not_required\">Урок-факультатив</string>\r\n    <string name=\"change_school_and_grade\">Сменить школу и класс обучения</string>\r\n    <string name=\"amount_attempts_to_server_limit\">Вы пытались связаться с сервером очень много раз.\\nСледующая попытка через %d</string>\r\n    <string name=\"we_are_downloading_data_please_wait\">Загружаем данные с сервера.\\nПожалуйста, подождите…</string>\r\n    <string name=\"lesson_time\">%02d:%02d - %02d:%02d</string>\r\n    <string name=\"warning_lessons_must_not_be_actual\">Нам не удалось связаться с сервером, поэтому расписание уроков и другая информация может быть устаревшей!</string>\r\n    <string name=\"no_school_address\">Без адреса.</string>\r\n    <string name=\"no_school_name\">Без имени.</string>\r\n    <string name=\"next_lesson_is_in_time\">Следующий урок начнется через %d дней, %02d часов и %02d минут.</string>\r\n    <string name=\"no_grades_for_school_description\">Не удалось загрузить список классов для выбранной образовательной организации.\\nЕсли вы считаете, что произошла ошибка, пожалуйста, свяжитесь с нами:\\n</string>\r\n    <string name=\"no_schools_description\">Нам не удалось загрузить список школ. Сервер работает, но возвращает в качестве ответа пустой список школ… Пожалуйста, попробуйте загрузить список школ снова, а если ошибка возникнет снова, то попробуйте позже. Также вы можете связаться с нами:\\n</string>\r\n    <string name=\"no_subgroups_for_grade_description\">Не удалось загрузить список субгрупп для выбранного класса.\\nЕсли вы считаете, что произошла ошибка, пожалуйста, свяжитесь с нами:\\n</string>\r\n    <string name=\"no_subgroups_for_school_description\">Не удалось загрузить список субгрупп для выбранного класса.\\nНо так как в данной образовательной организации всего один класс, то Вам нужно выбрать другую образовательную организацию.\\nЕсли вы считаете, что произошла ошибка, пожалуйста, свяжитесь с нами:\\n</string>\r\n    <string name=\"lesson_schedule_text_header\">Класс: %s, группа: %s</string>\r\n    <string name=\"week\">Неделя %d</string>\r\n    <string name=\"pick_school_again\">Выбрать другую школу</string>\r\n    <string name=\"pick_grade_again\">Выбрать другой класс</string>\r\n    <string name=\"navLabelMain\">Главная</string>\r\n    <string name=\"navLabelSchedule\">Расписание</string>\r\n    <string name=\"navLabelTeachers\">Учителя</string>\r\n    <string name=\"navLabelEvents\">События</string>\r\n    <string name=\"nav_drawer_open\" />\r\n    <string name=\"nav_drawer_close\" />\r\n    <string name=\"schedule\">Расписание</string>\r\n    <string name=\"change_grade\">Сменить класс</string>\r\n    <string name=\"teachers_list\">Список учителей</string>\r\n    <string name=\"search\">Поиск</string>\r\n    <string name=\"no_lessons_today\">Сегодня нет уроков.</string>\r\n</resources>
+===================================================================
+diff --git a/app/src/main/res/values/strings.xml b/app/src/main/res/values/strings.xml
+--- a/app/src/main/res/values/strings.xml	
++++ b/app/src/main/res/values/strings.xml	
+@@ -63,4 +63,5 @@
+     <string name="teachers_list">Список учителей</string>
+     <string name="search">Поиск</string>
+     <string name="no_lessons_today">Сегодня нет уроков.</string>
++    <string name="schedule_for_school_grade_subgroup">Расписание для группы "%s"</string>
+ </resources>
+\ No newline at end of file
+Index: app/src/main/java/com/example/lyceumapp/RequestManager.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.lyceumapp\r\n\r\nimport android.content.Context\r\nimport com.example.lyceumapp.database.DatabaseClient\r\nimport com.example.lyceumapp.json.grades.GradeJson\r\nimport com.example.lyceumapp.json.schools.SchoolJson\r\nimport com.example.lyceumapp.retrofit.RetrofitManager\r\nimport com.example.lyceumapp.json.lessons.LessonJson\r\nimport com.example.lyceumapp.json.subgroups.SubgroupInfoJson\r\nimport com.example.lyceumapp.json.subgroups.SubgroupJson\r\nimport com.example.lyceumapp.json.subgroups.SubgroupTodayScheduleJson\r\nimport com.example.lyceumapp.json.teachers.TeacherJson\r\nimport kotlinx.coroutines.*\r\nimport java.util.*\r\n\r\nobject RequestManager {\r\n\r\n    fun getTeachers(listener: (List<TeacherJson>?) -> Unit) {\r\n        RetrofitManager.getTeachers{\r\n            if(it==null) listener(null)\r\n            else listener(it.teachers)\r\n        }\r\n    }\r\n\r\n    fun getSchools(listener: (List<SchoolJson>?) -> Unit) {\r\n        RetrofitManager.getSchools{\r\n            if(it!=null) listener(it.schools.sorted())\r\n            else listener(null)\r\n        }\r\n    }\r\n\r\n    fun getGradesForSchool(schoolId: Int, listener: (List<GradeJson>?) -> Unit) {\r\n        RetrofitManager.getGradesForSchool(schoolId) {\r\n            listener(it?.schoolGrades)\r\n        }\r\n    }\r\n\r\n    fun getSubgroupsForGrade(gradeId: Int, listener: (List<SubgroupJson>?) -> Unit) {\r\n        RetrofitManager.getSubgroupsForGrade(gradeId) {\r\n            listener(it?.subgroups)\r\n        }\r\n    }\r\n\r\n    fun getSubgroupInfo(subgroupId: Int, listener: (SubgroupInfoJson?) -> Unit) {\r\n        RetrofitManager.getSubgroupInfo(subgroupId) {\r\n            listener(it)\r\n        }\r\n    }\r\n\r\n    //here the listener param of function, that contains also boolean field. That field implies \"isLessonsActual\" -\r\n    //so, it returns true if we downloaded lessons from the server recently. And it returns false in case when the server is unable to connect\r\n    fun getScheduleForSubgroup(context: Context, subgroupId: Int, listener: (List<LessonJson>?, Boolean) -> Unit) {\r\n        RetrofitManager.getScheduleForSubgroup(subgroupId) {\r\n            if(it==null) {\r\n                //something went wrong, for example there is no Internet. We need to check local database\r\n                CoroutineScope(Dispatchers.Main).launch {\r\n                    val deferredAreLessonsInLocalDatabase = async(Dispatchers.IO) {\r\n                        DatabaseClient.getInstance(context).lessonDao().areLessonsInDatabase()\r\n                    }\r\n\r\n                    if(deferredAreLessonsInLocalDatabase.await()) {\r\n                        //there are lessons in database. we need to get it\r\n                        getLessonsFromLocalDatabase(context) { lessonsFromLocalDatabase ->\r\n                            listener(lessonsFromLocalDatabase, false)\r\n                        }\r\n                    }\r\n                    else {\r\n                        //actually there are no lessons in database even. It's no good to do something else...\r\n                        //just pass the null\r\n                        listener(null, false)\r\n                    }\r\n\r\n                }\r\n            }\r\n            else {\r\n                //everything is correct, we need to return the list of lessonJson objects to the listener\r\n                //and we need to cache lessons to the Room database here\r\n                cacheLessonsToLocalDatabase(context, it.lessons) {\r\n                    listener(it.lessons, true)\r\n                }\r\n\r\n            }\r\n        }\r\n    }\r\n\r\n    fun getTodaySchedule(subgroupId: Int, listener: (SubgroupTodayScheduleJson?) -> Unit) {\r\n        RetrofitManager.getTodaySchedule(subgroupId) {\r\n            listener(it)\r\n        }\r\n    }\r\n\r\n    // TODO: later Lawrence will create special request that returns amount of weeks for subgroup on the server\r\n    fun getAmountWeeksForSubgroup(lessons: List<LessonJson>): Int {\r\n        var maxWeek = 0\r\n        for(lesson in lessons) {\r\n            if(lesson.week>maxWeek) maxWeek = lesson.week\r\n        }\r\n        return maxWeek\r\n    }\r\n\r\n    //actually we don't know what week user has. And we can't just use todayLessons, because there can be Sunday or holidays\r\n    //this method returns null if there is no lessons\r\n    fun getNextLessonAndTimeToIt(lessons: List<LessonJson>): Pair<LessonJson, DeltaTime>? {\r\n        fun getMinutesBetweenLessonAndCurrentTime(lesson: LessonJson, currentWeekday: Int, currentHour: Int, currentMinute: Int): Int {\r\n            val minutesForLessonSinceBeginningOfWeek = lesson.weekday*24*60+lesson.startHour*60+lesson.startMinute\r\n            val minutesForCurrentTimeSinceBeginningOfWeek = currentWeekday*24*60+currentHour*60+currentMinute\r\n            return if(minutesForCurrentTimeSinceBeginningOfWeek > minutesForLessonSinceBeginningOfWeek) {\r\n                (7*24*60-minutesForCurrentTimeSinceBeginningOfWeek)+minutesForLessonSinceBeginningOfWeek\r\n            }\r\n            else minutesForLessonSinceBeginningOfWeek-minutesForCurrentTimeSinceBeginningOfWeek\r\n        }\r\n\r\n        return if(lessons.isEmpty()) null\r\n        else {\r\n            val calendar = Calendar.getInstance()\r\n            val currentWeekday = calendar.get(Calendar.DAY_OF_WEEK)-1\r\n            val currentHour = calendar.get(Calendar.HOUR)\r\n            val currentMinute = calendar.get(Calendar.MINUTE)\r\n\r\n            var nextLesson = lessons[0] //we can't put null to it, because I don't want to deal with NullSave kotlin stuff... So, I init this var like lessons[0]\r\n            var minTime = 24*7*60+1 //this field must be bigger than every int from fun above. We need it to our program works correctly\r\n            var time = 0\r\n            lessons.forEach{ lesson ->\r\n                time = getMinutesBetweenLessonAndCurrentTime(lesson, currentWeekday, currentHour, currentMinute)\r\n                if(time<minTime) {\r\n                    minTime = time\r\n                    nextLesson = lesson\r\n                }\r\n            }\r\n            val days = minTime/(60*24)\r\n            val hours = (minTime-days*60*24)/60\r\n            val minutes = minTime-days*60*24-hours*60\r\n            nextLesson to DeltaTime(days, hours, minutes)\r\n        }\r\n\r\n    }\r\n\r\n    //actually now in design there's no function how to choose week. But we have this method in ScheduleFragment, where we set week = 0 as default\r\n    // TODO: remove this comment if there's week choosing engine in the design\r\n    fun getLessonsForDefiniteWeek(lessons: List<LessonJson>, week: Int): List<LessonJson> {\r\n        val result = arrayListOf<LessonJson>()\r\n        for(lesson in lessons) {\r\n            if(lesson.week==week) result.add(lesson)\r\n        }\r\n        return result\r\n    }\r\n\r\n    //we use this method in ScheduleFragment, when the certain tab in tabLayout was chosen and we need to show a schedule for a day in viewPager\r\n    fun getLessonsForDefiniteDay(lessons: List<LessonJson>, week: Int, day: Int): List<LessonJson> {\r\n        val dayInServerFormat = when(day) {\r\n            Calendar.MONDAY -> 0\r\n            Calendar.TUESDAY -> 1\r\n            Calendar.WEDNESDAY -> 2\r\n            Calendar.THURSDAY ->3\r\n            Calendar.FRIDAY -> 4\r\n            Calendar.SATURDAY -> 5\r\n            Calendar.SUNDAY -> 6\r\n            else -> throw IncorrectDayOfWeekFormatException()\r\n        }\r\n        val result = arrayListOf<LessonJson>()\r\n        for(lesson in lessons) {\r\n            if(lesson.week==week && lesson.weekday==dayInServerFormat) result.add(lesson)\r\n        }\r\n        return result\r\n    }\r\n\r\n    fun day0to6toCalendarFormat(day0to6: Int): Int {\r\n        return when(day0to6) {\r\n            0 -> Calendar.MONDAY\r\n            1 -> Calendar.TUESDAY\r\n            2 -> Calendar.WEDNESDAY\r\n            3 -> Calendar.THURSDAY\r\n            4 -> Calendar.FRIDAY\r\n            5 -> Calendar.SATURDAY\r\n            6 -> Calendar.SUNDAY\r\n            else -> throw IncorrectDayOfWeekFormatException()\r\n        }\r\n    }\r\n\r\n    private fun cacheLessonsToLocalDatabase(context: Context, lessons: List<LessonJson>, listener: () -> Unit) {\r\n        CoroutineScope(Dispatchers.Main).launch {\r\n            val deferredInsertLessonsIntoDatabase = async(Dispatchers.IO) {\r\n                val lessonDao = DatabaseClient.getInstance(context).lessonDao()\r\n\r\n                lessonDao.deleteAll()\r\n                for(lesson in lessons) {\r\n                    lesson.id = 0\r\n                    lessonDao.insert(lesson)\r\n                }\r\n            }\r\n            deferredInsertLessonsIntoDatabase.await()\r\n            listener()\r\n        }\r\n    }\r\n\r\n    private fun getLessonsFromLocalDatabase(context: Context, listener: (List<LessonJson>) -> Unit) {\r\n        CoroutineScope(Dispatchers.Main).launch {\r\n            val deferredLessonsFromLocalDatabase = async(Dispatchers.IO) {\r\n                DatabaseClient.getInstance(context).lessonDao().getAll()\r\n            }\r\n            listener(deferredLessonsFromLocalDatabase.await())\r\n        }\r\n    }\r\n\r\n    data class DeltaTime(var days: Int, var hours: Int, var minutes: Int) {\r\n        var mills: Long = ((days * 24 * 60 + hours * 60 + minutes) * 60_000).toLong()\r\n\r\n        fun subtractMinute() {\r\n            mills-=60_000\r\n            if(minutes>0) minutes--\r\n            else {\r\n                if(hours>0) {\r\n                    minutes = 59\r\n                    hours--\r\n                }\r\n                else if(days>0) {\r\n                    hours = 23\r\n                    minutes = 59\r\n                    days--\r\n                }\r\n            }\r\n        }\r\n    }\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/example/lyceumapp/RequestManager.kt b/app/src/main/java/com/example/lyceumapp/RequestManager.kt
+--- a/app/src/main/java/com/example/lyceumapp/RequestManager.kt	
++++ b/app/src/main/java/com/example/lyceumapp/RequestManager.kt	
+@@ -102,7 +102,7 @@
+     //this method returns null if there is no lessons
+     fun getNextLessonAndTimeToIt(lessons: List<LessonJson>): Pair<LessonJson, DeltaTime>? {
+         fun getMinutesBetweenLessonAndCurrentTime(lesson: LessonJson, currentWeekday: Int, currentHour: Int, currentMinute: Int): Int {
+-            val minutesForLessonSinceBeginningOfWeek = lesson.weekday*24*60+lesson.startHour*60+lesson.startMinute
++            val minutesForLessonSinceBeginningOfWeek = lesson.weekday*24*60+lesson.startTime.startHour*60+lesson.startTime.startMinute
+             val minutesForCurrentTimeSinceBeginningOfWeek = currentWeekday*24*60+currentHour*60+currentMinute
+             return if(minutesForCurrentTimeSinceBeginningOfWeek > minutesForLessonSinceBeginningOfWeek) {
+                 (7*24*60-minutesForCurrentTimeSinceBeginningOfWeek)+minutesForLessonSinceBeginningOfWeek
+Index: app/src/main/java/com/example/lyceumapp/activity/MainMenuActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.lyceumapp.activity\r\n\r\nimport android.content.Intent\r\nimport android.os.Bundle\r\nimport android.util.Log\r\nimport android.view.MenuItem\r\nimport android.view.View\r\nimport android.widget.TextView\r\nimport androidx.appcompat.app.ActionBarDrawerToggle\r\nimport androidx.appcompat.app.AppCompatActivity\r\nimport androidx.appcompat.widget.Toolbar\r\nimport androidx.core.view.GravityCompat\r\nimport androidx.drawerlayout.widget.DrawerLayout\r\nimport androidx.lifecycle.ViewModelProvider\r\nimport com.example.lyceumapp.Const\r\nimport com.example.lyceumapp.R\r\nimport com.example.lyceumapp.databinding.ActivityMainMenuBinding\r\nimport com.example.lyceumapp.fragment.EventsFragment\r\nimport com.example.lyceumapp.fragment.MainFragment\r\nimport com.example.lyceumapp.fragment.ScheduleFragment\r\nimport com.example.lyceumapp.fragment.TeachersFragment\r\nimport com.example.lyceumapp.json.subgroups.SubgroupInfoJson\r\nimport com.example.lyceumapp.viewmodel.MainMenuViewModel\r\nimport com.example.lyceumapp.viewmodel.MainMenuViewModelFactory\r\nimport com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener\r\n\r\nclass MainMenuActivity : AppCompatActivity(),\r\nOnNavigationItemSelectedListener {\r\n    private lateinit var viewModel: MainMenuViewModel\r\n    private lateinit var subgroupInfo: SubgroupInfoJson\r\n    private lateinit var drawerLayout: DrawerLayout\r\n\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        super.onCreate(savedInstanceState)\r\n        setContentView(R.layout.activity_download)\r\n\r\n        subgroupInfo = intent.extras!!.getParcelable(Const.INTENT_KEY_SUBGROUP_INFO)!!\r\n\r\n        viewModel = ViewModelProvider(this, MainMenuViewModelFactory(application, subgroupInfo))[MainMenuViewModel::class.java]\r\n\r\n        val amountAttemptsToConnect = intent.extras?.getInt(Const.INTENT_KEY_AMOUNT_ATTEMPTS_TO_CONNECT)\r\n        if(amountAttemptsToConnect!=null) viewModel.amountAttemptsToConnect = amountAttemptsToConnect\r\n\r\n        viewModel.liveDataLessonsForSubgroup.observe(this) { pairLessonsAndIsActual ->\r\n            if (pairLessonsAndIsActual == null) {\r\n                //something went wrong and we can't get lessons for the subgroup from the server. We start NoResponseActivity\r\n                val intent = Intent(this, NoResponseActivity::class.java)\r\n                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)\r\n                intent.putExtra(Const.INTENT_KEY_NO_RESPONSE_TYPE, Const.NoResponseType.GetLessons)\r\n                intent.putExtra(Const.INTENT_KEY_AMOUNT_ATTEMPTS_TO_CONNECT, viewModel.amountAttemptsToConnect)\r\n                intent.putExtra(Const.INTENT_KEY_SUBGROUP_INFO, subgroupInfo)\r\n                startActivity(intent)\r\n            } else {\r\n                //there is we've finally got lessons. We can show main_menu layout!\r\n                val binding = ActivityMainMenuBinding.inflate(layoutInflater)\r\n                setContentView(binding.root)\r\n\r\n                //here if lessons aren't actual, we need to show special textView banner about it\r\n                val textWarningLessonsAreNotActual = findViewById<TextView>(R.id.textWarningLessonsAreNotActual)\r\n                textWarningLessonsAreNotActual.visibility = if(pairLessonsAndIsActual.second) View.GONE\r\n                else View.VISIBLE\r\n\r\n                drawerLayout = binding.drawerLayoutMainMenu\r\n\r\n                val toolbar = findViewById<Toolbar>(R.id.toolbarMainMenu)\r\n                setSupportActionBar(toolbar)\r\n\r\n                val toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.nav_drawer_open, R.string.nav_drawer_close)\r\n                toggle.syncState()\r\n\r\n                binding.navViewMainMenu.setNavigationItemSelectedListener(this)\r\n\r\n                viewModel.updateChosenNavViewItemId(R.id.menuItemMain)\r\n\r\n                viewModel.liveDataChosenNavViewItemId.observe(this){ id ->\r\n                    binding.navViewMainMenu.setCheckedItem(id)\r\n                    val fragment = when(id) {\r\n                        R.id.menuItemMain -> MainFragment()\r\n                        R.id.menuItemSchedule -> ScheduleFragment()\r\n                        R.id.menuItemTeachers -> TeachersFragment()\r\n                        R.id.menuItemEvents -> EventsFragment()\r\n                        else -> {\r\n                            Log.e(Const.LOG_TAG_DRAWER_INCORRECT_MENU_ITEM_ID, \"The id in onNavigationItemSelected is incorrect!\")\r\n                            MainFragment()\r\n                        }\r\n                    }\r\n                    supportFragmentManager.beginTransaction().replace(R.id.frameLayoutMainMenu, fragment)\r\n                        .commit()\r\n                }\r\n            }\r\n        }\r\n    }\r\n\r\n\r\n    override fun onNavigationItemSelected(item: MenuItem): Boolean {\r\n        val fragment = when(item.itemId) {\r\n            R.id.menuItemMain -> MainFragment()\r\n            R.id.menuItemSchedule -> ScheduleFragment()\r\n            R.id.menuItemTeachers -> TeachersFragment()\r\n            R.id.menuItemEvents -> EventsFragment()\r\n            else -> {\r\n                Log.e(Const.LOG_TAG_DRAWER_INCORRECT_MENU_ITEM_ID, \"The id in onNavigationItemSelected is incorrect!\")\r\n                MainFragment()\r\n            }\r\n        }\r\n\r\n        supportFragmentManager.beginTransaction().replace(R.id.frameLayoutMainMenu, fragment)\r\n            .commit()\r\n\r\n        drawerLayout.closeDrawer(GravityCompat.START)\r\n        return true\r\n    }\r\n\r\n    override fun onSaveInstanceState(outState: Bundle) {\r\n        outState.putParcelable(Const.INTENT_KEY_SUBGROUP_INFO, subgroupInfo)\r\n        super.onSaveInstanceState(outState)\r\n    }\r\n\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/example/lyceumapp/activity/MainMenuActivity.kt b/app/src/main/java/com/example/lyceumapp/activity/MainMenuActivity.kt
+--- a/app/src/main/java/com/example/lyceumapp/activity/MainMenuActivity.kt	
++++ b/app/src/main/java/com/example/lyceumapp/activity/MainMenuActivity.kt	
+@@ -1,6 +1,7 @@
+ package com.example.lyceumapp.activity
+ 
+ import android.content.Intent
++import android.os.Build
+ import android.os.Bundle
+ import android.util.Log
+ import android.view.MenuItem
+@@ -34,7 +35,10 @@
+         super.onCreate(savedInstanceState)
+         setContentView(R.layout.activity_download)
+ 
+-        subgroupInfo = intent.extras!!.getParcelable(Const.INTENT_KEY_SUBGROUP_INFO)!!
++        subgroupInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
++            intent.extras!!.getParcelable(Const.INTENT_KEY_SUBGROUP_INFO, SubgroupInfoJson::class.java)!!
++        }
++        else intent.extras!!.getParcelable<SubgroupInfoJson>(Const.INTENT_KEY_SUBGROUP_INFO)!!
+ 
+         viewModel = ViewModelProvider(this, MainMenuViewModelFactory(application, subgroupInfo))[MainMenuViewModel::class.java]
+ 
+@@ -70,7 +74,13 @@
+ 
+                 binding.navViewMainMenu.setNavigationItemSelectedListener(this)
+ 
+-                viewModel.updateChosenNavViewItemId(R.id.menuItemMain)
++                if(viewModel.hasFirstActivityLaunchHappened) {
++                    viewModel.updateChosenNavViewItemId(viewModel.chosenNavMenuItemId)
++                }
++                else {
++                    viewModel.hasFirstActivityLaunchHappened = true
++                }
++
+ 
+                 viewModel.liveDataChosenNavViewItemId.observe(this){ id ->
+                     binding.navViewMainMenu.setCheckedItem(id)
+@@ -93,6 +103,8 @@
+ 
+ 
+     override fun onNavigationItemSelected(item: MenuItem): Boolean {
++        viewModel.chosenNavMenuItemId = item.itemId
++
+         val fragment = when(item.itemId) {
+             R.id.menuItemMain -> MainFragment()
+             R.id.menuItemSchedule -> ScheduleFragment()
+Index: app/src/main/java/com/example/lyceumapp/json/lessons/LessonTimeInterval.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.lyceumapp.json.lessons\r\n\r\nimport com.squareup.moshi.Json\r\n\r\ndata class LessonTimeInterval(\r\n    @Json(name = \"hour\") val hour: Int,\r\n    @Json(name = \"minute\") val minute: Int\r\n)\r\n
+===================================================================
+diff --git a/app/src/main/java/com/example/lyceumapp/json/lessons/LessonTimeInterval.kt b/app/src/main/java/com/example/lyceumapp/json/lessons/LessonTimeInterval.kt
+--- a/app/src/main/java/com/example/lyceumapp/json/lessons/LessonTimeInterval.kt	
++++ b/app/src/main/java/com/example/lyceumapp/json/lessons/LessonTimeInterval.kt	
+@@ -2,7 +2,12 @@
+ 
+ import com.squareup.moshi.Json
+ 
+-data class LessonTimeInterval(
+-    @Json(name = "hour") val hour: Int,
+-    @Json(name = "minute") val minute: Int
++data class LessonStartTimeInterval(
++    @Json(name = "hour") val startHour: Int,
++    @Json(name = "minute") val startMinute: Int
++)
++
++data class LessonEndTimeInterval(
++    @Json(name = "hour") val endHour: Int,
++    @Json(name = "minute") val endMinute: Int
+ )
+Index: app/src/main/java/com/example/lyceumapp/viewmodel/MainMenuViewModel.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.lyceumapp.viewmodel\r\n\r\nimport android.app.Application\r\nimport android.os.CountDownTimer\r\nimport androidx.annotation.IdRes\r\nimport androidx.lifecycle.AndroidViewModel\r\nimport androidx.lifecycle.MutableLiveData\r\nimport com.example.lyceumapp.*\r\nimport com.example.lyceumapp.json.lessons.LessonJson\r\nimport com.example.lyceumapp.json.subgroups.SubgroupInfoJson\r\nimport com.example.lyceumapp.json.subgroups.SubgroupTodayScheduleJson\r\nimport com.example.lyceumapp.json.teachers.TeacherJson\r\n\r\nclass MainMenuViewModel(application: Application, subgroupInfo: SubgroupInfoJson):\r\nAndroidViewModel(application){\r\n    private var timerNextLesson: CountDownTimer? = null\r\n\r\n    //there are all lessons for subgroup\r\n    val liveDataLessonsForSubgroup = MutableLiveData<Pair<List<LessonJson>?, Boolean>?>()\r\n    //we use it in MainFragment to show schedule for today\r\n    val liveDataTodaySchedule = MutableLiveData<SubgroupTodayScheduleJson?>()\r\n    //we use it in MainFragment to show the time before next lesson in real time with CountDownTimer...\r\n    val liveDataNextLessonAndTimeToIt = MutableLiveData<Pair<LessonJson, RequestManager.DeltaTime>?>()\r\n    //we use it in LessonsScheduleFragment to show schedule for day in viewPager powered by tabLayout\r\n    val liveDataLessonsForDefiniteDay = MutableLiveData<List<LessonJson>>()\r\n    //we need this liveData for simple jumping between fragments in navView for proper working\r\n    val liveDataChosenNavViewItemId = MutableLiveData<Int>()\r\n    //actually teachers haven't done on server by Lawrence yet, but I've already added it\r\n    val liveDataTeachers = MutableLiveData<List<TeacherJson>?>()\r\n    //classic field against ddos-attacks :)\r\n    var amountAttemptsToConnect = 1\r\n\r\n    init{\r\n        RequestManager.getScheduleForSubgroup(application.applicationContext, subgroupInfo.subgroupId) { lessons, isActual ->\r\n            if (lessons == null) liveDataLessonsForSubgroup.value = null\r\n            else {\r\n                RequestManager.getTodaySchedule(subgroupInfo.subgroupId) { todaySchedule ->\r\n                    RequestManager.getTeachers() { teachers ->\r\n                        liveDataLessonsForSubgroup.value = lessons to isActual\r\n                        liveDataTodaySchedule.value = todaySchedule\r\n                        liveDataTeachers.value = teachers\r\n\r\n                        val nextLessonAndTimeToIt =\r\n                            RequestManager.getNextLessonAndTimeToIt(lessons)\r\n                        liveDataNextLessonAndTimeToIt.value = nextLessonAndTimeToIt\r\n                        if (nextLessonAndTimeToIt != null) startNextLessonTimer(\r\n                            nextLessonAndTimeToIt.second.mills,\r\n                            nextLessonAndTimeToIt.first,\r\n                            nextLessonAndTimeToIt.second\r\n                        )\r\n                    }\r\n                }\r\n            }\r\n        }\r\n    }\r\n\r\n    fun getLessonsForDefiniteWeek(week: Int): List<LessonJson> {\r\n        //our architecture can work only if this method is called from fragments of MainMenuActivity, when all lesson got and they're not null\r\n        return RequestManager.getLessonsForDefiniteWeek(liveDataLessonsForSubgroup.value!!.first!!, week)\r\n    }\r\n\r\n    //this method returns array with default weekNames: 'week 1', 'week 2' etc\r\n    fun getWeekNamesForSubgroup(): Array<String> {\r\n        val amountWeeks = RequestManager.getAmountWeeksForSubgroup(liveDataLessonsForSubgroup.value!!.first!!)\r\n        val result = Array(amountWeeks){\"\"}\r\n        val strWeek = getApplication<Application>().resources.getString(R.string.week)\r\n        for(i in 0 until amountWeeks) {\r\n            result[i] = \"$strWeek ${i+1}\"\r\n        }\r\n        return result\r\n    }\r\n\r\n    //this method allows to jump between fragments in navView\r\n    fun updateChosenNavViewItemId(@IdRes itemId: Int) {\r\n        liveDataChosenNavViewItemId.value = itemId\r\n    }\r\n\r\n    //we use this method in ScheduleFragment when the tab of tabLayout was changed and we need to get schedule for another day of week\r\n    fun updateLessonsForDefiniteDay(lessons: List<LessonJson>, day: Int) {\r\n        // TODO: we don't know what the week is here, so we use default week = 0\r\n        liveDataLessonsForDefiniteDay.value = RequestManager.getLessonsForDefiniteDay(lessons, 0, day)\r\n    }\r\n\r\n    private fun startNextLessonTimer(beginMills: Long, lesson: LessonJson, deltaTime: RequestManager.DeltaTime) {\r\n        timerNextLesson = object: CountDownTimer(beginMills, 1000*60){\r\n            override fun onTick(p0: Long) {\r\n                deltaTime.subtractMinute()\r\n                liveDataNextLessonAndTimeToIt.value = lesson to deltaTime\r\n            }\r\n\r\n            override fun onFinish() {\r\n                val nextLessonAndTimeToIt = RequestManager.getNextLessonAndTimeToIt(liveDataLessonsForSubgroup.value!!.first!!)\r\n                liveDataNextLessonAndTimeToIt.value = nextLessonAndTimeToIt\r\n                if(nextLessonAndTimeToIt!=null) startNextLessonTimer(nextLessonAndTimeToIt.second.mills, nextLessonAndTimeToIt.first, nextLessonAndTimeToIt.second)\r\n            }\r\n        }.start()\r\n    }\r\n\r\n    override fun onCleared() {\r\n        timerNextLesson?.cancel()\r\n    }\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/example/lyceumapp/viewmodel/MainMenuViewModel.kt b/app/src/main/java/com/example/lyceumapp/viewmodel/MainMenuViewModel.kt
+--- a/app/src/main/java/com/example/lyceumapp/viewmodel/MainMenuViewModel.kt	
++++ b/app/src/main/java/com/example/lyceumapp/viewmodel/MainMenuViewModel.kt	
+@@ -11,7 +11,7 @@
+ import com.example.lyceumapp.json.subgroups.SubgroupTodayScheduleJson
+ import com.example.lyceumapp.json.teachers.TeacherJson
+ 
+-class MainMenuViewModel(application: Application, subgroupInfo: SubgroupInfoJson):
++class MainMenuViewModel(application: Application, val subgroupInfo: SubgroupInfoJson):
+ AndroidViewModel(application){
+     private var timerNextLesson: CountDownTimer? = null
+ 
+@@ -30,6 +30,12 @@
+     //classic field against ddos-attacks :)
+     var amountAttemptsToConnect = 1
+ 
++    //we need it to save chosenFragment.id in navView when screen orientation is changed
++    var chosenNavMenuItemId = R.id.menuItemMain
++
++    //this field shows if the first launch of main activity has already happened
++    var hasFirstActivityLaunchHappened = false
++
+     init{
+         RequestManager.getScheduleForSubgroup(application.applicationContext, subgroupInfo.subgroupId) { lessons, isActual ->
+             if (lessons == null) liveDataLessonsForSubgroup.value = null
+@@ -43,11 +49,15 @@
+                         val nextLessonAndTimeToIt =
+                             RequestManager.getNextLessonAndTimeToIt(lessons)
+                         liveDataNextLessonAndTimeToIt.value = nextLessonAndTimeToIt
+-                        if (nextLessonAndTimeToIt != null) startNextLessonTimer(
+-                            nextLessonAndTimeToIt.second.mills,
+-                            nextLessonAndTimeToIt.first,
+-                            nextLessonAndTimeToIt.second
+-                        )
++                        if (nextLessonAndTimeToIt != null) {
++                            startNextLessonTimer(
++                                nextLessonAndTimeToIt.second.mills,
++                                nextLessonAndTimeToIt.first,
++                                nextLessonAndTimeToIt.second
++                            )
++                        }
++
++                        updateChosenNavViewItemId(R.id.menuItemMain)
+                     }
+                 }
+             }
+@@ -72,6 +82,7 @@
+ 
+     //this method allows to jump between fragments in navView
+     fun updateChosenNavViewItemId(@IdRes itemId: Int) {
++        chosenNavMenuItemId = itemId
+         liveDataChosenNavViewItemId.value = itemId
+     }
+ 
+Index: app/src/main/java/com/example/lyceumapp/fragment/MainFragment.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.lyceumapp.fragment\r\n\r\nimport android.os.Bundle\r\nimport androidx.fragment.app.Fragment\r\nimport android.view.LayoutInflater\r\nimport android.view.View\r\nimport android.view.ViewGroup\r\nimport androidx.fragment.app.activityViewModels\r\nimport com.example.lyceumapp.R\r\nimport com.example.lyceumapp.databinding.FragmentMainBinding\r\nimport com.example.lyceumapp.databinding.LessonInScheduleBinding\r\nimport com.example.lyceumapp.viewmodel.MainMenuViewModel\r\n\r\nclass MainFragment : Fragment() {\r\n\r\n    override fun onCreateView(\r\n        inflater: LayoutInflater, container: ViewGroup?,\r\n        savedInstanceState: Bundle?,\r\n    ): View {\r\n        //our viewModel instance by our MainMenuActivity\r\n        //actually binding with 3 params including container and attachToParent is better, than simple 1-parameter method\r\n        val viewModel: MainMenuViewModel by activityViewModels()\r\n        val binding = FragmentMainBinding.inflate(inflater, container, false)\r\n\r\n        //the main fragment's idea is immutability of fragment like a finished ui component\r\n        //we can't reset fragment's layout to another after onCreateView().\r\n        //But we can have a case when we need to set layout according to data from viewModel, but there is observer, not straight\r\n        //call in onCreateView - we can't call 'return binding.root' from observer.\r\n        //the best solution is creating elements for every case. So, I created textNoLessons and linearScheduleMain for 2 different cases\r\n        viewModel.liveDataTodaySchedule.observe(requireActivity()){ todaySchedule ->\r\n            if(todaySchedule==null) {\r\n                //there is no schedule for today from server.\r\n                //maybe today is Sunday, but maybe there's an error on server...\r\n                binding.textNoLessons.visibility = View.VISIBLE\r\n                binding.linearScheduleMain.visibility = View.GONE\r\n            }\r\n            else {\r\n                //we don't use recyclerView here, because we need to create scrolling ui in MainFragment for user.\r\n                binding.textNoLessons.visibility = View.GONE\r\n                binding.linearScheduleMain.visibility = View.VISIBLE\r\n\r\n                binding.textDayOfWeek.text = serverWeekDayNumberToStr(todaySchedule.weekday)\r\n\r\n                var bindingLessonElement: LessonInScheduleBinding\r\n                val strTime = resources.getString(R.string.lesson_time)\r\n                for(lesson in todaySchedule.lessons) {\r\n                    bindingLessonElement = LessonInScheduleBinding.inflate(layoutInflater)\r\n                    bindingLessonElement.textLessonName.text = lesson.name\r\n                    bindingLessonElement.textLessonTime.text = String.format(strTime, lesson.startHour, lesson.startMinute, lesson.endHour, lesson.endMinute)\r\n                    binding.linearScheduleMain.addView(bindingLessonElement.root)\r\n                }\r\n            }\r\n        }\r\n\r\n        viewModel.liveDataNextLessonAndTimeToIt.observe(requireActivity()){\r\n            if(it==null) binding.textTimeToNextLesson.visibility = View.GONE // TODO: think what better: hiding textView or set text kinda 'no the soonest lesson'\r\n            else {\r\n                binding.textTimeToNextLesson.visibility = View.VISIBLE\r\n                binding.textTimeToNextLesson.text = String.format(resources.getString(R.string.next_lesson_is_in_time), it.second.days, it.second.hours, it.second.minutes)\r\n            }\r\n        }\r\n\r\n\r\n        //there's button 'schedule' above linearScheduleMain\r\n        binding.buttonSchedule.setOnClickListener {\r\n            //updateChosenNavView is very cool method I've created for simple jumping between fragment in navView\r\n            viewModel.updateChosenNavViewItemId(R.id.menuItemSchedule)\r\n        }\r\n\r\n        return binding.root\r\n    }\r\n\r\n    private fun serverWeekDayNumberToStr(weekday: Int): String {\r\n        //actually we have 3 systems of day's numbering:\r\n        //1. 0..6 number segment like [monday; sunday]\r\n        //2. response from server in weekday field. Now it's like 1st system,\r\n        //but nobody knows what changes can happen, so it's different system\r\n        //3. java.util.Calendar constants, for example Calendar.MONDAY, Calendar.THURSDAY etc.\r\n        val daysStr = resources.getStringArray(R.array.daysOfWeek)\r\n        return daysStr[weekday]\r\n    }\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/example/lyceumapp/fragment/MainFragment.kt b/app/src/main/java/com/example/lyceumapp/fragment/MainFragment.kt
+--- a/app/src/main/java/com/example/lyceumapp/fragment/MainFragment.kt	
++++ b/app/src/main/java/com/example/lyceumapp/fragment/MainFragment.kt	
+@@ -1,5 +1,6 @@
+ package com.example.lyceumapp.fragment
+ 
++import android.content.Context
+ import android.os.Bundle
+ import androidx.fragment.app.Fragment
+ import android.view.LayoutInflater
+@@ -46,7 +47,7 @@
+                 for(lesson in todaySchedule.lessons) {
+                     bindingLessonElement = LessonInScheduleBinding.inflate(layoutInflater)
+                     bindingLessonElement.textLessonName.text = lesson.name
+-                    bindingLessonElement.textLessonTime.text = String.format(strTime, lesson.startHour, lesson.startMinute, lesson.endHour, lesson.endMinute)
++                    bindingLessonElement.textLessonTime.text = String.format(strTime, lesson.startTime.startHour, lesson.startTime.startMinute, lesson.endTime.endHour, lesson.endTime.endMinute)
+                     binding.linearScheduleMain.addView(bindingLessonElement.root)
+                 }
+             }
+@@ -60,7 +61,6 @@
+             }
+         }
+ 
+-
+         //there's button 'schedule' above linearScheduleMain
+         binding.buttonSchedule.setOnClickListener {
+             //updateChosenNavView is very cool method I've created for simple jumping between fragment in navView
+Index: app/src/main/java/com/example/lyceumapp/fragment/ScheduleFragment.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.lyceumapp.fragment\r\n\r\nimport android.content.Context\r\nimport android.content.Intent\r\nimport android.os.Bundle\r\nimport androidx.fragment.app.Fragment\r\nimport android.view.LayoutInflater\r\nimport android.view.View\r\nimport android.view.ViewGroup\r\nimport android.widget.AdapterView\r\nimport android.widget.AdapterView.OnItemSelectedListener\r\nimport android.widget.ArrayAdapter\r\nimport androidx.fragment.app.FragmentManager\r\nimport androidx.fragment.app.activityViewModels\r\nimport androidx.lifecycle.Lifecycle\r\nimport androidx.viewpager2.adapter.FragmentStateAdapter\r\nimport com.example.lyceumapp.*\r\nimport com.example.lyceumapp.databinding.FragmentScheduleBinding\r\nimport com.example.lyceumapp.json.lessons.LessonJson\r\nimport com.example.lyceumapp.tabs.lessons.LessonsScheduleFragment\r\nimport com.example.lyceumapp.viewmodel.MainMenuViewModel\r\nimport com.google.android.material.tabs.TabLayoutMediator\r\nimport java.util.*\r\n\r\nclass ScheduleFragment : Fragment() {\r\n\r\n    override fun onCreateView(\r\n        inflater: LayoutInflater, container: ViewGroup?,\r\n        savedInstanceState: Bundle?,\r\n    ): View? {\r\n        val binding = FragmentScheduleBinding.inflate(inflater, container, false)\r\n\r\n        val viewModel: MainMenuViewModel by activityViewModels()\r\n\r\n        val weekNames = viewModel.getWeekNamesForSubgroup()\r\n        if(weekNames.isEmpty()) binding.linearWeekType.visibility = View.GONE\r\n        else {\r\n            val spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, weekNames)\r\n            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)\r\n            binding.spinnerWeekType.adapter = spinnerAdapter\r\n        }\r\n\r\n\r\n\r\n        val lessonsForDefiniteWeek = viewModel.getLessonsForDefiniteWeek(0)\r\n        val adapter = LessonsTabsPagerAdapter(viewModel, childFragmentManager, lifecycle, lessonsForDefiniteWeek)\r\n        binding.viewPagerSchedule.adapter = adapter\r\n        binding.viewPagerSchedule.isUserInputEnabled = true\r\n        TabLayoutMediator(binding.tabLayoutSchedule, binding.viewPagerSchedule) { tab, position ->\r\n            tab.text = when(position) {\r\n                0 -> resources.getString(R.string.monday)\r\n                1 -> resources.getString(R.string.tuesday)\r\n                2 -> resources.getString(R.string.wednesday)\r\n                3 -> resources.getString(R.string.thursday)\r\n                4 -> resources.getString(R.string.friday)\r\n                5 -> resources.getString(R.string.saturday)\r\n                else -> throw TabLayoutCanNotHaveMoreThan6TabsException()\r\n            }\r\n        }.attach()\r\n\r\n        binding.spinnerWeekType.onItemSelectedListener = object: OnItemSelectedListener{\r\n            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {\r\n                adapter.lessons = viewModel.getLessonsForDefiniteWeek(position)\r\n                adapter.notifyDataSetChanged()\r\n            }\r\n\r\n            override fun onNothingSelected(p0: AdapterView<*>?) = Unit\r\n        }\r\n\r\n        binding.buttonChangeGrade.setOnClickListener {\r\n            val shPreferences = requireActivity().getSharedPreferences(Const.SH_PREFERENCES_NAME, Context.MODE_PRIVATE)\r\n            shPreferences.edit().remove(Const.SH_PREFERENCES_KEY_SCHOOL_ID)\r\n                .remove(Const.SH_PREFERENCES_KEY_GRADE_ID)\r\n                .remove(Const.SH_PREFERENCES_KEY_SUBGROUP_ID)\r\n                .remove(Const.SH_PREFERENCES_KEY_SCHOOL_NAME)\r\n                .remove(Const.SH_PREFERENCES_KEY_SCHOOL_ADDRESS).commit()\r\n            startActivity(Intent(requireActivity(), MainActivity::class.java))\r\n        }\r\n\r\n        return binding.root\r\n    }\r\n\r\n    class LessonsTabsPagerAdapter(private var viewModel: MainMenuViewModel,\r\n                                  fragmentManager: FragmentManager,\r\n                                  lifecycle: Lifecycle,\r\n                                  var lessons: List<LessonJson>): FragmentStateAdapter(fragmentManager, lifecycle){\r\n\r\n        override fun getItemCount() = 6\r\n\r\n        override fun createFragment(position: Int): Fragment {\r\n            return when(position){\r\n                0, 1, 2, 3, 4, 5 -> {\r\n                    viewModel.updateLessonsForDefiniteDay(lessons, RequestManager.day0to6toCalendarFormat(position))\r\n                    LessonsScheduleFragment()\r\n                }\r\n                else -> throw LessonOutOfBoundsException()\r\n            }\r\n        }\r\n\r\n    }\r\n\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/example/lyceumapp/fragment/ScheduleFragment.kt b/app/src/main/java/com/example/lyceumapp/fragment/ScheduleFragment.kt
+--- a/app/src/main/java/com/example/lyceumapp/fragment/ScheduleFragment.kt	
++++ b/app/src/main/java/com/example/lyceumapp/fragment/ScheduleFragment.kt	
+@@ -32,6 +32,8 @@
+ 
+         val viewModel: MainMenuViewModel by activityViewModels()
+ 
++        binding.textScheduleForGrade.text = String.format(resources.getString(R.string.schedule_for_school_grade_subgroup), viewModel.subgroupInfo.subgroupName)
++
+         val weekNames = viewModel.getWeekNamesForSubgroup()
+         if(weekNames.isEmpty()) binding.linearWeekType.visibility = View.GONE
+         else {
+@@ -40,8 +42,6 @@
+             binding.spinnerWeekType.adapter = spinnerAdapter
+         }
+ 
+-
+-
+         val lessonsForDefiniteWeek = viewModel.getLessonsForDefiniteWeek(0)
+         val adapter = LessonsTabsPagerAdapter(viewModel, childFragmentManager, lifecycle, lessonsForDefiniteWeek)
+         binding.viewPagerSchedule.adapter = adapter
+Index: app/src/main/java/com/example/lyceumapp/json/subgroups/SubgroupInfoJson.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.lyceumapp.json.subgroups\r\n\r\nimport android.os.Parcel\r\nimport android.os.Parcelable\r\nimport com.squareup.moshi.Json\r\n\r\ndata class SubgroupInfoJson(\r\n    @Json(name = \"subgroup_id\") val subgroupId: Int,\r\n    @Json(name = \"subgroup_name\") val subgroupName: String,\r\n    @Json(name = \"class_id\") val gradeId: Int,\r\n    @Json(name = \"class_number\") val gradeNumber: Int,\r\n    @Json(name = \"class_letter\") val gradeLetter: String,\r\n    @Json(name = \"school_id\") val schoolId: Int,\r\n    @Json(name = \"school_name\") val schoolName: String\r\n): Parcelable {\r\n    override fun describeContents() = 0\r\n\r\n    override fun writeToParcel(parcel: Parcel?, flags: Int) {\r\n        parcel?.writeInt(subgroupId)\r\n        parcel?.writeString(subgroupName)\r\n        parcel?.writeInt(gradeId)\r\n        parcel?.writeInt(gradeNumber)\r\n        parcel?.writeString(gradeLetter)\r\n        parcel?.writeInt(schoolId)\r\n        parcel?.writeString(schoolName)\r\n    }\r\n\r\n    companion object CREATOR: Parcelable.Creator<SubgroupInfoJson> {\r\n        override fun createFromParcel(parcel: Parcel?): SubgroupInfoJson {\r\n            return SubgroupInfoJson(parcel!!.readInt(),\r\n            parcel.readString()!!,\r\n            parcel.readInt(),\r\n            parcel.readInt(),\r\n            parcel.readString()!!,\r\n            parcel.readInt(),\r\n            parcel.readString()!!)\r\n        }\r\n\r\n        override fun newArray(p0: Int) = arrayOfNulls<SubgroupInfoJson>(p0)\r\n    }\r\n}\r\n
+===================================================================
+diff --git a/app/src/main/java/com/example/lyceumapp/json/subgroups/SubgroupInfoJson.kt b/app/src/main/java/com/example/lyceumapp/json/subgroups/SubgroupInfoJson.kt
+--- a/app/src/main/java/com/example/lyceumapp/json/subgroups/SubgroupInfoJson.kt	
++++ b/app/src/main/java/com/example/lyceumapp/json/subgroups/SubgroupInfoJson.kt	
+@@ -15,14 +15,14 @@
+ ): Parcelable {
+     override fun describeContents() = 0
+ 
+-    override fun writeToParcel(parcel: Parcel?, flags: Int) {
+-        parcel?.writeInt(subgroupId)
+-        parcel?.writeString(subgroupName)
+-        parcel?.writeInt(gradeId)
+-        parcel?.writeInt(gradeNumber)
+-        parcel?.writeString(gradeLetter)
+-        parcel?.writeInt(schoolId)
+-        parcel?.writeString(schoolName)
++    override fun writeToParcel(parcel: Parcel, flags: Int) {
++        parcel.writeInt(subgroupId)
++        parcel.writeString(subgroupName)
++        parcel.writeInt(gradeId)
++        parcel.writeInt(gradeNumber)
++        parcel.writeString(gradeLetter)
++        parcel.writeInt(schoolId)
++        parcel.writeString(schoolName)
+     }
+ 
+     companion object CREATOR: Parcelable.Creator<SubgroupInfoJson> {
+Index: app/src/main/java/com/example/lyceumapp/viewmodel/MainViewModel.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.lyceumapp.viewmodel\r\n\r\nimport android.app.Application\r\nimport android.content.Intent\r\nimport androidx.lifecycle.AndroidViewModel\r\nimport androidx.lifecycle.MutableLiveData\r\nimport com.example.lyceumapp.Const\r\nimport com.example.lyceumapp.RequestManager\r\nimport com.example.lyceumapp.activity.MainMenuActivity\r\nimport com.example.lyceumapp.json.schools.SchoolJson\r\nimport com.example.lyceumapp.json.subgroups.SubgroupInfoJson\r\nimport kotlinx.coroutines.CoroutineScope\r\nimport kotlinx.coroutines.Dispatchers\r\nimport kotlinx.coroutines.async\r\nimport kotlinx.coroutines.launch\r\n\r\nclass MainViewModel(application: Application, private val modeToOpenShPreferences: Int): AndroidViewModel(application) {\r\n    val liveDataListSchools = MutableLiveData<List<SchoolJson>?>()\r\n\r\n    var amountAttemptsToConnect = 1\r\n    lateinit var chosenSchool: SchoolJson\r\n\r\n    //first we need to check if subgroupId exists in shPreferences\r\n    //if yes - user has already chosen school and grade before, but we also need to check it:\r\n        //we download subgroupInfoJson from server with info about chosen subgroup, school and grade\r\n            //if subgroupInfo is null, then our choice isn't actual, we need to download schools from server\r\n            //else, if we get subgroupInfo, we start MainMenuActivity\r\n    //if no - user hasn't chosen school and grade yet. - we need to download schools from server\r\n    init{\r\n        getShPreferencesData { subgroupId ->\r\n            if(subgroupId==null) {\r\n                //here we need to download schools for user\r\n                downloadSchools()\r\n            }\r\n            else {\r\n                //here we have subgroupId in shPreferences, but also we need to check\r\n                //is this id is actual\r\n                downloadSubgroupInfo(subgroupId) { subgroupInfo ->\r\n                    if(subgroupInfo==null) {\r\n                        //here subgroupId is not actual, we need to download schools for user\r\n                        downloadSchools()\r\n                    }\r\n                    else {\r\n                        //everything is alright, we need to start MainMenuActivity inside MainActivity\r\n                        val intent = Intent(getApplication<Application>().applicationContext, MainMenuActivity::class.java)\r\n                        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)\r\n                        intent.putExtra(Const.INTENT_KEY_SUBGROUP_INFO, subgroupInfo)\r\n                        getApplication<Application>().startActivity(intent)\r\n                    }\r\n                }\r\n            }\r\n        }\r\n    }\r\n\r\n    private fun getShPreferencesData(listener: (Int?) -> Unit) {\r\n        CoroutineScope(Dispatchers.Main).launch {\r\n            val deferred = async(Dispatchers.IO){\r\n                val shPreferences = getApplication<Application>().getSharedPreferences(Const.SH_PREFERENCES_NAME, modeToOpenShPreferences)\r\n                if(shPreferences.contains(Const.SH_PREFERENCES_KEY_SUBGROUP_ID)) {\r\n                    shPreferences.getInt(Const.SH_PREFERENCES_KEY_SUBGROUP_ID, -1)\r\n                }\r\n                else null\r\n            }\r\n            listener(deferred.await())\r\n        }\r\n    }\r\n\r\n\r\n    //RequestManager is like Repository or Model in MVVM pattern\r\n    //default value of chosenSchool is the first object from the list of schools\r\n    private fun downloadSchools() {\r\n        RequestManager.getSchools{\r\n            if(it!=null && it.isNotEmpty()) {\r\n                chosenSchool = it[0]\r\n            }\r\n            liveDataListSchools.value = it\r\n        }\r\n    }\r\n\r\n    private fun downloadSubgroupInfo(subgroupId: Int, listener: (SubgroupInfoJson?) -> Unit) {\r\n        RequestManager.getSubgroupInfo(subgroupId) {\r\n            listener(it)\r\n        }\r\n    }\r\n\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/example/lyceumapp/viewmodel/MainViewModel.kt b/app/src/main/java/com/example/lyceumapp/viewmodel/MainViewModel.kt
+--- a/app/src/main/java/com/example/lyceumapp/viewmodel/MainViewModel.kt	
++++ b/app/src/main/java/com/example/lyceumapp/viewmodel/MainViewModel.kt	
+@@ -16,7 +16,8 @@
+ 
+ class MainViewModel(application: Application, private val modeToOpenShPreferences: Int): AndroidViewModel(application) {
+     val liveDataListSchools = MutableLiveData<List<SchoolJson>?>()
+-
++    //we use this liveData to call startActivity(MainMenuActivity) passing SubgroupInfoJson through intent inside MainActivity
++    val liveDataWeNeedToStartMainMenuActivity = MutableLiveData<SubgroupInfoJson?>()
+     var amountAttemptsToConnect = 1
+     lateinit var chosenSchool: SchoolJson
+ 
+@@ -42,10 +43,7 @@
+                     }
+                     else {
+                         //everything is alright, we need to start MainMenuActivity inside MainActivity
+-                        val intent = Intent(getApplication<Application>().applicationContext, MainMenuActivity::class.java)
+-                        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+-                        intent.putExtra(Const.INTENT_KEY_SUBGROUP_INFO, subgroupInfo)
+-                        getApplication<Application>().startActivity(intent)
++                        liveDataWeNeedToStartMainMenuActivity.value = subgroupInfo
+                     }
+                 }
+             }
+Index: app/src/main/java/com/example/lyceumapp/MainActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.lyceumapp\r\n\r\nimport android.content.Intent\r\nimport android.os.Bundle\r\nimport android.view.LayoutInflater\r\nimport android.view.ViewGroup\r\nimport android.widget.CompoundButton\r\nimport androidx.appcompat.app.AppCompatActivity\r\nimport androidx.lifecycle.ViewModelProvider\r\nimport androidx.recyclerview.widget.DividerItemDecoration\r\nimport androidx.recyclerview.widget.LinearLayoutManager\r\nimport androidx.recyclerview.widget.RecyclerView\r\nimport com.example.lyceumapp.activity.ChooseGradeActivity\r\nimport com.example.lyceumapp.activity.MainMenuActivity\r\nimport com.example.lyceumapp.activity.NoResponseActivity\r\nimport com.example.lyceumapp.activity.NoSchoolsActivity\r\nimport com.example.lyceumapp.databinding.ActivityChooseSchoolsBinding\r\nimport com.example.lyceumapp.viewmodel.MainViewModel\r\nimport com.example.lyceumapp.databinding.RecyclerElementSchoolsBinding\r\nimport com.example.lyceumapp.json.schools.SchoolJson\r\nimport com.example.lyceumapp.viewmodel.MainViewModelFactory\r\n\r\n\r\nclass MainActivity : AppCompatActivity() {\r\n    //viewModel for MainActivity\r\n    private lateinit var viewModel: MainViewModel\r\n    //adapter for recyclerView for list of schools\r\n    private lateinit var adapter: SchoolJsonAdapter\r\n\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        super.onCreate(savedInstanceState)\r\n        //download layout is the first, because user must see that his request is downloading now\r\n        setContentView(R.layout.activity_download)\r\n        supportActionBar?.hide()\r\n\r\n        //we create viewModel using ViewModelProvider. Actually, MainViewModel creates only one time when activity creates the first time.\r\n        //but we still need delegate some parameters into MainViewModelConstructor every onCreate() call\r\n        //the reason above - that's why we need to save some data to intent\r\n        viewModel = ViewModelProvider(this, MainViewModelFactory(application, MODE_PRIVATE))[MainViewModel::class.java]\r\n\r\n        //we need this field 'amountAttemptsToConnect', because we need to show delay timer (like against ddos-attacks) if amountAttemptsToConnect > some value in Const.kt\r\n        //if even this activity launch is the first attempt (in this case amountAttemptsToConnect = null always), we have default value of amountAttemptsToConnect in our ViewModel\r\n        val amountAttemptsToConnect = intent.extras?.getInt(Const.INTENT_KEY_AMOUNT_ATTEMPTS_TO_CONNECT)\r\n        //we need to get amountAttemptsToConnect from intent only the first time activity creates\r\n        //and we set this value from intent into ourViewModel instance\r\n        if(amountAttemptsToConnect!=null) viewModel.amountAttemptsToConnect = amountAttemptsToConnect\r\n\r\n        //the code below will run when we get some value from RequestManager (and from RetrofitManager and from Lawrence API)\r\n        //this value is our List<SchoolJson>?\r\n        //it can be null if some error happen (for example, no Internet, or Lawrence API isn't working now)\r\n        //and also wee need to check the size of List<SchoolJson>. if size==0, it means that API's working now, but there's no schools in API\r\n        //empty schools list in API is so strange, but it can happen. So, we need to predict this situation in our application\r\n        viewModel.liveDataListSchools.observe(this) { schools ->\r\n            if (schools == null) {\r\n                //here some error happen and we haven't got schools. We need to start NoResponseActivity\r\n                //we give some values through Intent into NoResponseActivity: Const.NoResponseType and amountAttemptsToConnect\r\n                //NoResponseType - NoResponseActivity must know if error happens during downloading schools or during downloading grades.\r\n                //AmountAttemptToConnect - if this value > than some value from Const, we need to show delay timing (ddos attack blocking)\r\n                val intent = Intent(this, NoResponseActivity::class.java)\r\n                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)\r\n                intent.putExtra(Const.INTENT_KEY_NO_RESPONSE_TYPE, Const.NoResponseType.GetSchools)\r\n                intent.putExtra(Const.INTENT_KEY_AMOUNT_ATTEMPTS_TO_CONNECT, viewModel.amountAttemptsToConnect)\r\n                startActivity(intent)\r\n            } else if(schools.isEmpty()) {\r\n                //here the unlikely situation, where the server works, but returns an empty school list\r\n                //this case we need to launch very simple activity - NoSchoolsActivity\r\n                val intent = Intent(this, NoSchoolsActivity::class.java)\r\n                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)\r\n                startActivity(intent)\r\n            }\r\n            else {\r\n                //we got schools successfully!\r\n                //ViewBinding is very cool technique from Google. We can use it instead of findViewById() calls\r\n                val binding = ActivityChooseSchoolsBinding.inflate(layoutInflater)\r\n                setContentView(binding.root)\r\n\r\n                //create an adapter for RecyclerView for schools list visualisation\r\n                adapter = SchoolJsonAdapter(schools, viewModel)\r\n                binding.recyclerChooseSchool.adapter = adapter\r\n                //we need to set layoutManager to recyclerView (a recycler view can be like table for example, but we need LinearLayoutManager)\r\n                binding.recyclerChooseSchool.layoutManager = (LinearLayoutManager(this))\r\n                //here we add separating line between elements in recyclerView\r\n                binding.recyclerChooseSchool.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))\r\n\r\n                //the code below works if we click button 'next' under RecyclerView. When the button clicked, we need to get chosenSchool object from adapter and start ChooseGradeActivity\r\n                binding.buttonNext.setOnClickListener {\r\n                    val intent = Intent(this, ChooseGradeActivity::class.java)\r\n                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)\r\n                    //chosenSchool - the school object that was chosen by user in RecyclerView. This object saved in our viewModel\r\n                    //and we need to pass this chosenSchool into ChooseGradeActivity\r\n                    intent.putExtra(Const.INTENT_KEY_CHOSEN_SCHOOL, viewModel.chosenSchool)\r\n                    startActivity(intent)\r\n                }\r\n            }\r\n        }\r\n    }\r\n\r\n    //our adapter for RecyclerView\r\n    //we pass viewModel into adapter object, because chosenSchool object must be saved exactly in ViewModel - because in case of activity configuration changes it'll be saved\r\n    class SchoolJsonAdapter(private val schools: List<SchoolJson>, private val viewModel: MainViewModel) : RecyclerView.Adapter<SchoolJsonAdapter.SchoolJsonHolder>() {\r\n        //the object of checked by user RadioButton\r\n        private var checkedRadioButton: CompoundButton? = null\r\n\r\n        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =\r\n            SchoolJsonHolder(RecyclerElementSchoolsBinding.inflate(LayoutInflater.from(parent.context), parent, false))\r\n\r\n        override fun onBindViewHolder(holder: SchoolJsonHolder, position: Int) {\r\n            //we set school name textView in every element of our RecyclerView\r\n            holder.bindingSchoolElement.textSchoolName.text = schools[position].name\r\n            holder.bindingSchoolElement.textSchoolAddress.text = schools[position].address\r\n\r\n            //if school was chosen by user earlier we show it to user in our RadioButton in element of RecyclerView\r\n            if(schools[position].id == viewModel.chosenSchool.id) {\r\n                holder.bindingSchoolElement.radioChooseSchool.isChecked = true\r\n                checkedRadioButton = holder.bindingSchoolElement.radioChooseSchool\r\n            }\r\n\r\n            //and there's click listener for our RadioButton\r\n            //we need to set viewModel's field 'chosenSchool' evevalry time some radioButton is clicked\r\n            //and in adapter we always need to save the object of checked RadioButton - it saves in 'checkedRadioButton'\r\n            holder.bindingSchoolElement.radioChooseSchool.setOnCheckedChangeListener { compoundButton, _ ->\r\n                checkedRadioButton?.isChecked = false\r\n                checkedRadioButton = compoundButton\r\n                viewModel.chosenSchool = schools[position]\r\n            }\r\n        }\r\n\r\n        override fun getItemCount() = schools.size\r\n\r\n        //we also can use ViewBinding in viewHolder\r\n        class SchoolJsonHolder(val bindingSchoolElement: RecyclerElementSchoolsBinding) : RecyclerView.ViewHolder(bindingSchoolElement.root)\r\n    }\r\n}\r\n\r\n
+===================================================================
+diff --git a/app/src/main/java/com/example/lyceumapp/MainActivity.kt b/app/src/main/java/com/example/lyceumapp/MainActivity.kt
+--- a/app/src/main/java/com/example/lyceumapp/MainActivity.kt	
++++ b/app/src/main/java/com/example/lyceumapp/MainActivity.kt	
+@@ -1,5 +1,6 @@
+ package com.example.lyceumapp
+ 
++import android.app.Application
+ import android.content.Intent
+ import android.os.Bundle
+ import android.view.LayoutInflater
+@@ -45,6 +46,16 @@
+         //and we set this value from intent into ourViewModel instance
+         if(amountAttemptsToConnect!=null) viewModel.amountAttemptsToConnect = amountAttemptsToConnect
+ 
++        viewModel.liveDataWeNeedToStartMainMenuActivity.observe(this){
++            if(it!=null) {
++                //here we need to start MainMenuActivity
++                val intent = Intent(this, MainMenuActivity::class.java)
++                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
++                intent.putExtra(Const.INTENT_KEY_SUBGROUP_INFO, it)
++                startActivity(intent)
++            }
++        }
++
+         //the code below will run when we get some value from RequestManager (and from RetrofitManager and from Lawrence API)
+         //this value is our List<SchoolJson>?
+         //it can be null if some error happen (for example, no Internet, or Lawrence API isn't working now)
+Index: app/src/main/res/layout/activity_no_grades_for_school.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>im<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.constraintlayout.widget.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    tools:context=\".activity.NoGradesForSchoolActivity\">\r\n\r\n    <TextView\r\n        android:id=\"@+id/textNoGradesForSchoolHeader\"\r\n        style=\"@style/textNoResponseHeader\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_marginHorizontal=\"10dp\"\r\n        android:layout_weight=\"1\"\r\n        android:gravity=\"center\"\r\n        android:text=\"@string/no_response_header\"\r\n        app:layout_constraintBottom_toTopOf=\"@+id/textNoGradesForSchoolDescription\"\r\n        android:layout_marginBottom=\"10dp\"/>\r\n\r\n    <TextView\r\n        android:id=\"@+id/textNoGradesForSchoolDescription\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:gravity=\"center\"\r\n        android:layout_marginBottom=\"10dp\"\r\n        android:layout_marginHorizontal=\"10dp\"\r\n        android:text=\"@string/no_grades_for_school_description\"\r\n        app:layout_constraintBottom_toTopOf=\"@+id/buttonPickSchoolAgain\"\r\n        style=\"@style/textSecondary\"/>\r\n\r\n\r\n    <Button\r\n        android:id=\"@+id/buttonPickSchoolAgain\"\r\n        style=\"@style/button_rectangle_round\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:text=\"@string/pick_school_again\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toTopOf=\"parent\" />\r\n\r\n\r\n</androidx.constraintlayout.widget.ConstraintLayout>
+===================================================================
+diff --git a/app/src/main/res/layout/activity_no_grades_for_school.xml b/app/src/main/res/layout/activity_no_grades_for_school.xml
+--- a/app/src/main/res/layout/activity_no_grades_for_school.xml	
++++ b/app/src/main/res/layout/activity_no_grades_for_school.xml	
+@@ -1,4 +1,4 @@
+-im<?xml version="1.0" encoding="utf-8"?>
++<?xml version="1.0" encoding="utf-8"?>
+ <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+     xmlns:tools="http://schemas.android.com/tools"
+Index: app/src/main/java/com/example/lyceumapp/activity/ChooseSubgroupActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.lyceumapp.activity\r\n\r\nimport android.content.Intent\r\nimport androidx.appcompat.app.AppCompatActivity\r\nimport android.os.Bundle\r\nimport android.view.LayoutInflater\r\nimport android.view.ViewGroup\r\nimport android.widget.CompoundButton\r\nimport androidx.lifecycle.ViewModelProvider\r\nimport androidx.recyclerview.widget.DividerItemDecoration\r\nimport androidx.recyclerview.widget.LinearLayoutManager\r\nimport androidx.recyclerview.widget.RecyclerView\r\nimport com.example.lyceumapp.Const\r\nimport com.example.lyceumapp.R\r\nimport com.example.lyceumapp.databinding.ActivityChooseGradesOrSubgroupsBinding\r\nimport com.example.lyceumapp.databinding.RecyclerElementSubgroupsBinding\r\nimport com.example.lyceumapp.json.grades.GradeJson\r\nimport com.example.lyceumapp.json.schools.SchoolJson\r\nimport com.example.lyceumapp.json.subgroups.SubgroupJson\r\nimport com.example.lyceumapp.viewmodel.ChooseSubgroupViewModel\r\nimport com.example.lyceumapp.viewmodel.ChooseSubgroupViewModelFactory\r\n\r\nclass ChooseSubgroupActivity : AppCompatActivity() {\r\n    private lateinit var viewModel: ChooseSubgroupViewModel\r\n    private lateinit var chosenGrade: GradeJson\r\n    private lateinit var adapter: ChooseSubgroupAdapter\r\n\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        super.onCreate(savedInstanceState)\r\n        setContentView(R.layout.activity_download)\r\n        supportActionBar?.hide()\r\n\r\n        //we need to get chosenGradeFromIntent in every this onCreate() method call, because\r\n        //our ViewModel use it in it's constructor every time we have onCreate() call\r\n        chosenGrade = intent.extras?.getParcelable(Const.INTENT_KEY_CHOSEN_GRADE)!!\r\n\r\n        viewModel = ViewModelProvider(this,\r\n                ChooseSubgroupViewModelFactory(application, chosenGrade))[ChooseSubgroupViewModel::class.java]\r\n\r\n        //we need to get chosenSchool only one time, because chosenSchool is needed to our viewModel only when button \"next\" was clicked.\r\n        //and this case we need to save chosenSchool.id into shPreferences\r\n        val chosenSchool = intent.extras?.getParcelable<SchoolJson>(Const.INTENT_KEY_CHOSEN_SCHOOL)\r\n        if(chosenSchool!=null) viewModel.chosenSchool = chosenSchool\r\n\r\n        //we need to get amountAttemptsToConnect from intent only one time\r\n        //if even this activity's launch is the first attempt to connect (in this case the code row below will be\r\n        //null), we anyway set amountAttemptsToConnect = 1 in ViewModel\r\n        val amountAttemptsToConnect = intent.extras?.getInt(Const.INTENT_KEY_AMOUNT_ATTEMPTS_TO_CONNECT)\r\n        if(amountAttemptsToConnect!=null) viewModel.amountAttemptsToConnect = amountAttemptsToConnect\r\n\r\n        // TODO: we haven't made amountGrades passing through intent in ChooseGradeActivity\r\n        //we may have situation when there are no subgroups for a grade and a school, that have been chosen earlier, contains only one grade. This case it's no good showing\r\n        //a list of the grades to user, we need to show list of schools to user. And that's why we need to get amountOfGrades to check this condition and do some actions if necessary\r\n        val amountGrades = intent.extras?.getInt(Const.INTENT_KEY_AMOUNT_GRADES)\r\n        if(amountGrades!=null) viewModel.amountGrades = amountGrades\r\n\r\n        viewModel.liveDataListSubgroups.observe(this) { subgroups ->\r\n            if(subgroups==null) {\r\n                //here we need to start NoResponseActivity\r\n                val intent = Intent(this, NoResponseActivity::class.java)\r\n                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)\r\n                //we need to pass noResponseType, amountAttemptsToConnect, chosenSchool, chosenGrade, amountGrades into NoResponseActivity\r\n                intent.putExtra(Const.INTENT_KEY_NO_RESPONSE_TYPE, Const.NoResponseType.GetSubgroups)\r\n                intent.putExtra(Const.INTENT_KEY_AMOUNT_ATTEMPTS_TO_CONNECT, viewModel.amountAttemptsToConnect)\r\n                intent.putExtra(Const.INTENT_KEY_CHOSEN_SCHOOL, viewModel.chosenSchool)\r\n                intent.putExtra(Const.INTENT_KEY_CHOSEN_GRADE, chosenGrade)\r\n                intent.putExtra(Const.INTENT_KEY_AMOUNT_GRADES, viewModel.amountGrades)\r\n                startActivity(intent)\r\n            }\r\n            else if(subgroups.isEmpty()) {\r\n                //this case we need to start NoSubgroupsForGradeActivity and we need to pass there amountGrades for property working\r\n                val intent = Intent(this, NoSubgroupsForGradeActivity::class.java)\r\n                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)\r\n                intent.putExtra(Const.INTENT_KEY_AMOUNT_GRADES, viewModel.amountGrades)\r\n                intent.putExtra(Const.INTENT_KEY_CHOSEN_SCHOOL, viewModel.chosenSchool)\r\n                startActivity(intent)\r\n            }\r\n            else if(subgroups.size==1) {\r\n                //here it's no good showing the list of subgroups, because there is only one subgroup. We need to save everything in shPreferences and start MainMenuActivity\r\n                saveEverythingInShPreferences(viewModel.chosenSchool.id, chosenGrade.id, subgroups[0].id, viewModel.chosenSchool.address, viewModel.chosenSchool.name)\r\n                startActivity(Intent(this, MainMenuActivity::class.java))\r\n            }\r\n            else {\r\n                //and here we have enough size list of subgroups (size>=2) and we need to show layout with recyclerView and adapter for this recycler view\r\n                val binding = ActivityChooseGradesOrSubgroupsBinding.inflate(layoutInflater)\r\n                setContentView(binding.root)\r\n\r\n                //create an adapter for our RecyclerView\r\n                adapter = ChooseSubgroupAdapter(subgroups, layoutInflater, viewModel)\r\n                binding.recyclerChooseGradeOrSubgroup.adapter = adapter\r\n                //configure our recyclerView visualisation\r\n                binding.recyclerChooseGradeOrSubgroup.layoutManager = LinearLayoutManager(this)\r\n                binding.recyclerChooseGradeOrSubgroup.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))\r\n\r\n                //listener for \"next\" button\r\n                binding.buttonNext.setOnClickListener {\r\n                    //here we need save everything in sharedPreferences and finally start MainMenuActivity\r\n                    saveEverythingInShPreferences(viewModel.chosenSchool.id, chosenGrade.id, viewModel.chosenSubgroup.id, viewModel.chosenSchool.address, viewModel.chosenSchool.name)\r\n                    startActivity(Intent(this, MainMenuActivity::class.java))\r\n                }\r\n\r\n                //listener for \"cancel\" button.\r\n                binding.buttonCancel.setOnClickListener{\r\n                    //we need to start chooseGradeActivity with chosenSchoolId\r\n                    val intent = Intent(this, ChooseGradeActivity::class.java)\r\n                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)\r\n                    intent.putExtra(Const.INTENT_KEY_CHOSEN_SCHOOL, viewModel.chosenSchool)\r\n                    startActivity(intent)\r\n                }\r\n            }\r\n        }\r\n    }\r\n\r\n    override fun onSaveInstanceState(outState: Bundle) {\r\n        outState.putParcelable(Const.INTENT_KEY_CHOSEN_GRADE, chosenGrade)\r\n        super.onSaveInstanceState(outState)\r\n    }\r\n\r\n    //we need to save in sharedPreferences:\r\n    //the id of chosen school\r\n    //the id of chosen grade\r\n    //the id of chosen subgroup\r\n    //the school address\r\n    //the school name\r\n    //maybe later we will need to save here school image or school mobile phone, for example...\r\n    private fun saveEverythingInShPreferences(schoolId: Int, gradeId: Int, subgroupId: Int, schoolAddress: String, schoolName: String) {\r\n        val shPreferences = getSharedPreferences(Const.SH_PREFERENCES_NAME, MODE_PRIVATE)\r\n        //I don't want to use .apply() instead of .commit() 'cause I'm afraid that ShPreferences can be not saved by the moment We need them in next activity - MainMenuActivity\r\n        shPreferences.edit()\r\n            .putInt(Const.SH_PREFERENCES_KEY_SCHOOL_ID, schoolId)\r\n            .putInt(Const.SH_PREFERENCES_KEY_GRADE_ID, gradeId) //our architecture guarantee that gradeId will haven't be null by this code.\r\n            .putInt(Const.SH_PREFERENCES_KEY_SUBGROUP_ID, subgroupId)\r\n            .putString(Const.SH_PREFERENCES_KEY_SCHOOL_ADDRESS, schoolAddress)\r\n            .putString(Const.SH_PREFERENCES_KEY_SCHOOL_NAME, schoolName)\r\n            .commit()\r\n    }\r\n\r\n\r\n    class ChooseSubgroupAdapter(\r\n        private val subgroups: List<SubgroupJson>,\r\n        private val inflater: LayoutInflater,\r\n        private val viewModel: ChooseSubgroupViewModel):\r\n        RecyclerView.Adapter<ChooseSubgroupAdapter.SubgroupJsonHolder>() {\r\n        private var checkedRadioButton: CompoundButton? = null\r\n\r\n        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =\r\n            SubgroupJsonHolder(RecyclerElementSubgroupsBinding.inflate(inflater))\r\n\r\n        override fun onBindViewHolder(holder: SubgroupJsonHolder, position: Int) {\r\n            holder.bindingSubgroupElement.textRecyclerElementSubgroupsName.text = subgroups[position].name\r\n\r\n            if(subgroups[position].id == viewModel.chosenSubgroup.id) {\r\n                holder.bindingSubgroupElement.radioButtonRecyclerElementSubgroup.isChecked = true\r\n                checkedRadioButton = holder.bindingSubgroupElement.radioButtonRecyclerElementSubgroup\r\n            }\r\n\r\n            holder.bindingSubgroupElement.radioButtonRecyclerElementSubgroup.setOnCheckedChangeListener{ compoundButton, _ ->\r\n                checkedRadioButton?.isChecked = false\r\n                checkedRadioButton = compoundButton\r\n                viewModel.chosenSubgroup = subgroups[position]\r\n            }\r\n        }\r\n\r\n        override fun getItemCount() = subgroups.size\r\n\r\n        class SubgroupJsonHolder(val bindingSubgroupElement: RecyclerElementSubgroupsBinding): RecyclerView.ViewHolder(bindingSubgroupElement.root)\r\n    }\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/example/lyceumapp/activity/ChooseSubgroupActivity.kt b/app/src/main/java/com/example/lyceumapp/activity/ChooseSubgroupActivity.kt
+--- a/app/src/main/java/com/example/lyceumapp/activity/ChooseSubgroupActivity.kt	
++++ b/app/src/main/java/com/example/lyceumapp/activity/ChooseSubgroupActivity.kt	
+@@ -16,6 +16,7 @@
+ import com.example.lyceumapp.databinding.RecyclerElementSubgroupsBinding
+ import com.example.lyceumapp.json.grades.GradeJson
+ import com.example.lyceumapp.json.schools.SchoolJson
++import com.example.lyceumapp.json.subgroups.SubgroupInfoJson
+ import com.example.lyceumapp.json.subgroups.SubgroupJson
+ import com.example.lyceumapp.viewmodel.ChooseSubgroupViewModel
+ import com.example.lyceumapp.viewmodel.ChooseSubgroupViewModelFactory
+@@ -77,8 +78,7 @@
+             }
+             else if(subgroups.size==1) {
+                 //here it's no good showing the list of subgroups, because there is only one subgroup. We need to save everything in shPreferences and start MainMenuActivity
+-                saveEverythingInShPreferences(viewModel.chosenSchool.id, chosenGrade.id, subgroups[0].id, viewModel.chosenSchool.address, viewModel.chosenSchool.name)
+-                startActivity(Intent(this, MainMenuActivity::class.java))
++                saveInShPreferencesAndStartMainMenuActivity()
+             }
+             else {
+                 //and here we have enough size list of subgroups (size>=2) and we need to show layout with recyclerView and adapter for this recycler view
+@@ -95,8 +95,7 @@
+                 //listener for "next" button
+                 binding.buttonNext.setOnClickListener {
+                     //here we need save everything in sharedPreferences and finally start MainMenuActivity
+-                    saveEverythingInShPreferences(viewModel.chosenSchool.id, chosenGrade.id, viewModel.chosenSubgroup.id, viewModel.chosenSchool.address, viewModel.chosenSchool.name)
+-                    startActivity(Intent(this, MainMenuActivity::class.java))
++                    saveInShPreferencesAndStartMainMenuActivity()
+                 }
+ 
+                 //listener for "cancel" button.
+@@ -116,25 +115,24 @@
+         super.onSaveInstanceState(outState)
+     }
+ 
+-    //we need to save in sharedPreferences:
+-    //the id of chosen school
+-    //the id of chosen grade
+-    //the id of chosen subgroup
+-    //the school address
+-    //the school name
+-    //maybe later we will need to save here school image or school mobile phone, for example...
+-    private fun saveEverythingInShPreferences(schoolId: Int, gradeId: Int, subgroupId: Int, schoolAddress: String, schoolName: String) {
+-        val shPreferences = getSharedPreferences(Const.SH_PREFERENCES_NAME, MODE_PRIVATE)
+-        //I don't want to use .apply() instead of .commit() 'cause I'm afraid that ShPreferences can be not saved by the moment We need them in next activity - MainMenuActivity
+-        shPreferences.edit()
+-            .putInt(Const.SH_PREFERENCES_KEY_SCHOOL_ID, schoolId)
+-            .putInt(Const.SH_PREFERENCES_KEY_GRADE_ID, gradeId) //our architecture guarantee that gradeId will haven't be null by this code.
+-            .putInt(Const.SH_PREFERENCES_KEY_SUBGROUP_ID, subgroupId)
+-            .putString(Const.SH_PREFERENCES_KEY_SCHOOL_ADDRESS, schoolAddress)
+-            .putString(Const.SH_PREFERENCES_KEY_SCHOOL_NAME, schoolName)
+-            .commit()
+-    }
++    private fun saveInShPreferencesAndStartMainMenuActivity() {
++        //I don't want to use .apply() instead of commit(), because our app is getting this value from
++        //shPreferences instantly in next MainMenuActivity
++        getSharedPreferences(Const.SH_PREFERENCES_NAME, MODE_PRIVATE)
++            .edit().putInt(Const.SH_PREFERENCES_KEY_SUBGROUP_ID, viewModel.chosenSubgroup.id).commit()
+ 
++        val subgroupInfo = SubgroupInfoJson(viewModel.chosenSubgroup.id,
++            viewModel.chosenSubgroup.name,
++            chosenGrade.id,
++            chosenGrade.number,
++            chosenGrade.letter,
++            viewModel.chosenSchool.id,
++            viewModel.chosenSchool.name)
++        val intent = Intent(this, MainMenuActivity::class.java)
++        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
++        intent.putExtra(Const.INTENT_KEY_SUBGROUP_INFO, subgroupInfo)
++        startActivity(intent)
++    }
+ 
+     class ChooseSubgroupAdapter(
+         private val subgroups: List<SubgroupJson>,
+Index: app/src/main/java/com/example/lyceumapp/database/LyceumDatabase.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.lyceumapp.database\r\n\r\nimport androidx.room.Database\r\nimport androidx.room.RoomDatabase\r\nimport com.example.lyceumapp.json.lessons.LessonJson\r\n\r\n@Database(entities = [LessonJson::class],  version = 2)\r\nabstract class LyceumDatabase: RoomDatabase() {\r\n    abstract fun lessonDao(): LessonDao\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/example/lyceumapp/database/LyceumDatabase.kt b/app/src/main/java/com/example/lyceumapp/database/LyceumDatabase.kt
+--- a/app/src/main/java/com/example/lyceumapp/database/LyceumDatabase.kt	
++++ b/app/src/main/java/com/example/lyceumapp/database/LyceumDatabase.kt	
+@@ -4,7 +4,7 @@
+ import androidx.room.RoomDatabase
+ import com.example.lyceumapp.json.lessons.LessonJson
+ 
+-@Database(entities = [LessonJson::class],  version = 2)
++@Database(entities = [LessonJson::class],  version = 3)
+ abstract class LyceumDatabase: RoomDatabase() {
+     abstract fun lessonDao(): LessonDao
+ }
+\ No newline at end of file
+Index: app/src/main/java/com/example/lyceumapp/json/lessons/LessonJson.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.lyceumapp.json.lessons\r\n\r\nimport android.os.Parcel\r\nimport android.os.Parcelable\r\nimport androidx.room.Entity\r\nimport androidx.room.Ignore\r\nimport androidx.room.PrimaryKey\r\nimport com.example.lyceumapp.json.teachers.TeacherJson\r\nimport com.squareup.moshi.Json\r\n\r\n@Entity\r\nclass LessonJson(\r\n    @PrimaryKey(autoGenerate = true) @Json(name = \"lesson_id\") var id: Int,\r\n    @Json(name = \"name\") var name: String,\r\n    @Ignore @Json(name = \"start_time\") val startTime: LessonTimeInterval,\r\n    @Ignore @Json(name = \"end_time\") val endTime: LessonTimeInterval,\r\n    @Json(name = \"week\") var week: Int,\r\n    @Json(name = \"weekday\") var weekday: Int,\r\n    @Json(name = \"teacher\") var teacher: TeacherJson\r\n): Parcelable, Comparable<LessonJson> {\r\n    var startHour = startTime.hour\r\n    var startMinute = startTime.minute\r\n    var endHour = endTime.hour\r\n    var endMinute = endTime.minute\r\n\r\n\r\n    constructor(id: Int, name: String, startHour: Int, startMinute: Int, endHour: Int, endMinute: Int, week: Int, weekday: Int, teacherId: Int): this(\r\n        id, name, LessonTimeInterval(startHour, startMinute), LessonTimeInterval(endHour, endMinute), week, weekday, teacherId\r\n    )\r\n\r\n    override fun compareTo(other: LessonJson): Int {\r\n        return if(startHour>other.startHour) 1\r\n        else if(startHour==other.startHour) {\r\n\r\n            if(startMinute>other.startMinute) 1\r\n            else if(startMinute==other.startMinute) 0\r\n            else -1\r\n\r\n        }\r\n        else -1\r\n    }\r\n\r\n    override fun describeContents() = 0\r\n\r\n    override fun writeToParcel(parcel: Parcel, p1: Int) {\r\n        parcel.writeInt(id)\r\n        parcel.writeString(name)\r\n        parcel.writeInt(startHour)\r\n        parcel.writeInt(startMinute)\r\n        parcel.writeInt(endHour)\r\n        parcel.writeInt(endMinute)\r\n        parcel.writeInt(week)\r\n        parcel.writeInt(weekday)\r\n        parcel.writeParcelable(teacher)\r\n    }\r\n\r\n    companion object CREATOR: Parcelable.Creator<LessonJson> {\r\n        override fun createFromParcel(parcel: Parcel?) =\r\n            LessonJson(parcel!!.readInt(),\r\n            parcel.readString()!!,\r\n            LessonTimeInterval(parcel.readInt(), parcel.readInt()),\r\n            LessonTimeInterval(parcel.readInt(), parcel.readInt()),\r\n            parcel.readInt(),\r\n            parcel.readInt(),\r\n            parcel.readInt(),\r\n            )\r\n\r\n        override fun newArray(p0: Int) = arrayOfNulls<LessonJson>(p0)\r\n    }\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/example/lyceumapp/json/lessons/LessonJson.kt b/app/src/main/java/com/example/lyceumapp/json/lessons/LessonJson.kt
+--- a/app/src/main/java/com/example/lyceumapp/json/lessons/LessonJson.kt	
++++ b/app/src/main/java/com/example/lyceumapp/json/lessons/LessonJson.kt	
+@@ -2,6 +2,8 @@
+ 
+ import android.os.Parcel
+ import android.os.Parcelable
++import androidx.room.ColumnInfo
++import androidx.room.Embedded
+ import androidx.room.Entity
+ import androidx.room.Ignore
+ import androidx.room.PrimaryKey
+@@ -10,30 +12,21 @@
+ 
+ @Entity
+ class LessonJson(
+-    @PrimaryKey(autoGenerate = true) @Json(name = "lesson_id") var id: Int,
+-    @Json(name = "name") var name: String,
+-    @Ignore @Json(name = "start_time") val startTime: LessonTimeInterval,
+-    @Ignore @Json(name = "end_time") val endTime: LessonTimeInterval,
++    @ColumnInfo(name = "lesson_id") @PrimaryKey(autoGenerate = true) @Json(name = "lesson_id") var id: Int,
++    @ColumnInfo(name = "lesson_name") @Json(name = "name") var name: String,
++    @Embedded @Json(name = "start_time") val startTime: LessonStartTimeInterval,
++    @Embedded @Json(name = "end_time") val endTime: LessonEndTimeInterval,
+     @Json(name = "week") var week: Int,
+     @Json(name = "weekday") var weekday: Int,
+-    @Json(name = "teacher") var teacher: TeacherJson
++    @Embedded @Json(name = "teacher") val teacher: TeacherJson
+ ): Parcelable, Comparable<LessonJson> {
+-    var startHour = startTime.hour
+-    var startMinute = startTime.minute
+-    var endHour = endTime.hour
+-    var endMinute = endTime.minute
+-
+-
+-    constructor(id: Int, name: String, startHour: Int, startMinute: Int, endHour: Int, endMinute: Int, week: Int, weekday: Int, teacherId: Int): this(
+-        id, name, LessonTimeInterval(startHour, startMinute), LessonTimeInterval(endHour, endMinute), week, weekday, teacherId
+-    )
+ 
+     override fun compareTo(other: LessonJson): Int {
+-        return if(startHour>other.startHour) 1
+-        else if(startHour==other.startHour) {
++        return if(startTime.startHour>other.startTime.startHour) 1
++        else if(startTime.startHour==other.startTime.startHour) {
+ 
+-            if(startMinute>other.startMinute) 1
+-            else if(startMinute==other.startMinute) 0
++            if(startTime.startMinute>other.startTime.startMinute) 1
++            else if(startTime.startMinute==other.startTime.startMinute) 0
+             else -1
+ 
+         }
+@@ -45,25 +38,34 @@
+     override fun writeToParcel(parcel: Parcel, p1: Int) {
+         parcel.writeInt(id)
+         parcel.writeString(name)
+-        parcel.writeInt(startHour)
+-        parcel.writeInt(startMinute)
+-        parcel.writeInt(endHour)
+-        parcel.writeInt(endMinute)
++        parcel.writeInt(startTime.startHour)
++        parcel.writeInt(startTime.startMinute)
++        parcel.writeInt(endTime.endHour)
++        parcel.writeInt(endTime.endMinute)
+         parcel.writeInt(week)
+         parcel.writeInt(weekday)
+-        parcel.writeParcelable(teacher)
++        parcel.writeInt(teacher.id)
++        parcel.writeString(teacher.name)
+     }
+ 
+     companion object CREATOR: Parcelable.Creator<LessonJson> {
+-        override fun createFromParcel(parcel: Parcel?) =
+-            LessonJson(parcel!!.readInt(),
+-            parcel.readString()!!,
+-            LessonTimeInterval(parcel.readInt(), parcel.readInt()),
+-            LessonTimeInterval(parcel.readInt(), parcel.readInt()),
+-            parcel.readInt(),
+-            parcel.readInt(),
+-            parcel.readInt(),
+-            )
++        override fun createFromParcel(parcel: Parcel?): LessonJson {
++            val id = parcel!!.readInt()
++            val name = parcel.readString()!!
++            val startHour = parcel.readInt()
++            val startMinute = parcel.readInt()
++            val endHour = parcel.readInt()
++            val endMinute = parcel.readInt()
++            val week = parcel.readInt()
++            val weekday = parcel.readInt()
++            val teacherId = parcel.readInt()
++            val teacherName = parcel.readString()!!
++
++            return LessonJson(id, name, LessonStartTimeInterval(startHour, startMinute),
++                LessonEndTimeInterval(endHour, endMinute), week, weekday,
++                TeacherJson(teacherId, teacherName))
++        }
++
+ 
+         override fun newArray(p0: Int) = arrayOfNulls<LessonJson>(p0)
+     }

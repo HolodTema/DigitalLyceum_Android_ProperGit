@@ -1,0 +1,98 @@
+[
+    {
+        "merged": "com.example.lyceumapp-mergeDebugResources-50:/layout/activity_settings.xml",
+        "source": "com.example.lyceumapp-main-53:/layout/activity_settings.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-mergeDebugResources-50:/layout/activity_no_response.xml",
+        "source": "com.example.lyceumapp-main-53:/layout/activity_no_response.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-mergeDebugResources-50:/layout/fragment_choose_grade.xml",
+        "source": "com.example.lyceumapp-main-53:/layout/fragment_choose_grade.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-mergeDebugResources-50:/layout/fragment_events.xml",
+        "source": "com.example.lyceumapp-main-53:/layout/fragment_events.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-mergeDebugResources-50:/layout/fragment_teachers.xml",
+        "source": "com.example.lyceumapp-main-53:/layout/fragment_teachers.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-mergeDebugResources-50:/layout/fragment_no_lessons_schedule.xml",
+        "source": "com.example.lyceumapp-main-53:/layout/fragment_no_lessons_schedule.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-mergeDebugResources-50:/layout/recycler_element_subgroups.xml",
+        "source": "com.example.lyceumapp-main-53:/layout/recycler_element_subgroups.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-mergeDebugResources-50:/layout/activity_no_schools.xml",
+        "source": "com.example.lyceumapp-main-53:/layout/activity_no_schools.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-mergeDebugResources-50:/layout/content_main_menu.xml",
+        "source": "com.example.lyceumapp-main-53:/layout/content_main_menu.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-mergeDebugResources-50:/layout/recycler_element_schools.xml",
+        "source": "com.example.lyceumapp-main-53:/layout/recycler_element_schools.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-mergeDebugResources-50:/layout/recycler_element_grades.xml",
+        "source": "com.example.lyceumapp-main-53:/layout/recycler_element_grades.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-mergeDebugResources-50:/layout/activity_no_subgroups_for_grade.xml",
+        "source": "com.example.lyceumapp-main-53:/layout/activity_no_subgroups_for_grade.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-mergeDebugResources-50:/layout/lesson_in_schedule.xml",
+        "source": "com.example.lyceumapp-main-53:/layout/lesson_in_schedule.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-mergeDebugResources-50:/layout/recycler_element_teachers.xml",
+        "source": "com.example.lyceumapp-main-53:/layout/recycler_element_teachers.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-mergeDebugResources-50:/layout/activity_no_grades_for_school.xml",
+        "source": "com.example.lyceumapp-main-53:/layout/activity_no_grades_for_school.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-mergeDebugResources-50:/layout/activity_download.xml",
+        "source": "com.example.lyceumapp-main-53:/layout/activity_download.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-mergeDebugResources-50:/layout/activity_choose_grades_or_subgroups.xml",
+        "source": "com.example.lyceumapp-main-53:/layout/activity_choose_grades_or_subgroups.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-mergeDebugResources-50:/layout/nav_header_main_menu.xml",
+        "source": "com.example.lyceumapp-main-53:/layout/nav_header_main_menu.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-mergeDebugResources-50:/layout/fragment_main.xml",
+        "source": "com.example.lyceumapp-main-53:/layout/fragment_main.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-mergeDebugResources-50:/layout/fragment_lessons_schedule.xml",
+        "source": "com.example.lyceumapp-main-53:/layout/fragment_lessons_schedule.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-mergeDebugResources-50:/layout/fragment_schedule.xml",
+        "source": "com.example.lyceumapp-main-53:/layout/fragment_schedule.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-mergeDebugResources-50:/layout/activity_choose_schools.xml",
+        "source": "com.example.lyceumapp-main-53:/layout/activity_choose_schools.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-mergeDebugResources-50:/layout/activity_main_menu.xml",
+        "source": "com.example.lyceumapp-main-53:/layout/activity_main_menu.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-mergeDebugResources-50:/layout/app_bar_main_menu.xml",
+        "source": "com.example.lyceumapp-main-53:/layout/app_bar_main_menu.xml"
+    }
+]

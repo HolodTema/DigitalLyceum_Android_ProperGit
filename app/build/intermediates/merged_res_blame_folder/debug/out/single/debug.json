@@ -1,0 +1,234 @@
+[
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/drawable_button_rectangle_round.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/drawable/button_rectangle_round.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/mipmap-hdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.lyceumapp-main-53:/mipmap-hdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/drawable_ic_schedule_lessons.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/drawable/ic_schedule_lessons.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "com.example.lyceumapp-main-53:/mipmap-xxxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/layout_recycler_element_teachers.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/layout/recycler_element_teachers.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/layout_recycler_element_subgroups.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/layout/recycler_element_subgroups.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/drawable_ic_next.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/drawable/ic_next.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.lyceumapp-main-53:/mipmap-xxxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/layout_fragment_lessons_schedule.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/layout/fragment_lessons_schedule.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/drawable_tabs_indicator.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/drawable/tabs_indicator.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/layout_activity_choose_schools.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/layout/activity_choose_schools.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/drawable_ic_schedule_breaks.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/drawable/ic_schedule_breaks.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/layout_fragment_no_lessons_schedule.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/layout/fragment_no_lessons_schedule.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "com.example.lyceumapp-main-53:/mipmap-xhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/drawable_lyceum_background.jpg.flat",
+        "source": "com.example.lyceumapp-main-53:/drawable/lyceum_background.jpg"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/layout_fragment_schedule.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/layout/fragment_schedule.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/drawable_ic_launcher_background.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/drawable/ic_launcher_background.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/layout_activity_settings.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/layout/activity_settings.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/drawable_ic_settings.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/drawable/ic_settings.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/mipmap-mdpi_ic_launcher.webp.flat",
+        "source": "com.example.lyceumapp-main-53:/mipmap-mdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/drawable_warning_background.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/drawable/warning_background.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/xml_backup_rules.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/xml/backup_rules.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/drawable_tabs_shape.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/drawable/tabs_shape.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/drawable_main_menu_round_white_background.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/drawable/main_menu_round_white_background.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/raw_test.json.flat",
+        "source": "com.example.lyceumapp-main-53:/raw/test.json"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/mipmap-xxhdpi_ic_launcher.webp.flat",
+        "source": "com.example.lyceumapp-main-53:/mipmap-xxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/xml_data_extraction_rules.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/xml/data_extraction_rules.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/layout_activity_no_grades_for_school.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/layout/activity_no_grades_for_school.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.lyceumapp-main-53:/mipmap-xxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/layout_recycler_element_grades.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/layout/recycler_element_grades.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/raw_schedule_lessons.json.flat",
+        "source": "com.example.lyceumapp-main-53:/raw/schedule_lessons.json"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/xml_root_preferences.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/xml/root_preferences.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/layout_content_main_menu.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/layout/content_main_menu.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/layout_activity_no_response.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/layout/activity_no_response.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/drawable_tabs_selector.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/drawable/tabs_selector.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/drawable_linear_rectangle_secondary_variant.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/drawable/linear_rectangle_secondary_variant.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/drawable-anydpi-v24_ic_launcher_foreground.xml.flat",
+        "source": "com.example.lyceumapp-pngs-46:/drawable-anydpi-v24/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/layout_fragment_choose_grade.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/layout/fragment_choose_grade.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/menu_menu_drawer_main_menu.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/menu/menu_drawer_main_menu.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/layout_activity_no_schools.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/layout/activity_no_schools.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/mipmap-anydpi-v26/ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/layout_activity_choose_grades_or_subgroups.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/layout/activity_choose_grades_or_subgroups.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/mipmap-xhdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.lyceumapp-main-53:/mipmap-xhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/layout_fragment_main.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/layout/fragment_main.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/layout_activity_main_menu.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/layout/activity_main_menu.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/layout_recycler_element_schools.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/layout/recycler_element_schools.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/layout_app_bar_main_menu.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/layout/app_bar_main_menu.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/drawable_linear_rectangle_secondary.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/drawable/linear_rectangle_secondary.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/layout_activity_no_subgroups_for_grade.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/layout/activity_no_subgroups_for_grade.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/layout_activity_download.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/layout/activity_download.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/layout_nav_header_main_menu.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/layout/nav_header_main_menu.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/mipmap-mdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.lyceumapp-main-53:/mipmap-mdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/layout_fragment_events.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/layout/fragment_events.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "com.example.lyceumapp-main-53:/mipmap-hdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/layout_fragment_teachers.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/layout/fragment_teachers.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/layout_lesson_in_schedule.xml.flat",
+        "source": "com.example.lyceumapp-main-53:/layout/lesson_in_schedule.xml"
+    },
+    {
+        "merged": "com.example.lyceumapp-merged_res-51:/drawable_lyceum_lessons_schedule_background.jpeg.flat",
+        "source": "com.example.lyceumapp-main-53:/drawable/lyceum_lessons_schedule_background.jpeg"
+    }
+]

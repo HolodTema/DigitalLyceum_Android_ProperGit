@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="http://schemas.android.com/tools">
+    <string-array name="daysOfWeek">
+        <item>Понедельник</item>
+        <item>Вторник</item>
+        <item>Среда</item>
+        <item>Четверг</item>
+        <item>Пятница</item>
+        <item>Суббота</item>
+        <item>Воскресенье</item>
+    </string-array>
+    <string-array name="lyceumClasses">
+        <item>8А</item>
+        <item>8Б</item>
+        <item>8В</item>
+        <item>9А</item>
+        <item>9Б</item>
+        <item>9В</item>
+        <item>10А</item>
+        <item>10Б</item>
+        <item>10В</item>
+        <item>11А</item>
+        <item>11Б</item>
+        <item>11В</item>
+    </string-array>
+    <string-array name="reply_entries">
+        <item>Reply</item>
+        <item>Reply to all</item>
+    </string-array>
+    <string-array name="reply_values">
+        <item>reply</item>
+        <item>reply_all</item>
+    </string-array>
+    <attr format="color" name="colorOnPrimaryDark"/>
+    <attr format="color" name="colorStandardText"/>
+    <attr format="color" name="colorStroke"/>
+    <attr format="color" name="colorTextSecondary"/>
+    <color name="black">#FF000000</color>
+    <color name="color_on_primary">#F3F0E3</color>
+    <color name="color_on_primary_dark_dark">#787878</color>
+    <color name="color_on_primary_dark_light">#F1F1F1</color>
+    <color name="color_primary">#D26926</color>
+    <color name="color_primary_dark">#A8541E</color>
+    <color name="color_primary_light">#DB8751</color>
+    <color name="color_secondary">#E0D9B9</color>
+    <color name="color_secondary_dark">#B3AE94</color>
+    <color name="color_secondary_light">#E6E1C7</color>
+    <color name="color_standard_text_dark">#FFFFFF</color>
+    <color name="color_standard_text_light">#000000</color>
+    <color name="color_stroke_dark">#393939</color>
+    <color name="color_stroke_light">#737373</color>
+    <color name="color_text_secondary_dark">#1e1e1e</color>
+    <color name="color_text_secondary_light">#3C3C3C</color>
+    <color name="dark_green">#008001</color>
+    <color name="dark_orange">#cc8400</color>
+    <color name="dark_purple">#9a00cc</color>
+    <color name="green">#00a001</color>
+    <color name="light_orange">#FFBC40</color>
+    <color name="light_purple">#d140ff</color>
+    <color name="orange">#FFA500</color>
+    <color name="purple">#c100ff</color>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="red">#FF0000</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="white">#FFFFFFFF</color>
+    <string name="about_app">about_app</string>
+    <string name="amount_attempts_to_server_limit">Вы пытались связаться с сервером очень много раз.\nСледующая попытка через %d</string>
+    <string name="app_name">Lyceum App</string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="cancel">назад</string>
+    <string name="change_grade">Сменить класс</string>
+    <string name="change_school_and_grade">Сменить школу и класс обучения</string>
+    <string name="choose_your_grade">Выберите свой класс обучения:</string>
+    <string name="choose_your_school">Выберите свою школу:</string>
+    <string name="friday">Пт</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="lesson_not_required">Урок-факультатив</string>
+    <string name="lesson_schedule_text_header">Класс: %s, группа: %s</string>
+    <string name="lesson_time">%02d:%02d - %02d:%02d</string>
+    <string name="messages_header">Messages</string>
+    <string name="monday">Пн</string>
+    <string name="navLabelEvents">События</string>
+    <string name="navLabelMain">Главная</string>
+    <string name="navLabelSchedule">Расписание</string>
+    <string name="navLabelTeachers">Учителя</string>
+    <string name="nav_drawer_close"/>
+    <string name="nav_drawer_open"/>
+    <string name="next">Далее</string>
+    <string name="next_lesson_is_in_time">Следующий урок начнется через %d дней, %02d часов и %02d минут.</string>
+    <string name="no_grades_for_school_description">Не удалось загрузить список классов для выбранной образовательной организации.\nЕсли вы считаете, что произошла ошибка, пожалуйста, свяжитесь с нами:\n</string>
+    <string name="no_lessons_today">Сегодня нет уроков.</string>
+    <string name="no_response_description">Проверьте подключение к Интернету или попробуйте позже.</string>
+    <string name="no_response_header">Что то пошло не так…</string>
+    <string name="no_school_address">Без адреса.</string>
+    <string name="no_school_name">Без имени.</string>
+    <string name="no_schools_description">Нам не удалось загрузить список школ. Сервер работает, но возвращает в качестве ответа пустой список школ… Пожалуйста, попробуйте загрузить список школ снова, а если ошибка возникнет снова, то попробуйте позже. Также вы можете связаться с нами:\n</string>
+    <string name="no_subgroups_for_grade_description">Не удалось загрузить список субгрупп для выбранного класса.\nЕсли вы считаете, что произошла ошибка, пожалуйста, свяжитесь с нами:\n</string>
+    <string name="no_subgroups_for_school_description">Не удалось загрузить список субгрупп для выбранного класса.\nНо так как в данной образовательной организации всего один класс, то Вам нужно выбрать другую образовательную организацию.\nЕсли вы считаете, что произошла ошибка, пожалуйста, свяжитесь с нами:\n</string>
+    <string name="pick_grade_again">Выбрать другой класс</string>
+    <string name="pick_school_again">Выбрать другую школу</string>
+    <string name="reply_title">Default reply action</string>
+    <string name="saturday">Сб</string>
+    <string name="schedule">Расписание</string>
+    <string name="schedule_for_school_grade_subgroup">Расписание для группы "%s"</string>
+    <string name="search">Поиск</string>
+    <string name="signature_title">Your signature</string>
+    <string name="sync_header">Sync</string>
+    <string name="sync_title">Sync email periodically</string>
+    <string name="teachers_list">Список учителей</string>
+    <string name="telegram_bot">Telegram-Бот \"Лицей в цифре\":</string>
+    <string name="thursday">Чт</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="try_again">Попробовать снова</string>
+    <string name="tuesday">Вт</string>
+    <string name="warning_lessons_must_not_be_actual">Нам не удалось связаться с сервером, поэтому расписание уроков и другая информация может быть устаревшей!</string>
+    <string name="we_are_downloading_data_please_wait">Загружаем данные с сервера.\nПожалуйста, подождите…</string>
+    <string name="website">Сайт \"Лицей в цифре\":</string>
+    <string name="website_link">http://lava-land.ru/</string>
+    <string name="wednesday">Ср</string>
+    <string name="week">Неделя %d</string>
+    <string name="you_may_change_lyceum_class_in_settings">Позже Вы сможете поменять свой класс в настройках.</string>
+    <style name="Theme.LyceumApp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryVariant">@color/color_primary_light</item>
+        <item name="colorOnPrimary">@color/color_on_primary</item>
+        
+        <item name="colorSecondary">@color/color_secondary</item>
+        <item name="colorSecondaryVariant">@color/color_secondary_dark</item>
+        <item name="colorOnSecondary">@color/black</item>
+        
+        <item name="android:statusBarColor" ns1:targetApi="l">?attr/colorPrimary</item>
+        
+        <item name="colorStroke">@color/color_stroke_light</item>
+        <item name="colorTextSecondary">@color/color_text_secondary_light</item>
+        <item name="colorOnPrimaryDark">@color/color_on_primary_dark_light</item>
+        <item name="colorStandardText">@color/color_standard_text_light</item>
+    </style>
+    <style name="Theme.LyceumApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="Theme.LyceumApp.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="Theme.LyceumApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+    <style name="button" parent="textSecondary">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:background">@drawable/main_menu_round_white_background</item>
+        <item name="android:padding">10dp</item>
+        <item name="elevation">20dp</item>
+        <item name="drawableTint">?attr/colorPrimary</item>
+    </style>
+    <style name="buttonInBottomOfScreen" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="drawableTint">?attr/colorPrimary</item>
+    </style>
+    <style name="button_rectangle_round" parent="textPrimary">
+        <item name="android:background">@drawable/button_rectangle_round</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+    </style>
+    <style name="linearMainMenuElement">
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/main_menu_round_white_background</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:orientation">vertical</item>
+        <item name="elevation">20dp</item>
+    </style>
+    <style name="linearMainMenuElementHorizontalOrientation">
+        <item name="android:background">@drawable/main_menu_round_white_background</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:orientation">vertical</item>
+        <item name="elevation">20dp</item>
+    </style>
+    <style name="textNoResponseHeader" parent="textPrimary">
+        <item name="android:textSize">30sp</item>
+    </style>
+    <style name="textPrimary">
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+    <style name="textSecondary">
+        <item name="android:textColor">?attr/colorTextSecondary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+    <style name="textWarning">
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:background">@drawable/warning_background</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+    </style>
+</resources>

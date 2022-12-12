@@ -39,8 +39,6 @@
                     android:layout_height="match_parent"
                     style="@style/button_rectangle_round"
                     android:text="@string/schedule"
-                    android:paddingVertical="0dp"
-                    android:paddingHorizontal="20dp"
                     android:layout_gravity="end|center"/>
             </LinearLayout>
 
@@ -51,15 +49,18 @@
                 android:layout_marginTop="20dp"
                 android:background="@drawable/linear_rectangle_secondary_variant"
                 android:orientation="vertical">
-
-                <include layout="@layout/lesson_in_schedule" />
-
-                <include layout="@layout/lesson_in_schedule" />
-
-                <include layout="@layout/lesson_in_schedule" />
-
-                <include layout="@layout/lesson_in_schedule" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/textNoLessons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/no_lessons_today"
+                style="@style/textPrimary"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="5dp"
+                android:gravity="center"
+                android:background="@drawable/linear_rectangle_secondary"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

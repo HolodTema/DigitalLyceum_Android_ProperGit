@@ -26,12 +26,12 @@
         android:layout_marginBottom="10dp"
         android:layout_marginHorizontal="10dp"
         android:text="@string/no_schools_description"
-        app:layout_constraintBottom_toTopOf="@+id/textLikeButtonTryAgain"
+        app:layout_constraintBottom_toTopOf="@+id/buttonTryAgain"
         style="@style/textSecondary"/>
 
-    <TextView
-        android:id="@+id/textLikeButtonTryAgain"
-        style="@style/button"
+    <Button
+        android:id="@+id/buttonTryAgain"
+        style="@style/button_rectangle_round"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/try_again"

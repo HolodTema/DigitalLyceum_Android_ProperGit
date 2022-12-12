@@ -69,7 +69,13 @@
         android:id="@+id/tabLayoutSchedule"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:textAllCaps="false" />
+        app:textAllCaps="false"
+        android:background="@drawable/tabs_shape"
+        app:tabBackground="@drawable/tabs_selector"
+        app:tabSelectedTextColor="?attr/colorOnSecondary"
+        app:tabTextColor="?attr/colorOnSecondary"
+        app:tabPadding="0dp"
+        app:tabIndicator="@drawable/tabs_indicator"/>
     <androidx.viewpager2.widget.ViewPager2
         android:layout_marginTop="20dp"
         android:id="@+id/viewPagerSchedule"

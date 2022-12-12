@@ -7,17 +7,19 @@ import com.example.lyceumapp.json.schools.SchoolJson
 import com.example.lyceumapp.retrofit.RetrofitManager
 import com.example.lyceumapp.json.lessons.LessonJson
 import com.example.lyceumapp.json.subgroups.SubgroupJson
+import com.example.lyceumapp.json.subgroups.SubgroupTodayScheduleJson
+import com.example.lyceumapp.json.teachers.TeacherJson
 import kotlinx.coroutines.*
 import java.util.*
-import kotlin.collections.ArrayList
 
 object RequestManager {
-    //we need this field because we don't need to make request to server EVERY time we launch MainMenuActivity. After first time we just get LessonDB from database.
-    var isRequestScheduleForGradeAlreadyGot = false
-    private set
 
-    var isRequestScheduleForSubgroupAlreadyGot = false
-    private set
+    fun getTeachers(listener: (List<TeacherJson>?) -> Unit) {
+        RetrofitManager.getTeachers{
+            if(it==null) listener(null)
+            else listener(it.teachers)
+        }
+    }
 
     fun getSchools(listener: (List<SchoolJson>?) -> Unit) {
         RetrofitManager.getSchools{
@@ -38,20 +40,10 @@ object RequestManager {
         }
     }
 
-
     //here the listener param of function, that contains also boolean field. That field implies "isLessonsActual" -
     //so, it returns true if we downloaded lessons from the server recently. And it returns false in case when the server is unable to connect
     fun getScheduleForSubgroup(context: Context, subgroupId: Int, listener: (List<LessonJson>?, Boolean) -> Unit) {
-        //we don't need to create request to the server every time we launch MainMenuActivity. We need to do it only
-        //one time during the app lifecycle
-        if(isRequestScheduleForSubgroupAlreadyGot) {
-            //here we've already made request to the server and we don't have to do it again. We can get lessons from
-            //a local database
-            getLessonsFromLocalDatabase(context) { lessonsFromLocalDatabase ->
-                listener(lessonsFromLocalDatabase, true)
-            }
-        }
-        else RetrofitManager.getScheduleForSubgroup(subgroupId) {
+        RetrofitManager.getScheduleForSubgroup(subgroupId) {
             if(it==null) {
                 //something went wrong, for example there is no Internet. We need to check local database
                 CoroutineScope(Dispatchers.Main).launch {
@@ -84,17 +76,14 @@ object RequestManager {
         }
     }
 
-    fun getLessonsForOneDayOfSubgroup(lessons: ArrayList<LessonJson>, dayOfWeek: Int): ArrayList<LessonJson> {
-        val result = ArrayList<LessonJson>()
-        for( lesson in lessons) {
-            if(lesson.weekday==dayOfWeek) result.add(lesson)
+    fun getTodaySchedule(subgroupId: Int, listener: (SubgroupTodayScheduleJson?) -> Unit) {
+        RetrofitManager.getTodaySchedule(subgroupId) {
+            listener(it)
         }
-        result.sort()
-        return result
     }
 
     // TODO: later Lawrence will create special request that returns amount of weeks for subgroup on the server
-    fun getAmountWeeksForSubgroup(lessons: ArrayList<LessonJson>): Int {
+    fun getAmountWeeksForSubgroup(lessons: List<LessonJson>): Int {
         var maxWeek = 0
         for(lesson in lessons) {
             if(lesson.week>maxWeek) maxWeek = lesson.week
@@ -102,19 +91,83 @@ object RequestManager {
         return maxWeek
     }
 
-//    fun getNextLessonAndTimeToIt(lessons: List<LessonJson>): Pair<LessonJson, Int> {
-//        val calendar = Calendar.getInstance()
-//        for(lesson in lessons) {
-//
-//        }
-//    }
+    //actually we don't know what week user has. And we can't just use todayLessons, because there can be Sunday or holidays
+    //this method returns null if there is no lessons
+    fun getNextLessonAndTimeToIt(lessons: List<LessonJson>): Pair<LessonJson, DeltaTime>? {
+        fun getMinutesBetweenLessonAndCurrentTime(lesson: LessonJson, currentWeekday: Int, currentHour: Int, currentMinute: Int): Int {
+            val minutesForLessonSinceBeginningOfWeek = lesson.weekday*24*60+lesson.startHour*60+lesson.startMinute
+            val minutesForCurrentTimeSinceBeginningOfWeek = currentWeekday*24*60+currentHour*60+currentMinute
+            return if(minutesForCurrentTimeSinceBeginningOfWeek > minutesForLessonSinceBeginningOfWeek) {
+                (7*24*60-minutesForCurrentTimeSinceBeginningOfWeek)+minutesForLessonSinceBeginningOfWeek
+            }
+            else minutesForLessonSinceBeginningOfWeek-minutesForCurrentTimeSinceBeginningOfWeek
+        }
 
-    fun getLessonsForDefiniteWeek(lessons: ArrayList<LessonJson>, week: Int): ArrayList<LessonJson> {
+        return if(lessons.isEmpty()) null
+        else {
+            val calendar = Calendar.getInstance()
+            val currentWeekday = calendar.get(Calendar.DAY_OF_WEEK)-1
+            val currentHour = calendar.get(Calendar.HOUR)
+            val currentMinute = calendar.get(Calendar.MINUTE)
+
+            var nextLesson = lessons[0] //we can't put null to it, because I don't want to deal with NullSave kotlin stuff... So, I init this var like lessons[0]
+            var minTime = 24*7*60+1 //this field must be bigger than every int from fun above. We need it to our program works correctly
+            var time = 0
+            lessons.forEach{ lesson ->
+                time = getMinutesBetweenLessonAndCurrentTime(lesson, currentWeekday, currentHour, currentMinute)
+                if(time<minTime) {
+                    minTime = time
+                    nextLesson = lesson
+                }
+            }
+            val days = minTime/(60*24)
+            val hours = (minTime-days*60*24)/60
+            val minutes = minTime-days*60*24-hours*60
+            nextLesson to DeltaTime(days, hours, minutes)
+        }
+
+    }
+
+    //actually now in design there's no function how to choose week. But we have this method in ScheduleFragment, where we set week = 0 as default
+    // TODO: remove this comment if there's week choosing engine in the design
+    fun getLessonsForDefiniteWeek(lessons: List<LessonJson>, week: Int): List<LessonJson> {
         val result = arrayListOf<LessonJson>()
         for(lesson in lessons) {
             if(lesson.week==week) result.add(lesson)
         }
         return result
+    }
+
+    //we use this method in ScheduleFragment, when the certain tab in tabLayout was chosen and we need to show a schedule for a day in viewPager
+    fun getLessonsForDefiniteDay(lessons: List<LessonJson>, week: Int, day: Int): List<LessonJson> {
+        val dayInServerFormat = when(day) {
+            Calendar.MONDAY -> 0
+            Calendar.TUESDAY -> 1
+            Calendar.WEDNESDAY -> 2
+            Calendar.THURSDAY ->3
+            Calendar.FRIDAY -> 4
+            Calendar.SATURDAY -> 5
+            Calendar.SUNDAY -> 6
+            else -> throw IncorrectDayOfWeekFormatException()
+        }
+        val result = arrayListOf<LessonJson>()
+        for(lesson in lessons) {
+            if(lesson.week==week && lesson.weekday==dayInServerFormat) result.add(lesson)
+        }
+        return result
+    }
+
+    fun day0to6toCalendarFormat(day0to6: Int): Int {
+        return when(day0to6) {
+            0 -> Calendar.MONDAY
+            1 -> Calendar.TUESDAY
+            2 -> Calendar.WEDNESDAY
+            3 -> Calendar.THURSDAY
+            4 -> Calendar.FRIDAY
+            5 -> Calendar.SATURDAY
+            6 -> Calendar.SUNDAY
+            else -> throw IncorrectDayOfWeekFormatException()
+        }
     }
 
     private fun cacheLessonsToLocalDatabase(context: Context, lessons: List<LessonJson>, listener: () -> Unit) {
@@ -139,6 +192,26 @@ object RequestManager {
                 DatabaseClient.getInstance(context).lessonDao().getAll()
             }
             listener(deferredLessonsFromLocalDatabase.await())
+        }
+    }
+
+    data class DeltaTime(var days: Int, var hours: Int, var minutes: Int) {
+        var mills: Long = ((days * 24 * 60 + hours * 60 + minutes) * 60_000).toLong()
+
+        fun subtractMinute() {
+            mills-=60_000
+            if(minutes>0) minutes--
+            else {
+                if(hours>0) {
+                    minutes = 59
+                    hours--
+                }
+                else if(days>0) {
+                    hours = 23
+                    minutes = 59
+                    days--
+                }
+            }
         }
     }
 }

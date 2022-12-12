@@ -45,7 +45,7 @@ OnNavigationItemSelectedListener {
         if(amountAttemptsToConnect!=null) viewModel.amountAttemptsToConnect = amountAttemptsToConnect
 
         viewModel.liveDataLessonsForSubgroup.observe(this) { pairLessonsAndIsActual ->
-            if (pairLessonsAndIsActual.first == null) {
+            if (pairLessonsAndIsActual == null) {
                 //something went wrong and we can't get lessons for the subgroup from the server. We start NoResponseActivity
                 val intent = Intent(this, NoResponseActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
@@ -72,9 +72,23 @@ OnNavigationItemSelectedListener {
 
                 binding.navViewMainMenu.setNavigationItemSelectedListener(this)
 
-                binding.navViewMainMenu.setCheckedItem(R.id.menuItemMain)
-                supportFragmentManager.beginTransaction().replace(R.id.frameLayoutMainMenu, MainFragment())
-                    .commit()
+                viewModel.updateChosenNavViewItemId(R.id.menuItemMain)
+
+                viewModel.liveDataChosenNavViewItemId.observe(this){ id ->
+                    binding.navViewMainMenu.setCheckedItem(id)
+                    val fragment = when(id) {
+                        R.id.menuItemMain -> MainFragment()
+                        R.id.menuItemSchedule -> ScheduleFragment()
+                        R.id.menuItemTeachers -> TeachersFragment()
+                        R.id.menuItemEvents -> EventsFragment()
+                        else -> {
+                            Log.e(Const.LOG_TAG_DRAWER_INCORRECT_MENU_ITEM_ID, "The id in onNavigationItemSelected is incorrect!")
+                            MainFragment()
+                        }
+                    }
+                    supportFragmentManager.beginTransaction().replace(R.id.frameLayoutMainMenu, fragment)
+                        .commit()
+                }
             }
         }
     }

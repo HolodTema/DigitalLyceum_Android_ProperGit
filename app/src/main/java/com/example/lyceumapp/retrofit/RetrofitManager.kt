@@ -7,13 +7,12 @@ import com.example.lyceumapp.json.grades.SchoolGradesJson
 import com.example.lyceumapp.json.schools.SchoolsListJson
 import com.example.lyceumapp.json.subgroups.GradeSubgroupsJson
 import com.example.lyceumapp.json.subgroups.SubgroupScheduleJson
+import com.example.lyceumapp.json.subgroups.SubgroupTodayScheduleJson
+import com.example.lyceumapp.json.teachers.TeachersListJson
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
+import retrofit2.*
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 
@@ -37,6 +36,22 @@ object RetrofitManager {
                 .addConverterFactory(MoshiConverterFactory.create(Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()))
                 .build()
         }
+    }
+
+    fun getTeachers(listener: (TeachersListJson?) -> Unit) {
+        createClient()
+        val service = retrofit?.create(TeachersService::class.java)
+        val call = service?.getTeachers() ?: throw CantCreateRetrofitRequestException()
+        call.enqueue(object: Callback<TeachersListJson> {
+            override fun onResponse(call: Call<TeachersListJson>, response: Response<TeachersListJson>) {
+                listener(response.body())
+            }
+
+            override fun onFailure(call: Call<TeachersListJson>, t: Throwable) {
+                Log.e(Const.LOG_TAG_RETROFIT_ON_FAILURE, t.toString())
+                listener(null)
+            }
+        })
     }
 
     fun getSchools(listener: (SchoolsListJson?) -> Unit) {
@@ -97,6 +112,22 @@ object RetrofitManager {
             }
 
             override fun onFailure(call: Call<SubgroupScheduleJson>, t: Throwable) {
+                Log.e(Const.LOG_TAG_RETROFIT_ON_FAILURE, t.toString())
+                listener(null)
+            }
+        })
+    }
+
+    fun getTodaySchedule(subgroupId: Int, listener: (SubgroupTodayScheduleJson?) -> Unit) {
+        createClient()
+        val service = retrofit?.create(TodayScheduleForSubgroupService::class.java)
+        val call = service?.getTodayScheduleForSubgroup(subgroupId) ?: throw CantCreateRetrofitRequestException()
+        call.enqueue(object: Callback<SubgroupTodayScheduleJson> {
+            override fun onResponse(call: Call<SubgroupTodayScheduleJson>, response: Response<SubgroupTodayScheduleJson>) {
+                listener(response.body())
+            }
+
+            override fun onFailure(call: Call<SubgroupTodayScheduleJson>, t: Throwable) {
                 Log.e(Const.LOG_TAG_RETROFIT_ON_FAILURE, t.toString())
                 listener(null)
             }

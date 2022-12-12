@@ -53,7 +53,9 @@ class MainActivity : AppCompatActivity() {
         viewModel.liveDataDoWeHaveDataInShPreferences.observe(this) {
             if (it) {
                 //Intent.FLAG_ACTIVITY_N0_ANIMATION - start another activity without animation
-                startActivity(Intent(applicationContext, MainMenuActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
+                val intent = Intent(applicationContext, MainMenuActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                startActivity(intent)
                 //when we finish our activity, MainViewModel will be destroyed
                 finish()
             }

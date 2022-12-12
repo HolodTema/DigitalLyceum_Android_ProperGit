@@ -5,6 +5,7 @@ import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import com.example.lyceumapp.json.teachers.TeacherJson
 import com.squareup.moshi.Json
 
 @Entity
@@ -15,7 +16,7 @@ class LessonJson(
     @Ignore @Json(name = "end_time") val endTime: LessonTimeInterval,
     @Json(name = "week") var week: Int,
     @Json(name = "weekday") var weekday: Int,
-    @Json(name = "teacher_id") var teacherId: Int
+    @Json(name = "teacher") var teacher: TeacherJson
 ): Parcelable, Comparable<LessonJson> {
     var startHour = startTime.hour
     var startMinute = startTime.minute
@@ -50,7 +51,7 @@ class LessonJson(
         parcel.writeInt(endMinute)
         parcel.writeInt(week)
         parcel.writeInt(weekday)
-        parcel.writeInt(teacherId)
+        parcel.writeParcelable(teacher)
     }
 
     companion object CREATOR: Parcelable.Creator<LessonJson> {

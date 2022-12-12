@@ -14,7 +14,7 @@ class NoSchoolsActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.hide()
 
-        binding.textLikeButtonTryAgain.setOnClickListener{
+        binding.buttonTryAgain.setOnClickListener{
             val intent = Intent(this, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
             startActivity(intent)

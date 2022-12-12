@@ -7,10 +7,11 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.example.lyceumapp.*
 import com.example.lyceumapp.json.lessons.LessonJson
+import com.example.lyceumapp.json.subgroups.SubgroupInfoJson
 import com.example.lyceumapp.json.subgroups.SubgroupTodayScheduleJson
 import com.example.lyceumapp.json.teachers.TeacherJson
 
-class MainMenuViewModel(application: Application):
+class MainMenuViewModel(application: Application, subgroupInfo: SubgroupInfoJson):
 AndroidViewModel(application){
     private var timerNextLesson: CountDownTimer? = null
 
@@ -29,43 +30,27 @@ AndroidViewModel(application){
     //classic field against ddos-attacks :)
     var amountAttemptsToConnect = 1
 
-    //after server update we don't need to use lots of fields, we will operate with SchoolJson, GradeJson objects etc
-    private val schoolId: Int
-    private val gradeId: Int
-    private val subgroupId: Int
-    private val schoolAddress: String?
-    private val schoolName: String?
-
     init{
-        //here we need to get all saved data from shPreferences. And we except, that shPreferences contain it
-        val shPreferences = application.getSharedPreferences(Const.SH_PREFERENCES_NAME, Application.MODE_PRIVATE)
-        schoolId = shPreferences.getInt(Const.SH_PREFERENCES_KEY_SCHOOL_ID, -1)
-        gradeId = shPreferences.getInt(Const.SH_PREFERENCES_KEY_GRADE_ID, -1)
-        subgroupId = shPreferences.getInt(Const.SH_PREFERENCES_KEY_SUBGROUP_ID, -1)
-        schoolAddress = shPreferences.getString(Const.SH_PREFERENCES_KEY_SCHOOL_ADDRESS, null)
-        schoolName = shPreferences.getString(Const.SH_PREFERENCES_KEY_SCHOOL_NAME, null)
-        if(schoolId==-1 || gradeId==-1 || subgroupId==-1 || schoolAddress==null || schoolName==null) {
-            throw NoDataInShPreferencesException()
-        }
-        else {
-            //here everything is alright and we can download schedule for the subgroup
-            RequestManager.getScheduleForSubgroup(application.applicationContext, subgroupId) { lessons, isActual ->
-                if(lessons==null) liveDataLessonsForSubgroup.value = null
-                else {
-                    RequestManager.getTodaySchedule(subgroupId) { todaySchedule ->
-                        RequestManager.getTeachers() { teachers ->
-                            liveDataLessonsForSubgroup.value = lessons to isActual
-                            liveDataTodaySchedule.value = todaySchedule
-                            liveDataTeachers.value = teachers
+        RequestManager.getScheduleForSubgroup(application.applicationContext, subgroupInfo.subgroupId) { lessons, isActual ->
+            if (lessons == null) liveDataLessonsForSubgroup.value = null
+            else {
+                RequestManager.getTodaySchedule(subgroupInfo.subgroupId) { todaySchedule ->
+                    RequestManager.getTeachers() { teachers ->
+                        liveDataLessonsForSubgroup.value = lessons to isActual
+                        liveDataTodaySchedule.value = todaySchedule
+                        liveDataTeachers.value = teachers
 
-                            val nextLessonAndTimeToIt = RequestManager.getNextLessonAndTimeToIt(lessons)
-                            liveDataNextLessonAndTimeToIt.value = nextLessonAndTimeToIt
-                            if(nextLessonAndTimeToIt!=null) startNextLessonTimer(nextLessonAndTimeToIt.second.mills, nextLessonAndTimeToIt.first, nextLessonAndTimeToIt.second)
-                        }
+                        val nextLessonAndTimeToIt =
+                            RequestManager.getNextLessonAndTimeToIt(lessons)
+                        liveDataNextLessonAndTimeToIt.value = nextLessonAndTimeToIt
+                        if (nextLessonAndTimeToIt != null) startNextLessonTimer(
+                            nextLessonAndTimeToIt.second.mills,
+                            nextLessonAndTimeToIt.first,
+                            nextLessonAndTimeToIt.second
+                        )
                     }
                 }
             }
-            
         }
     }
 

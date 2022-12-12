@@ -6,6 +6,7 @@ import com.example.lyceumapp.Const
 import com.example.lyceumapp.json.grades.SchoolGradesJson
 import com.example.lyceumapp.json.schools.SchoolsListJson
 import com.example.lyceumapp.json.subgroups.GradeSubgroupsJson
+import com.example.lyceumapp.json.subgroups.SubgroupInfoJson
 import com.example.lyceumapp.json.subgroups.SubgroupScheduleJson
 import com.example.lyceumapp.json.subgroups.SubgroupTodayScheduleJson
 import com.example.lyceumapp.json.teachers.TeachersListJson
@@ -96,6 +97,22 @@ object RetrofitManager {
             }
 
             override fun onFailure(call: Call<GradeSubgroupsJson>, t: Throwable) {
+                Log.e(Const.LOG_TAG_RETROFIT_ON_FAILURE, t.toString())
+                listener(null)
+            }
+        })
+    }
+
+    fun getSubgroupInfo(subgroupId: Int, listener: (SubgroupInfoJson?) -> Unit) {
+        createClient()
+        val service = retrofit?.create(SubgroupInfoService::class.java)
+        val call = service?.getSubgroupInfo(subgroupId) ?: throw CantCreateRetrofitRequestException()
+        call.enqueue(object: Callback<SubgroupInfoJson> {
+            override fun onResponse(call: Call<SubgroupInfoJson>, response: Response<SubgroupInfoJson>) {
+                listener(response.body())
+            }
+
+            override fun onFailure(call: Call<SubgroupInfoJson>, t: Throwable) {
                 Log.e(Const.LOG_TAG_RETROFIT_ON_FAILURE, t.toString())
                 listener(null)
             }

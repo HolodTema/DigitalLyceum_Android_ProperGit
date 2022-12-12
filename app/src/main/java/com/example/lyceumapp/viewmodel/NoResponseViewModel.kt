@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.lyceumapp.Const
 import com.example.lyceumapp.json.grades.GradeJson
 import com.example.lyceumapp.json.schools.SchoolJson
+import com.example.lyceumapp.json.subgroups.SubgroupInfoJson
 
 //every time NoResponseActivity.onCreate() method runs, we kinda 'create' our viewModel through ViewModelProvider and NoResponseViewModelFactory
 //But although actually viewModel creates only the one time - when activity creates the first time, we still need to pass params to this constructor every
@@ -18,6 +19,7 @@ class NoResponseViewModel(application: Application, var amountAttemptsToConnect:
     //'late init' var in Kotlin works like declared, but hasn't initialized yet variable. For example, in Java it would be like: int a; (and below somewhere 'a = 0;')
     lateinit var chosenSchool: SchoolJson
     lateinit var chosenGrade: GradeJson
+    lateinit var subgroupInfo: SubgroupInfoJson
     var amountGrades: Int? = null
 
     init{

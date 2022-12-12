@@ -19,6 +19,7 @@ class Const {
         const val INTENT_KEY_CHOSEN_GRADE = "intentKeyChosenGrade"
         const val INTENT_KEY_AMOUNT_GRADES = "intentKeyAmountGrades"
         const val INTENT_KEY_LESSONS_FOR_SUBGROUP = "intentKeyLessonsForSubgroup"
+        const val INTENT_KEY_SUBGROUP_INFO = "intentKeySubgroupInfo"
 
         const val BUNDLE_KEY_LESSONS_FOR_ONE_DAY_OF_SUBGROUP = "bundleKeyLessonsForOneDayOfSubgroup"
         const val BUNDLE_KEY_LESSONS_FOR_ONE_DAY_OF_GRADE = "bundleKeyLessonsForOneDayOfGrade"

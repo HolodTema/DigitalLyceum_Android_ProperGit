@@ -11,6 +11,7 @@ import com.example.lyceumapp.R
 import com.example.lyceumapp.databinding.ActivityNoResponseBinding
 import com.example.lyceumapp.json.grades.GradeJson
 import com.example.lyceumapp.json.schools.SchoolJson
+import com.example.lyceumapp.json.subgroups.SubgroupInfoJson
 import com.example.lyceumapp.viewmodel.NoResponseViewModel
 import com.example.lyceumapp.viewmodel.NoResponseViewModelFactory
 
@@ -50,6 +51,10 @@ class NoResponseActivity : AppCompatActivity() {
             val amountGrades = intent.extras?.getInt(Const.INTENT_KEY_AMOUNT_GRADES)
             if(amountGrades!=null) viewModel.amountGrades = amountGrades
         }
+        else if(viewModel.noResponseType==Const.NoResponseType.GetLessons) {
+            val subgroupInfo = intent.extras?.getParcelable<SubgroupInfoJson>(Const.INTENT_KEY_SUBGROUP_INFO)
+            if(subgroupInfo!=null) viewModel.subgroupInfo = subgroupInfo
+        }
 
         //not only timer in our ViewModel starts in case of many requests to server from user. We also need to hide some xml-elements, for example button 'Try again'
         if(viewModel.amountAttemptsToConnect>=Const.AMOUNT_ATTEMPTS_TO_CONNECT_BEFORE_TIMING) {
@@ -78,6 +83,7 @@ class NoResponseActivity : AppCompatActivity() {
                 }
                 Const.NoResponseType.GetLessons -> {
                     Intent(this, MainMenuActivity::class.java)
+                        .putExtra(Const.INTENT_KEY_SUBGROUP_INFO, viewModel.subgroupInfo)
                 }
             }
             viewModel.amountAttemptsToConnect++;

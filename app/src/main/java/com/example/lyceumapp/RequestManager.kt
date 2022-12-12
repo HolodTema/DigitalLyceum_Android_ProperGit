@@ -6,6 +6,7 @@ import com.example.lyceumapp.json.grades.GradeJson
 import com.example.lyceumapp.json.schools.SchoolJson
 import com.example.lyceumapp.retrofit.RetrofitManager
 import com.example.lyceumapp.json.lessons.LessonJson
+import com.example.lyceumapp.json.subgroups.SubgroupInfoJson
 import com.example.lyceumapp.json.subgroups.SubgroupJson
 import com.example.lyceumapp.json.subgroups.SubgroupTodayScheduleJson
 import com.example.lyceumapp.json.teachers.TeacherJson
@@ -37,6 +38,12 @@ object RequestManager {
     fun getSubgroupsForGrade(gradeId: Int, listener: (List<SubgroupJson>?) -> Unit) {
         RetrofitManager.getSubgroupsForGrade(gradeId) {
             listener(it?.subgroups)
+        }
+    }
+
+    fun getSubgroupInfo(subgroupId: Int, listener: (SubgroupInfoJson?) -> Unit) {
+        RetrofitManager.getSubgroupInfo(subgroupId) {
+            listener(it)
         }
     }
 

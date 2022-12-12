@@ -11,7 +11,6 @@ import com.example.lyceumapp.databinding.FragmentMainBinding
 import com.example.lyceumapp.databinding.LessonInScheduleBinding
 import com.example.lyceumapp.viewmodel.MainMenuViewModel
 
-
 class MainFragment : Fragment() {
 
     override fun onCreateView(

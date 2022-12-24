@@ -3,19 +3,14 @@
     <style name="Theme.LyceumApp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/color_primary</item>
-        <item name="colorPrimaryVariant">@color/color_primary_light</item>
+        <item name="colorPrimaryVariant">@color/color_primary_variant</item>
         <item name="colorOnPrimary">@color/color_on_primary</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/color_secondary</item>
-        <item name="colorSecondaryVariant">@color/color_secondary_dark</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondaryVariant">@color/color_secondary_variant</item>
+        <item name="colorOnSecondary">@color/color_on_secondary</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
-        <!-- Customize your theme here. -->
-        <item name="colorStroke">@color/color_stroke_light</item>
-        <item name="colorTextSecondary">@color/color_text_secondary_light</item>
-        <item name="colorOnPrimaryDark">@color/color_on_primary_dark_light</item>
-        <item name="colorStandardText">@color/color_standard_text_light</item>
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorSecondaryVariant</item>
     </style>
 
     <style name="Theme.LyceumApp.NoActionBar">

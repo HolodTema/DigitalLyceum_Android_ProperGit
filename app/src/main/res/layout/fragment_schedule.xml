@@ -6,62 +6,40 @@
     android:layout_height="match_parent"
     tools:context=".fragment.ScheduleFragment"
     android:orientation="vertical"
-    android:padding="15dp">
-
-    <LinearLayout
-        android:id="@+id/linearScheduleHeader"
+    android:padding="15dp"
+    android:background="?attr/colorPrimaryVariant">
+    
+    <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/linear_rectangle_secondary_variant"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/textScheduleForGrade"
-            style="@style/textPrimary"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center"
-            android:layout_marginVertical="5dp"
-            android:layout_marginEnd="20dp"
-            android:layout_weight="1"
-            android:gravity="center|start"
-            android:layout_marginStart="20dp"
-            android:text="Schedule for 1A" />
-        <Button
-            android:id="@+id/buttonChangeGrade"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            style="@style/button_rectangle_round"
-            android:text="@string/change_grade"
-            android:paddingVertical="0dp"
-            android:paddingHorizontal="20dp"
-            android:layout_gravity="end|center"/>
-    </LinearLayout>
+        style="@style/buttonPrimary"
+        android:text="@string/cancel"/>
 
     <LinearLayout
-        android:id="@+id/linearWeekType"
+        android:id="@+id/linearGradeNameHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/linear_rectangle_secondary_variant"
         android:orientation="horizontal"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="15dp">
         <TextView
-            android:id="@+id/textWeekType"
-            style="@style/textPrimary"
-            android:layout_width="0dp"
+            android:id="@+id/textGradeName"
+            style="@style/textOnSecondary.textH4"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|center"
-            android:layout_marginVertical="5dp"
-            android:layout_marginEnd="20dp"
             android:layout_weight="1"
             android:gravity="center|start"
-            android:layout_marginStart="20dp"
-            android:text="The week type" />
-        <Spinner
+            android:text="10V schedule"
+            android:paddingHorizontal="20dp"/>
+        <Button
+            android:id="@+id/buttonChangeGrade"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/spinnerWeekType"
-            style="@style/button_rectangle_round"/>
+            android:layout_height="wrap_content"
+            style="@style/buttonPrimary"
+            android:text="@string/choose_grade"
+            android:layout_weight="1"
+            android:layout_gravity="end" />
     </LinearLayout>
 
     <com.google.android.material.tabs.TabLayout

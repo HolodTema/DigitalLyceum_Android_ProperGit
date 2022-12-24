@@ -40,7 +40,7 @@ class TeachersFragment : Fragment() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = Holder(RecyclerElementTeachersBinding.inflate(inflater))
 
         override fun onBindViewHolder(holder: Holder, position: Int) {
-            holder.binding.textName.text = teachers[position].name
+//            holder.binding.textName.text = teachers[position]
         }
 
         override fun getItemCount() = teachers.size

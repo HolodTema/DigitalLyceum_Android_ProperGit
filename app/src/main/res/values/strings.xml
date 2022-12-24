@@ -63,4 +63,6 @@
     <string name="teachers_list">Список учителей</string>
     <string name="search">Поиск</string>
     <string name="no_lessons_today">Сегодня нет уроков.</string>
+    <string name="events">Мероприятия</string>
+    <string name="choose_grade">Выбрать класс</string>
 </resources>

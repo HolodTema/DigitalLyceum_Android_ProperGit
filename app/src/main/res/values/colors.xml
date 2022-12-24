@@ -1,43 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<!-- HolodTema todo тут, помимо прочих цветов, объявлены все цвета для themes.xml ночной и светлой. Т е добавляй цвета для ночной темы сюда-->
-<!-- HolodTema todo пока что тут только для светлой темы цвета, я темную тему не писал - это и приводит к вылетам приложения -->
-<!-- HolodTema todo просто объяви какие хочешь цвета темной темы по аналогии, только замени в аттрибуте name "_light" на "_dark" - т к для темной темы, а не для светлой -->
-
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="orange">#FFA500</color>
-    <color name="light_orange">#FFBC40</color>
-    <color name="dark_orange">#cc8400</color>
-    <color name="light_purple">#d140ff</color>
-    <color name="purple">#c100ff</color>
-    <color name="dark_purple">#9a00cc</color>
-    <color name="green">#00a001</color>
-    <color name="dark_green">#008001</color>
-    <color name="color_stroke_light">#737373</color>
-    <color name="color_text_secondary_light">#3C3C3C</color>
-    <color name="color_on_primary_dark_light">#F1F1F1</color>
-    <color name="color_standard_text_light">#000000</color>
-    <color name="color_stroke_dark">#393939</color>
-    <color name="color_text_secondary_dark">#1e1e1e</color>
-    <color name="color_on_primary_dark_dark">#787878</color>
-    <color name="color_standard_text_dark">#FFFFFF</color>
-
-    <color name="color_primary">#D26926</color>
-    <color name="color_primary_light">#DB8751</color>
-    <color name="color_primary_dark">#A8541E</color>
-
-    <color name="color_secondary">#E0D9B9</color>
-    <color name="color_secondary_light">#E6E1C7</color>
-    <color name="color_secondary_dark">#B3AE94</color>
-
-    <color name="color_on_primary">#F3F0E3</color>
-
     <color name="red">#FF0000</color>
+
+    <color name="color_primary">#6D9773</color>
+    <color name="color_primary_variant">#0C3B2E</color>
+    <color name="color_on_primary">#FFFFFF</color>
+
+    <color name="color_secondary">#FFC936</color>
+    <color name="color_secondary_variant">#FFFFFF</color>
+    <color name="color_on_secondary">#FF000000</color>
 </resources>

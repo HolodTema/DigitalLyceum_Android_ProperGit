@@ -22,11 +22,11 @@ class ChooseSubgroupViewModel(
     lateinit var chosenSubgroup: SubgroupJson
 
     init{
-        downloadSubgroups(chosenGrade.id)
+        downloadSubgroups(chosenGrade.schoolId, chosenGrade.id)
     }
 
-    private fun downloadSubgroups(gradeId: Int) {
-        RequestManager.getSubgroupsForGrade(gradeId) {
+    private fun downloadSubgroups(schoolId: Int, gradeId: Int) {
+        RequestManager.getSubgroupsForGrade(schoolId, gradeId) {
             if(it!=null && it.isNotEmpty()) chosenSubgroup = it[0]
 
             liveDataListSubgroups.value = it

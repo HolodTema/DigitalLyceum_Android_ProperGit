@@ -4,7 +4,8 @@
     android:layout_height="200dp"
     android:orientation="horizontal"
     android:paddingVertical="50dp"
-    android:paddingHorizontal="20dp">
+    android:paddingHorizontal="20dp"
+    android:background="?attr/colorPrimaryVariant">
     <ImageView
         android:id="@+id/imageNavHeaderUser"
         android:layout_width="100dp"
@@ -12,7 +13,7 @@
         android:src="@mipmap/ic_launcher_round"
         android:layout_gravity="center"/>
     <TextView
-        style="@style/textPrimary"
+        style="@style/textOnPrimary.textH2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"

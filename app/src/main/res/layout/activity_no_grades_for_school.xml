@@ -4,11 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.NoGradesForSchoolActivity">
+    tools:context=".activity.NoGradesForSchoolActivity"
+    android:background="?attr/colorPrimaryVariant">
 
     <TextView
         android:id="@+id/textNoGradesForSchoolHeader"
-        style="@style/textNoResponseHeader"
+        style="@style/textOnPrimary.textH1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
@@ -27,12 +28,12 @@
         android:layout_marginHorizontal="10dp"
         android:text="@string/no_grades_for_school_description"
         app:layout_constraintBottom_toTopOf="@+id/buttonPickSchoolAgain"
-        style="@style/textSecondary"/>
+        style="@style/textOnPrimary.textH3"/>
 
 
     <Button
         android:id="@+id/buttonPickSchoolAgain"
-        style="@style/button_rectangle_round"
+        style="@style/buttonPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/pick_school_again"

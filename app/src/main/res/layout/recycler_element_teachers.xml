@@ -6,6 +6,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textName"
-        style="@style/textPrimary"
+        style="@style/textOnPrimary.textH4"
         android:layout_marginVertical="10dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.lyceumapp.Const
+import com.example.lyceumapp.const
 import com.example.lyceumapp.MainActivity
 import com.example.lyceumapp.R
 import com.example.lyceumapp.databinding.ActivityChooseGradesOrSubgroupsBinding
@@ -33,15 +33,9 @@ class ChooseGradeActivity : AppCompatActivity() {
         //we need to get chosenSchool in every this onCreate() method call, because our ViewModel uses it immediately
         //and that's why we need to pass chosenSchool into constructor of ViewModel. And I wish, but we need to call ViewModel's constructor every onCreate() call
         //and also that's why we need to save chosenSchool in onSaveInstanceState()
-        chosenSchool = intent.extras?.getParcelable(Const.INTENT_KEY_CHOSEN_SCHOOL)!!
+        chosenSchool = intent.extras?.getParcelable(const.INTENT_KEY_CHOSEN_SCHOOL)!!
 
         viewModel = ViewModelProvider(this, ChooseGradeViewModelFactory(application, chosenSchool))[ChooseGradeViewModel::class.java]
-
-        //we need to get amountAttemptsToConnect from intent only one time
-        //if even this activity launch is the first attempt (in this case amountAttemptsToConnect = null always), we have default value of amountAttemptsToConnect in our ViewModel
-        val amountAttemptsToConnect = intent.extras?.getInt(Const.INTENT_KEY_AMOUNT_ATTEMPTS_TO_CONNECT)
-        //green light of variable in Android Studio is Kotlin SmartCast
-        if(amountAttemptsToConnect!=null) viewModel.amountAttemptsToConnect = amountAttemptsToConnect
 
         //this liveData will be updated as soon as we get list of grades from server
         viewModel.liveDataListGrades.observe(this) { grades ->
@@ -50,9 +44,9 @@ class ChooseGradeActivity : AppCompatActivity() {
                 val intent = Intent(this, NoResponseActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                 //this case we need to start NoResponseActivity with params in intent: NoResponseType, AmountAttemptsToConnect, chosenSchool
-                intent.putExtra(Const.INTENT_KEY_NO_RESPONSE_TYPE, Const.NoResponseType.GetGrades)
-                intent.putExtra(Const.INTENT_KEY_AMOUNT_ATTEMPTS_TO_CONNECT, viewModel.amountAttemptsToConnect)
-                intent.putExtra(Const.INTENT_KEY_CHOSEN_SCHOOL, chosenSchool)
+                intent.putExtra(const.INTENT_KEY_NO_RESPONSE_TYPE, const.NoResponseType.GetGrades.name)
+                intent.putExtra(const.INTENT_KEY_AMOUNT_ATTEMPTS_TO_CONNECT, viewModel.amountAttemptsToConnect)
+                intent.putExtra(const.INTENT_KEY_CHOSEN_SCHOOL, chosenSchool)
                 startActivity(intent)
             }
             else if(grades.isEmpty()) {
@@ -82,9 +76,9 @@ class ChooseGradeActivity : AppCompatActivity() {
                     val intent = Intent(this, ChooseSubgroupActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                     //we need to pass chosenGrade, chosenSchool and amountGrades into the ChooseSubgroupActivity
-                    intent.putExtra(Const.INTENT_KEY_CHOSEN_SCHOOL, chosenSchool)
-                    intent.putExtra(Const.INTENT_KEY_CHOSEN_GRADE, viewModel.chosenGrade)
-                    intent.putExtra(Const.INTENT_KEY_AMOUNT_GRADES, viewModel.liveDataListGrades.value?.size)
+                    intent.putExtra(const.INTENT_KEY_CHOSEN_SCHOOL, chosenSchool)
+                    intent.putExtra(const.INTENT_KEY_CHOSEN_GRADE, viewModel.chosenGrade)
+                    intent.putExtra(const.INTENT_KEY_AMOUNT_GRADES, viewModel.liveDataListGrades.value?.size)
                     startActivity(intent)
                 }
 
@@ -101,7 +95,7 @@ class ChooseGradeActivity : AppCompatActivity() {
 
     //we need to save only chosenSchool field in onSaveInstanceState()
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelable(Const.INTENT_KEY_CHOSEN_SCHOOL, chosenSchool)
+        outState.putParcelable(const.INTENT_KEY_CHOSEN_SCHOOL, chosenSchool)
         super.onSaveInstanceState(outState)
     }
 

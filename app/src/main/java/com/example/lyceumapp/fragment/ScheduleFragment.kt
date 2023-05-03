@@ -7,9 +7,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemSelectedListener
-import android.widget.ArrayAdapter
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -20,7 +17,6 @@ import com.example.lyceumapp.json.lessons.LessonJson
 import com.example.lyceumapp.tabs.lessons.LessonsScheduleFragment
 import com.example.lyceumapp.viewmodel.MainMenuViewModel
 import com.google.android.material.tabs.TabLayoutMediator
-import java.util.*
 
 class ScheduleFragment : Fragment() {
 
@@ -32,17 +28,7 @@ class ScheduleFragment : Fragment() {
 
         val viewModel: MainMenuViewModel by activityViewModels()
 
-        val weekNames = viewModel.getWeekNamesForSubgroup()
-        if(weekNames.isEmpty()) binding.linearWeekType.visibility = View.GONE
-        else {
-            val spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, weekNames)
-            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            binding.spinnerWeekType.adapter = spinnerAdapter
-        }
-
-
-
-        val lessonsForDefiniteWeek = viewModel.getLessonsForDefiniteWeek(0)
+        val lessonsForDefiniteWeek = viewModel.getLessonsForDefiniteWeek(true)
         val adapter = LessonsTabsPagerAdapter(viewModel, childFragmentManager, lifecycle, lessonsForDefiniteWeek)
         binding.viewPagerSchedule.adapter = adapter
         binding.viewPagerSchedule.isUserInputEnabled = true
@@ -58,22 +44,9 @@ class ScheduleFragment : Fragment() {
             }
         }.attach()
 
-        binding.spinnerWeekType.onItemSelectedListener = object: OnItemSelectedListener{
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                adapter.lessons = viewModel.getLessonsForDefiniteWeek(position)
-                adapter.notifyDataSetChanged()
-            }
-
-            override fun onNothingSelected(p0: AdapterView<*>?) = Unit
-        }
-
         binding.buttonChangeGrade.setOnClickListener {
-            val shPreferences = requireActivity().getSharedPreferences(Const.SH_PREFERENCES_NAME, Context.MODE_PRIVATE)
-            shPreferences.edit().remove(Const.SH_PREFERENCES_KEY_SCHOOL_ID)
-                .remove(Const.SH_PREFERENCES_KEY_GRADE_ID)
-                .remove(Const.SH_PREFERENCES_KEY_SUBGROUP_ID)
-                .remove(Const.SH_PREFERENCES_KEY_SCHOOL_NAME)
-                .remove(Const.SH_PREFERENCES_KEY_SCHOOL_ADDRESS).commit()
+            val shPreferences = requireActivity().getSharedPreferences(const.SH_PREFERENCES_NAME, Context.MODE_PRIVATE)
+            shPreferences.edit().remove(const.SH_PREFERENCES_KEY_SCHOOL_ID).remove(const.SH_PREFERENCES_KEY_SUBGROUP_ID).commit()
             startActivity(Intent(requireActivity(), MainActivity::class.java))
         }
 
@@ -90,7 +63,7 @@ class ScheduleFragment : Fragment() {
         override fun createFragment(position: Int): Fragment {
             return when(position){
                 0, 1, 2, 3, 4, 5 -> {
-                    viewModel.updateLessonsForDefiniteDay(lessons, RequestManager.day0to6toCalendarFormat(position))
+                    viewModel.updateLessonsForDefiniteDay(lessons, true, RequestManager.day0to6toCalendarFormat(position))
                     LessonsScheduleFragment()
                 }
                 else -> throw LessonOutOfBoundsException()

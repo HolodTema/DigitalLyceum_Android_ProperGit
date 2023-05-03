@@ -7,25 +7,25 @@ import com.squareup.moshi.Json
 data class SchoolJson(
     @Json(name = "school_id") val id: Int,
     @Json(name = "name") val name: String,
-    @Json(name = "city") val city: String,
-    @Json(name = "place") val address: String
-): Parcelable, Comparable<SchoolJson> {
+    @Json(name = "address") val address: String,
+    @Json(name = "is_using_double_week") val isUsingDoubleWeek: Boolean
+    ): Parcelable, Comparable<SchoolJson> {
     override fun describeContents() = 0
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(id)
         parcel.writeString(name)
-        parcel.writeString(city)
         parcel.writeString(address)
+        val isUsingDoubleWeek = if(isUsingDoubleWeek) 1 else 0
+        parcel.writeInt(isUsingDoubleWeek)
     }
 
     companion object CREATOR: Parcelable.Creator<SchoolJson> {
         override fun createFromParcel(parcel: Parcel?): SchoolJson {
-            return SchoolJson(
-                parcel?.readInt()!!,
-                parcel.readString()!!,
-                parcel.readString()!!,
-                parcel.readString()!!
-            )
+            val id = parcel?.readInt()!!
+            val name = parcel.readString()!!
+            val address = parcel.readString()!!
+            val isUniversity = parcel.readInt()==1
+            return SchoolJson(id, name, address, isUniversity)
         }
 
         override fun newArray(size: Int) = arrayOfNulls<SchoolJson>(size)

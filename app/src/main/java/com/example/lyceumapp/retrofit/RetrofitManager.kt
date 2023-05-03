@@ -1,153 +1,169 @@
 package com.example.lyceumapp.retrofit
 
 import android.util.Log
-import com.example.lyceumapp.CantCreateRetrofitRequestException
-import com.example.lyceumapp.Const
+import com.example.lyceumapp.*
+import com.example.lyceumapp.json.grades.GradeJson
 import com.example.lyceumapp.json.grades.SchoolGradesJson
+import com.example.lyceumapp.json.lessons.ScheduleJson
+import com.example.lyceumapp.json.schools.SchoolJson
 import com.example.lyceumapp.json.schools.SchoolsListJson
-import com.example.lyceumapp.json.subgroups.GradeSubgroupsJson
-import com.example.lyceumapp.json.subgroups.SubgroupInfoJson
-import com.example.lyceumapp.json.subgroups.SubgroupScheduleJson
-import com.example.lyceumapp.json.subgroups.SubgroupTodayScheduleJson
+import com.example.lyceumapp.json.subgroups.*
 import com.example.lyceumapp.json.teachers.TeachersListJson
+import com.example.lyceumapp.retrofit.grades.DefineGradeService
+import com.example.lyceumapp.retrofit.grades.GradesForSchoolService
+import com.example.lyceumapp.retrofit.lessons.DayScheduleForSubgroupService
+import com.example.lyceumapp.retrofit.lessons.NearestDayScheduleForSubgroupService
+import com.example.lyceumapp.retrofit.schools.DefineSchoolService
+import com.example.lyceumapp.retrofit.schools.SchoolsService
+import com.example.lyceumapp.retrofit.subgroups.DefineSubgroupService
+import com.example.lyceumapp.retrofit.subgroups.SubgroupsForGradeService
+import com.example.lyceumapp.retrofit.teachers.TeachersService
+import com.example.lyceumapp.util.LoggingRetrofitCallback
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
 import retrofit2.*
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
+import kotlin.reflect.KProperty
 
 object RetrofitManager {
-    private const val BASE_URL = "https://dev.lava-land.ru"
+    private const val BASE_URL = "https://test.lyceumland.ru"
 
 
-    private var retrofit: Retrofit? = null
+    private val retrofit: Retrofit by RetrofitDelegate()
 
-    private fun createClient() {
-        if(retrofit==null) {
+
+    fun getTeachers(listener: (TeachersListJson?) -> Unit) {
+        val service = retrofit.create(TeachersService::class.java)
+        val call = service.getTeachers()
+        call.enqueue(LoggingRetrofitCallback(
+            { _, response ->
+            listener(response.body())
+            },
+            {
+                listener(null)
+            }
+        ))
+    }
+
+    fun getSchools(listener: (SchoolsListJson?) -> Unit) {
+        val service = retrofit.create(SchoolsService::class.java)
+        val call = service.getSchools()
+        call.enqueue(LoggingRetrofitCallback(
+            { _, response ->
+                listener(response.body())
+            },
+            {
+                listener(null)
+            }
+        ))
+    }
+
+    fun getDefineSchool(schoolId: Int, listener: (SchoolJson?) -> Unit) {
+        val service = retrofit.create(DefineSchoolService::class.java)
+        val call = service.getDefineSchool(schoolId)
+        call.enqueue(LoggingRetrofitCallback(
+            { _, response ->
+                listener(response.body())
+            },
+            {
+                listener(null)
+            }
+        ))
+    }
+
+    fun getGradesForSchool(schoolId: Int, listener: (SchoolGradesJson?) -> Unit) {
+        val service = retrofit.create(GradesForSchoolService::class.java)
+        val call = service.getGradesForSchool(schoolId)
+        call.enqueue(LoggingRetrofitCallback(
+            { _, response ->
+                listener(response.body())
+            },
+            {
+                listener(null)
+            }
+        ))
+    }
+
+    fun getDefineGrade(gradeId: Int, listener: (GradeJson?) -> Unit) {
+        val service = retrofit.create(DefineGradeService::class.java)
+        val call = service.getDefineGrade(gradeId)
+        call.enqueue(LoggingRetrofitCallback(
+            { _, response ->
+                listener(response.body())
+            },
+            {
+                listener(null)
+            }
+        ))
+    }
+
+    fun getSubgroupsForGrade(schoolId: Int, gradeId: Int, listener: (GradeSubgroupsJson?) -> Unit) {
+        val service = retrofit.create(SubgroupsForGradeService::class.java)
+        val call = service.getSubgroupsForGrade(schoolId, gradeId)
+        call.enqueue(LoggingRetrofitCallback(
+            { _, response ->
+                listener(response.body())
+            },
+            {
+                listener(null)
+            }
+        ))
+    }
+
+    fun getDefineSubgroup(subgroupId: Int, listener: (SubgroupJson?) -> Unit) {
+        val service = retrofit.create(DefineSubgroupService::class.java)
+        val call = service.getDefineSubgroup(subgroupId)
+        call.enqueue(LoggingRetrofitCallback(
+            { _, response ->
+                listener(response.body())
+            },
+            {
+                listener(null)
+            }
+        ))
+    }
+
+    fun getDayScheduleForSubgroup(subgroupId: Int, gradeId: Int, weekday: Int, doDouble: Boolean, listener: (ScheduleJson?) -> Unit) {
+        val service = retrofit.create(DayScheduleForSubgroupService::class.java)
+        val call = service.getDayScheduleForSubgroup(subgroupId, gradeId, weekday, doDouble)
+        call.enqueue(LoggingRetrofitCallback(
+            { _, response ->
+                listener(response.body())
+            },
+            {
+                listener(null)
+            }
+        ))
+    }
+
+    fun getNearestDaySchedule(subgroupId: Int, gradeId: Int, doDouble: Boolean, listener: (ScheduleJson?) -> Unit) {
+        val service = retrofit.create(NearestDayScheduleForSubgroupService::class.java)
+        val call = service.getNearestDayScheduleForSubgroup(subgroupId, gradeId, doDouble)
+        call.enqueue(LoggingRetrofitCallback(
+            { _, response ->
+                listener(response.body())
+            },
+            {
+                listener(null)
+            }
+        ))
+    }
+
+    class RetrofitDelegate {
+        operator fun getValue(retrofitManager: RetrofitManager, property: KProperty<*>): Retrofit {
             val okHttpClient = OkHttpClient.Builder()
-                .connectTimeout(Const.NETWORK_CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                .readTimeout(Const.NETWORK_READ_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                .writeTimeout(Const.NETWORK_WRITE_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                .connectTimeout(NETWORK_CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                .readTimeout(NETWORK_READ_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                .writeTimeout(NETWORK_WRITE_TIMEOUT_SECONDS, TimeUnit.SECONDS)
                 .build()
 
-            retrofit = Retrofit.Builder()
+            return Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .client(okHttpClient)
                 .addConverterFactory(MoshiConverterFactory.create(Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()))
                 .build()
         }
-    }
-
-    fun getTeachers(listener: (TeachersListJson?) -> Unit) {
-        createClient()
-        val service = retrofit?.create(TeachersService::class.java)
-        val call = service?.getTeachers() ?: throw CantCreateRetrofitRequestException()
-        call.enqueue(object: Callback<TeachersListJson> {
-            override fun onResponse(call: Call<TeachersListJson>, response: Response<TeachersListJson>) {
-                listener(response.body())
-            }
-
-            override fun onFailure(call: Call<TeachersListJson>, t: Throwable) {
-                Log.e(Const.LOG_TAG_RETROFIT_ON_FAILURE, t.toString())
-                listener(null)
-            }
-        })
-    }
-
-    fun getSchools(listener: (SchoolsListJson?) -> Unit) {
-        createClient()
-        val service = retrofit?.create(SchoolsService::class.java)
-        val call = service?.getSchools() ?: throw CantCreateRetrofitRequestException()
-        call.enqueue(object: Callback<SchoolsListJson>{
-            override fun onResponse(call: Call<SchoolsListJson>, response: Response<SchoolsListJson>) {
-                listener(response.body())
-            }
-            override fun onFailure(call: Call<SchoolsListJson>, t: Throwable) {
-                Log.e(Const.LOG_TAG_RETROFIT_ON_FAILURE, t.toString())
-                listener(null)
-            }
-        })
-    }
-
-    fun getGradesForSchool(schoolId: Int, listener: (SchoolGradesJson?) -> Unit) {
-        createClient()
-        val service = retrofit?.create(GradesForSchoolService::class.java)
-        val call = service?.getGradesForSchool(schoolId) ?: throw CantCreateRetrofitRequestException()
-        call.enqueue(object: Callback<SchoolGradesJson>{
-            override fun onResponse(call: Call<SchoolGradesJson>, response: Response<SchoolGradesJson>) {
-                listener(response.body())
-            }
-
-            override fun onFailure(call: Call<SchoolGradesJson>, t: Throwable) {
-                Log.e(Const.LOG_TAG_RETROFIT_ON_FAILURE, t.toString())
-                listener(null)
-            }
-
-        })
-    }
-
-    fun getSubgroupsForGrade(gradeId: Int, listener: (GradeSubgroupsJson?) -> Unit) {
-        createClient()
-        val service = retrofit?.create(SubgroupsForGradeService::class.java)
-        val call = service?.getSubgroupsForGrade(gradeId) ?: throw CantCreateRetrofitRequestException()
-        call.enqueue(object: Callback<GradeSubgroupsJson> {
-            override fun onResponse(call: Call<GradeSubgroupsJson>, response: Response<GradeSubgroupsJson>) {
-                listener(response.body())
-            }
-
-            override fun onFailure(call: Call<GradeSubgroupsJson>, t: Throwable) {
-                Log.e(Const.LOG_TAG_RETROFIT_ON_FAILURE, t.toString())
-                listener(null)
-            }
-        })
-    }
-
-    fun getSubgroupInfo(subgroupId: Int, listener: (SubgroupInfoJson?) -> Unit) {
-        createClient()
-        val service = retrofit?.create(SubgroupInfoService::class.java)
-        val call = service?.getSubgroupInfo(subgroupId) ?: throw CantCreateRetrofitRequestException()
-        call.enqueue(object: Callback<SubgroupInfoJson> {
-            override fun onResponse(call: Call<SubgroupInfoJson>, response: Response<SubgroupInfoJson>) {
-                listener(response.body())
-            }
-
-            override fun onFailure(call: Call<SubgroupInfoJson>, t: Throwable) {
-                Log.e(Const.LOG_TAG_RETROFIT_ON_FAILURE, t.toString())
-                listener(null)
-            }
-        })
-    }
-
-    fun getScheduleForSubgroup(subgroupId: Int, listener: (SubgroupScheduleJson?) -> Unit) {
-        createClient()
-        val service = retrofit?.create(ScheduleForSubgroupService::class.java)
-        val call = service?.getScheduleForSubgroup(subgroupId) ?: throw CantCreateRetrofitRequestException()
-        call.enqueue(object: Callback<SubgroupScheduleJson> {
-            override fun onResponse(call: Call<SubgroupScheduleJson>, response: Response<SubgroupScheduleJson>) {
-                listener(response.body())
-            }
-
-            override fun onFailure(call: Call<SubgroupScheduleJson>, t: Throwable) {
-                Log.e(Const.LOG_TAG_RETROFIT_ON_FAILURE, t.toString())
-                listener(null)
-            }
-        })
-    }
-
-    fun getTodaySchedule(subgroupId: Int, listener: (SubgroupTodayScheduleJson?) -> Unit) {
-        createClient()
-        val service = retrofit?.create(TodayScheduleForSubgroupService::class.java)
-        val call = service?.getTodayScheduleForSubgroup(subgroupId) ?: throw CantCreateRetrofitRequestException()
-        call.enqueue(object: Callback<SubgroupTodayScheduleJson> {
-            override fun onResponse(call: Call<SubgroupTodayScheduleJson>, response: Response<SubgroupTodayScheduleJson>) {
-                listener(response.body())
-            }
-
-            override fun onFailure(call: Call<SubgroupTodayScheduleJson>, t: Throwable) {
-                Log.e(Const.LOG_TAG_RETROFIT_ON_FAILURE, t.toString())
-                listener(null)
-            }
-        })
     }
 }

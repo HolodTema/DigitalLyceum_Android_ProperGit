@@ -6,7 +6,8 @@ import com.squareup.moshi.Json
 
 data class SubgroupJson(
     @Json(name = "subgroup_id") val id: Int,
-    @Json(name = "name") val name: String
+    @Json(name = "name") val name: String,
+    @Json(name = "class_id") val gradeId: Int
 ): Parcelable, Comparable<SubgroupJson> {
 
     override fun describeContents() = 0
@@ -14,6 +15,7 @@ data class SubgroupJson(
     override fun writeToParcel(parcel: Parcel, p1: Int) {
         parcel.writeInt(id)
         parcel.writeString(name)
+        parcel.writeInt(gradeId)
     }
 
     override fun compareTo(other: SubgroupJson): Int {
@@ -22,7 +24,7 @@ data class SubgroupJson(
 
     companion object CREATOR: Parcelable.Creator<SubgroupJson> {
         override fun createFromParcel(parcel: Parcel?): SubgroupJson {
-            return SubgroupJson(parcel?.readInt()!!, parcel.readString()!!)
+            return SubgroupJson(parcel?.readInt()!!, parcel.readString()!!, parcel.readInt())
         }
 
         override fun newArray(p0: Int) = arrayOfNulls<SubgroupJson>(p0)

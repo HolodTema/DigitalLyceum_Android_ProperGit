@@ -4,10 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.NoSchoolsActivity">
+    tools:context=".activity.NoSchoolsActivity"
+    android:background="?attr/colorPrimaryVariant">
     <TextView
         android:id="@+id/textNoSchoolsHeader"
-        style="@style/textPrimary"
+        style="@style/textOnPrimary.textH1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
@@ -27,11 +28,11 @@
         android:layout_marginHorizontal="10dp"
         android:text="@string/no_schools_description"
         app:layout_constraintBottom_toTopOf="@+id/buttonTryAgain"
-        style="@style/textSecondary"/>
+        style="@style/textOnPrimary.textH3"/>
 
     <Button
         android:id="@+id/buttonTryAgain"
-        style="@style/button_rectangle_round"
+        style="@style/buttonPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/try_again"

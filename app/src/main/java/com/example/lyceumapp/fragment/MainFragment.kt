@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.example.lyceumapp.R
 import com.example.lyceumapp.databinding.FragmentMainBinding
-import com.example.lyceumapp.databinding.LessonInScheduleBinding
+import com.example.lyceumapp.databinding.LessonInScheduleInactiveBinding
 import com.example.lyceumapp.viewmodel.MainMenuViewModel
 
 class MainFragment : Fragment() {
@@ -39,32 +39,36 @@ class MainFragment : Fragment() {
                 binding.textNoLessons.visibility = View.GONE
                 binding.linearScheduleMain.visibility = View.VISIBLE
 
-                binding.textDayOfWeek.text = serverWeekDayNumberToStr(todaySchedule.weekday)
+                binding.textDayOfWeek.text = serverWeekDayNumberToStr(todaySchedule[0].weekday)
 
-                var bindingLessonElement: LessonInScheduleBinding
+                var bindingLessonInactiveElement: LessonInScheduleInactiveBinding
                 val strTime = resources.getString(R.string.lesson_time)
-                for(lesson in todaySchedule.lessons) {
-                    bindingLessonElement = LessonInScheduleBinding.inflate(layoutInflater)
-                    bindingLessonElement.textLessonName.text = lesson.name
-                    bindingLessonElement.textLessonTime.text = String.format(strTime, lesson.startHour, lesson.startMinute, lesson.endHour, lesson.endMinute)
-                    binding.linearScheduleMain.addView(bindingLessonElement.root)
+                for(lesson in todaySchedule) {
+                    bindingLessonInactiveElement = LessonInScheduleInactiveBinding.inflate(layoutInflater)
+                    bindingLessonInactiveElement.textLessonName.text = lesson.name
+                    bindingLessonInactiveElement.textLessonTime.text = String.format(strTime, lesson.startTime.hour, lesson.startTime.minute, lesson.endTime.hour, lesson.endTime.minute)
+                    binding.linearScheduleMain.addView(bindingLessonInactiveElement.root)
                 }
             }
         }
 
-        viewModel.liveDataNextLessonAndTimeToIt.observe(requireActivity()){
-            if(it==null) binding.textTimeToNextLesson.visibility = View.GONE // TODO: think what better: hiding textView or set text kinda 'no the soonest lesson'
-            else {
-                binding.textTimeToNextLesson.visibility = View.VISIBLE
-                binding.textTimeToNextLesson.text = String.format(resources.getString(R.string.next_lesson_is_in_time), it.second.days, it.second.hours, it.second.minutes)
-            }
-        }
+//        viewModel.liveDataNextLessonAndTimeToIt.observe(requireActivity()){
+//            if(it==null) binding.textTimeToNextLesson.visibility = View.GONE // TODO: think what better: hiding textView or set text kinda 'no the soonest lesson'
+//            else {
+//                binding.textTimeToNextLesson.visibility = View.VISIBLE
+//                binding.textTimeToNextLesson.text = String.format(resources.getString(R.string.next_lesson_is_in_time), it.second.days, it.second.hours, it.second.minutes)
+//            }
+//        }
 
 
         //there's button 'schedule' above linearScheduleMain
         binding.buttonSchedule.setOnClickListener {
             //updateChosenNavView is very cool method I've created for simple jumping between fragment in navView
             viewModel.updateChosenNavViewItemId(R.id.menuItemSchedule)
+        }
+
+        binding.buttonEvents.setOnClickListener {
+            viewModel.updateChosenNavViewItemId(R.id.menuItemEvents)
         }
 
         return binding.root

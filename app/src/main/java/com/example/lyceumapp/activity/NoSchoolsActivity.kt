@@ -7,6 +7,7 @@ import com.example.lyceumapp.MainActivity
 import com.example.lyceumapp.R
 import com.example.lyceumapp.databinding.ActivityNoSchoolsBinding
 
+//can start: MainActivity
 class NoSchoolsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

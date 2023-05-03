@@ -3,21 +3,21 @@ package com.example.lyceumapp.database
 import androidx.room.*
 import com.example.lyceumapp.json.lessons.LessonJson
 
-@Dao
+//@Dao
 interface LessonDao {
-    @Insert
+    //@Insert
     fun insert(lessonJson: LessonJson)
-    @Update
+    //@Update
     fun update(lessonJson: LessonJson)
-    @Delete
+    //@Delete
     fun delete(lessonJson: LessonJson)
 
-    @Query("select exists(select * from lessonjson)")
+    //@Query("select exists(select * from lessonjson)")
     fun areLessonsInDatabase(): Boolean
 
-    @Query("select * from lessonjson")
+    //@Query("select * from lessonjson")
     fun getAll(): List<LessonJson>
 
-    @Query("delete from lessonjson")
+    //@Query("delete from lessonjson")
     fun deleteAll()
 }

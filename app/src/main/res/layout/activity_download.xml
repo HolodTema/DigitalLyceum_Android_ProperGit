@@ -3,16 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/colorPrimaryVariant">
 
     <TextView
-        style="@style/textPrimary"
+        style="@style/textOnPrimary.textH1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="40dp"
         android:gravity="center"
         android:text="@string/we_are_downloading_data_please_wait"
-        android:textColor="?attr/colorStandardText"
         app:layout_constraintBottom_toTopOf="@+id/progressBar" />
 
     <ProgressBar
@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:indeterminateTint="?attr/colorPrimary"
+        android:indeterminateTint="?attr/colorOnPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

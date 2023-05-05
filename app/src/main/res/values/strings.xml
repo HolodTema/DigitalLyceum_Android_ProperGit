@@ -14,7 +14,7 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
 
-    <string name="app_name">Lyceum App</string>
+    <string name="app_name">Лицей в Цифре</string>
     <string name="you_may_change_lyceum_class_in_settings">Позже Вы сможете поменять свой класс в настройках.</string>
     <string name="about_app">about_app</string>
     <string name="website_link">http://lava-land.ru/</string>
@@ -65,4 +65,10 @@
     <string name="no_lessons_today">Сегодня нет уроков.</string>
     <string name="events">Мероприятия</string>
     <string name="choose_grade">Выбрать класс</string>
+    <string name="no_lessons_this_day">В этот день нет уроков.</string>
+    <string name="nearest_day_with_lessons_is">Ближайший учебный день:</string>
+    
+    <string name="ordinary_school_day">Обычный школьный день</string>
+    <string name="weekend">Выходные</string>
+    <string name="no_teachers">Учителя не найдены</string>
 </resources>

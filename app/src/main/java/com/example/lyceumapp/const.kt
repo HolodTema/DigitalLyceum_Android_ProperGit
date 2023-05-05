@@ -25,6 +25,7 @@ const val INTENT_KEY_SUBGROUP = "intentKeySubgroup"
 
 const val BUNDLE_KEY_LESSONS_FOR_ONE_DAY_OF_SUBGROUP = "bundleKeyLessonsForOneDayOfSubgroup"
 const val BUNDLE_KEY_LESSONS_FOR_ONE_DAY_OF_GRADE = "bundleKeyLessonsForOneDayOfGrade"
+const val BUNDLE_KEY_WEEKDAY = "bundleKeyWeekday"
 
 const val DB_NAME = "lyceumDatabase"
 

@@ -7,7 +7,7 @@ import com.squareup.moshi.Json
 
 data class TeacherJson(
     @Json(name = "teacher_id") val id: Int,
-    @Json(name = "name") val name: String
+    @Json(name = "name") var name: String
 ): Parcelable {
     override fun describeContents() = 0
 

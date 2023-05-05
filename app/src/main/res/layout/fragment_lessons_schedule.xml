@@ -11,5 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/recyclerLessons"
-        android:background="@drawable/linear_rectangle_primary"/>
+        android:background="@drawable/linear_rectangle_secondary_variant"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="16dp"
+        android:id="@+id/textNoLessons"
+        android:text="@string/no_lessons_this_day"
+        style="@style/textOnSecondary.textH3"/>
 </FrameLayout>

@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
 
         //we need this field 'amountAttemptsToConnect', because we need to show delay timer (like against ddos-attacks) if amountAttemptsToConnect > some value in Const.kt
         //if even this activity launch is the first attempt (in this case amountAttemptsToConnect = null always), we have default value of amountAttemptsToConnect in our ViewModel
-        val amountAttemptsToConnect = intent.extras?.getInt(const.INTENT_KEY_AMOUNT_ATTEMPTS_TO_CONNECT)
+        val amountAttemptsToConnect = intent.extras?.getInt(INTENT_KEY_AMOUNT_ATTEMPTS_TO_CONNECT)
         //we need to get amountAttemptsToConnect from intent only the first time activity creates
         //and we set this value from intent into ourViewModel instance
         if(amountAttemptsToConnect!=null) viewModel.amountAttemptsToConnect = amountAttemptsToConnect
@@ -59,8 +59,8 @@ class MainActivity : AppCompatActivity() {
                 //AmountAttemptToConnect - if this value > than some value from Const, we need to show delay timing (ddos attack blocking)
                 val intent = Intent(this, NoResponseActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-                intent.putExtra(const.INTENT_KEY_NO_RESPONSE_TYPE, const.NoResponseType.GetSchools.name)
-                intent.putExtra(const.INTENT_KEY_AMOUNT_ATTEMPTS_TO_CONNECT, viewModel.amountAttemptsToConnect)
+                intent.putExtra(INTENT_KEY_NO_RESPONSE_TYPE, NoResponseType.GetSchools.name)
+                intent.putExtra(INTENT_KEY_AMOUNT_ATTEMPTS_TO_CONNECT, viewModel.amountAttemptsToConnect)
                 startActivity(intent)
             } else if(schools.isEmpty()) {
                 //here the unlikely situation, where the server works, but returns an empty school list
@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity() {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                     //chosenSchool - the school object that was chosen by user in RecyclerView. This object saved in our viewModel
                     //and we need to pass this chosenSchool into ChooseGradeActivity
-                    intent.putExtra(const.INTENT_KEY_CHOSEN_SCHOOL, viewModel.chosenSchool)
+                    intent.putExtra(INTENT_KEY_CHOSEN_SCHOOL, viewModel.chosenSchool)
                     startActivity(intent)
                 }
             }
@@ -99,9 +99,9 @@ class MainActivity : AppCompatActivity() {
             if(it!=null) {
                 val intent = Intent(this, MainMenuActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-                intent.putExtra(const.INTENT_KEY_SCHOOL, it.first)
-                intent.putExtra(const.INTENT_KEY_GRADE, it.second.first)
-                intent.putExtra(const.INTENT_KEY_SUBGROUP, it.second.second)
+                intent.putExtra(INTENT_KEY_SCHOOL, it.first)
+                intent.putExtra(INTENT_KEY_GRADE, it.second.first)
+                intent.putExtra(INTENT_KEY_SUBGROUP, it.second.second)
                 startActivity(intent)
             }
         }

@@ -13,7 +13,7 @@ class LessonJson(
     @Json(name = "name") var name: String,
     @Json(name = "start_time") val startTime: LessonTimeInterval,
     @Json(name = "end_time") val endTime: LessonTimeInterval,
-    @Json(name = "week") var week: Boolean,
+    @Json(name = "week") var week: Boolean?,
     @Json(name = "weekday") var weekday: Int,
     @Json(name = "room") var room: String,
     @Json(name = "teacher") var teacher: TeacherJson,
@@ -42,7 +42,6 @@ class LessonJson(
         parcel.writeInt(startTime.minute)
         parcel.writeInt(endTime.hour)
         parcel.writeInt(endTime.minute)
-        parcel.writeInt(if(week) 1 else 0)
         parcel.writeInt(weekday)
         parcel.writeString(room)
         parcel.writeInt(teacher.id)
@@ -56,7 +55,7 @@ class LessonJson(
             parcel.readString()!!,
             LessonTimeInterval(parcel.readInt(), parcel.readInt()),
             LessonTimeInterval(parcel.readInt(), parcel.readInt()),
-            parcel.readInt()==1,
+            false,
             parcel.readInt(),
             parcel.readString()!!,
             TeacherJson(parcel.readInt(), parcel.readString()!!),

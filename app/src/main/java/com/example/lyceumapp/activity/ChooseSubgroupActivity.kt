@@ -10,8 +10,18 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.lyceumapp.const
+import com.example.lyceumapp.INTENT_KEY_AMOUNT_ATTEMPTS_TO_CONNECT
+import com.example.lyceumapp.INTENT_KEY_AMOUNT_GRADES
+import com.example.lyceumapp.INTENT_KEY_CHOSEN_GRADE
+import com.example.lyceumapp.INTENT_KEY_CHOSEN_SCHOOL
+import com.example.lyceumapp.INTENT_KEY_GRADE
+import com.example.lyceumapp.INTENT_KEY_NO_RESPONSE_TYPE
+import com.example.lyceumapp.INTENT_KEY_SCHOOL
+import com.example.lyceumapp.INTENT_KEY_SUBGROUP
+import com.example.lyceumapp.NoResponseType
 import com.example.lyceumapp.R
+import com.example.lyceumapp.SH_PREFERENCES_KEY_SUBGROUP_ID
+import com.example.lyceumapp.SH_PREFERENCES_NAME
 import com.example.lyceumapp.databinding.ActivityChooseGradesOrSubgroupsBinding
 import com.example.lyceumapp.databinding.RecyclerElementSubgroupsBinding
 import com.example.lyceumapp.json.grades.GradeJson
@@ -32,26 +42,26 @@ class ChooseSubgroupActivity : AppCompatActivity() {
 
         //we need to get chosenGradeFromIntent in every this onCreate() method call, because
         //our ViewModel use it in it's constructor every time we have onCreate() call
-        chosenGrade = intent.extras?.getParcelable(const.INTENT_KEY_CHOSEN_GRADE)!!
+        chosenGrade = intent.extras?.getParcelable(INTENT_KEY_CHOSEN_GRADE)!!
 
         viewModel = ViewModelProvider(this,
                 ChooseSubgroupViewModelFactory(application, chosenGrade))[ChooseSubgroupViewModel::class.java]
 
         //we need to get chosenSchool only one time, because chosenSchool is needed to our viewModel only when button "next" was clicked.
         //and this case we need to save chosenSchool.id into shPreferences
-        val chosenSchool = intent.extras?.getParcelable<SchoolJson>(const.INTENT_KEY_CHOSEN_SCHOOL)
+        val chosenSchool = intent.extras?.getParcelable<SchoolJson>(INTENT_KEY_CHOSEN_SCHOOL)
         if(chosenSchool!=null) viewModel.chosenSchool = chosenSchool
 
         //we need to get amountAttemptsToConnect from intent only one time
         //if even this activity's launch is the first attempt to connect (in this case the code row below will be
         //null), we anyway set amountAttemptsToConnect = 1 in ViewModel
-        val amountAttemptsToConnect = intent.extras?.getInt(const.INTENT_KEY_AMOUNT_ATTEMPTS_TO_CONNECT)
+        val amountAttemptsToConnect = intent.extras?.getInt(INTENT_KEY_AMOUNT_ATTEMPTS_TO_CONNECT)
         if(amountAttemptsToConnect!=null) viewModel.amountAttemptsToConnect = amountAttemptsToConnect
 
         // TODO: we haven't made amountGrades passing through intent in ChooseGradeActivity
         //we may have situation when there are no subgroups for a grade and a school, that have been chosen earlier, contains only one grade. This case it's no good showing
         //a list of the grades to user, we need to show list of schools to user. And that's why we need to get amountOfGrades to check this condition and do some actions if necessary
-        val amountGrades = intent.extras?.getInt(const.INTENT_KEY_AMOUNT_GRADES)
+        val amountGrades = intent.extras?.getInt(INTENT_KEY_AMOUNT_GRADES)
         if(amountGrades!=null) viewModel.amountGrades = amountGrades
 
         viewModel.liveDataListSubgroups.observe(this) { subgroups ->
@@ -60,28 +70,28 @@ class ChooseSubgroupActivity : AppCompatActivity() {
                 val intent = Intent(this, NoResponseActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                 //we need to pass noResponseType, amountAttemptsToConnect, chosenSchool, chosenGrade, amountGrades into NoResponseActivity
-                intent.putExtra(const.INTENT_KEY_NO_RESPONSE_TYPE, const.NoResponseType.GetSubgroups.name)
-                intent.putExtra(const.INTENT_KEY_AMOUNT_ATTEMPTS_TO_CONNECT, viewModel.amountAttemptsToConnect)
-                intent.putExtra(const.INTENT_KEY_CHOSEN_SCHOOL, viewModel.chosenSchool)
-                intent.putExtra(const.INTENT_KEY_CHOSEN_GRADE, chosenGrade)
-                intent.putExtra(const.INTENT_KEY_AMOUNT_GRADES, viewModel.amountGrades)
+                intent.putExtra(INTENT_KEY_NO_RESPONSE_TYPE, NoResponseType.GetSubgroups.name)
+                intent.putExtra(INTENT_KEY_AMOUNT_ATTEMPTS_TO_CONNECT, viewModel.amountAttemptsToConnect)
+                intent.putExtra(INTENT_KEY_CHOSEN_SCHOOL, viewModel.chosenSchool)
+                intent.putExtra(INTENT_KEY_CHOSEN_GRADE, chosenGrade)
+                intent.putExtra(INTENT_KEY_AMOUNT_GRADES, viewModel.amountGrades)
                 startActivity(intent)
             }
             else if(subgroups.isEmpty()) {
                 //this case we need to start NoSubgroupsForGradeActivity and we need to pass there amountGrades for property working
                 val intent = Intent(this, NoSubgroupsForGradeActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-                intent.putExtra(const.INTENT_KEY_AMOUNT_GRADES, viewModel.amountGrades)
-                intent.putExtra(const.INTENT_KEY_CHOSEN_SCHOOL, viewModel.chosenSchool)
+                intent.putExtra(INTENT_KEY_AMOUNT_GRADES, viewModel.amountGrades)
+                intent.putExtra(INTENT_KEY_CHOSEN_SCHOOL, viewModel.chosenSchool)
                 startActivity(intent)
             }
             else if(subgroups.size==1) {
                 //here it's no good showing the list of subgroups, because there is only one subgroup. We need to save everything in shPreferences and start MainMenuActivity
                 saveEverythingInShPreferences(subgroups[0].id)
                 val intent = Intent(this, MainMenuActivity::class.java)
-                intent.putExtra(const.INTENT_KEY_SCHOOL, viewModel.chosenSchool)
-                    .putExtra(const.INTENT_KEY_GRADE, chosenGrade)
-                    .putExtra(const.INTENT_KEY_SUBGROUP, viewModel.chosenSubgroup)
+                intent.putExtra(INTENT_KEY_SCHOOL, viewModel.chosenSchool)
+                    .putExtra(INTENT_KEY_GRADE, chosenGrade)
+                    .putExtra(INTENT_KEY_SUBGROUP, viewModel.chosenSubgroup)
                 startActivity(intent)
             }
             else {
@@ -101,9 +111,9 @@ class ChooseSubgroupActivity : AppCompatActivity() {
                     //here we need save everything in sharedPreferences and finally start MainMenuActivity
                     saveEverythingInShPreferences(viewModel.chosenSubgroup.id)
                     val intent = Intent(this, MainMenuActivity::class.java)
-                    intent.putExtra(const.INTENT_KEY_SCHOOL, viewModel.chosenSchool)
-                        .putExtra(const.INTENT_KEY_GRADE, chosenGrade)
-                        .putExtra(const.INTENT_KEY_SUBGROUP, viewModel.chosenSubgroup)
+                    intent.putExtra(INTENT_KEY_SCHOOL, viewModel.chosenSchool)
+                        .putExtra(INTENT_KEY_GRADE, chosenGrade)
+                        .putExtra(INTENT_KEY_SUBGROUP, viewModel.chosenSubgroup)
                     startActivity(intent)
                 }
 
@@ -112,7 +122,7 @@ class ChooseSubgroupActivity : AppCompatActivity() {
                     //we need to start chooseGradeActivity with chosenSchoolId
                     val intent = Intent(this, ChooseGradeActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-                    intent.putExtra(const.INTENT_KEY_CHOSEN_SCHOOL, viewModel.chosenSchool)
+                    intent.putExtra(INTENT_KEY_CHOSEN_SCHOOL, viewModel.chosenSchool)
                     startActivity(intent)
                 }
             }
@@ -120,16 +130,16 @@ class ChooseSubgroupActivity : AppCompatActivity() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelable(const.INTENT_KEY_CHOSEN_GRADE, chosenGrade)
+        outState.putParcelable(INTENT_KEY_CHOSEN_GRADE, chosenGrade)
         super.onSaveInstanceState(outState)
     }
 
     //we need to save in sharedPreferences:
     //the id of chosen subgroup
     private fun saveEverythingInShPreferences(subgroupId: Int) {
-        val shPreferences = getSharedPreferences(const.SH_PREFERENCES_NAME, MODE_PRIVATE)
+        val shPreferences = getSharedPreferences(SH_PREFERENCES_NAME, MODE_PRIVATE)
         //I don't want to use .apply() instead of .commit() 'cause I'm afraid that ShPreferences can be not saved by the moment We need them in next activity - MainMenuActivity
-        shPreferences.edit().putInt(const.SH_PREFERENCES_KEY_SUBGROUP_ID, subgroupId).commit()
+        shPreferences.edit().putInt(SH_PREFERENCES_KEY_SUBGROUP_ID, subgroupId).commit()
     }
 
 

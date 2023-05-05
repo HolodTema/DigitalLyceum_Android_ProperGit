@@ -1,18 +1,21 @@
 package com.example.lyceumapp.retrofit
 
-import android.util.Log
-import com.example.lyceumapp.*
+import com.example.lyceumapp.NETWORK_CONNECT_TIMEOUT_SECONDS
+import com.example.lyceumapp.NETWORK_READ_TIMEOUT_SECONDS
+import com.example.lyceumapp.NETWORK_WRITE_TIMEOUT_SECONDS
 import com.example.lyceumapp.json.grades.GradeJson
 import com.example.lyceumapp.json.grades.SchoolGradesJson
 import com.example.lyceumapp.json.lessons.ScheduleJson
 import com.example.lyceumapp.json.schools.SchoolJson
 import com.example.lyceumapp.json.schools.SchoolsListJson
-import com.example.lyceumapp.json.subgroups.*
+import com.example.lyceumapp.json.subgroups.GradeSubgroupsJson
+import com.example.lyceumapp.json.subgroups.SubgroupJson
 import com.example.lyceumapp.json.teachers.TeachersListJson
 import com.example.lyceumapp.retrofit.grades.DefineGradeService
 import com.example.lyceumapp.retrofit.grades.GradesForSchoolService
 import com.example.lyceumapp.retrofit.lessons.DayScheduleForSubgroupService
 import com.example.lyceumapp.retrofit.lessons.NearestDayScheduleForSubgroupService
+import com.example.lyceumapp.retrofit.lessons.WeekScheduleForSubgroupService
 import com.example.lyceumapp.retrofit.schools.DefineSchoolService
 import com.example.lyceumapp.retrofit.schools.SchoolsService
 import com.example.lyceumapp.retrofit.subgroups.DefineSubgroupService
@@ -22,13 +25,13 @@ import com.example.lyceumapp.util.LoggingRetrofitCallback
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
-import retrofit2.*
+import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KProperty
 
 object RetrofitManager {
-    private const val BASE_URL = "https://test.lyceumland.ru"
+    private const val BASE_URL = "https://dev.lyceumland.ru"
 
 
     private val retrofit: Retrofit by RetrofitDelegate()
@@ -125,7 +128,18 @@ object RetrofitManager {
         ))
     }
 
-    fun getDayScheduleForSubgroup(subgroupId: Int, gradeId: Int, weekday: Int, doDouble: Boolean, listener: (ScheduleJson?) -> Unit) {
+    fun getWeekScheduleForSubgroup(subgroupId: Int, gradeId: Int, doDouble: Boolean = false, listener: (ScheduleJson?) -> Unit) {
+        val service = retrofit.create(WeekScheduleForSubgroupService::class.java)
+        val call = service.getWeekScheduleForSubgroup(subgroupId, gradeId, doDouble)
+        call.enqueue(LoggingRetrofitCallback({ _, response ->
+            listener(response.body())
+        },
+        {
+            listener(null)
+        }))
+    }
+
+    fun getDayScheduleForSubgroup(subgroupId: Int, gradeId: Int, weekday: Int, doDouble: Boolean = false, listener: (ScheduleJson?) -> Unit) {
         val service = retrofit.create(DayScheduleForSubgroupService::class.java)
         val call = service.getDayScheduleForSubgroup(subgroupId, gradeId, weekday, doDouble)
         call.enqueue(LoggingRetrofitCallback(
@@ -138,7 +152,7 @@ object RetrofitManager {
         ))
     }
 
-    fun getNearestDaySchedule(subgroupId: Int, gradeId: Int, doDouble: Boolean, listener: (ScheduleJson?) -> Unit) {
+    fun getNearestDaySchedule(subgroupId: Int, gradeId: Int, doDouble: Boolean = false, listener: (ScheduleJson?) -> Unit) {
         val service = retrofit.create(NearestDayScheduleForSubgroupService::class.java)
         val call = service.getNearestDayScheduleForSubgroup(subgroupId, gradeId, doDouble)
         call.enqueue(LoggingRetrofitCallback(

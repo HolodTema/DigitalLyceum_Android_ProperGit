@@ -6,6 +6,7 @@ import com.example.lyceumapp.json.grades.GradeJson
 import com.example.lyceumapp.json.schools.SchoolJson
 import com.example.lyceumapp.retrofit.RetrofitManager
 import com.example.lyceumapp.json.lessons.LessonJson
+import com.example.lyceumapp.json.lessons.ScheduleJson
 import com.example.lyceumapp.json.subgroups.SubgroupJson
 import com.example.lyceumapp.json.teachers.TeacherJson
 import kotlinx.coroutines.*
@@ -57,20 +58,21 @@ object RequestManager {
         }
     }
 
-
-    //here the listener param of function, that contains also boolean field. That field implies "isLessonsActual" -
-    //so, it returns true if we downloaded lessons from the server recently. And it returns false in case when the server is unable to connect
-// TODO: I've disabled a local database saving to simple deadline :)
-    fun getScheduleForSubgroup(context: Context, subgroupId: Int, gradeId: Int, listener: (List<LessonJson>?, Boolean) -> Unit) {
-        RetrofitManager.getScheduleForSubgroup(subgroupId, gradeId) {
-            if(it==null) listener(null, false)
-            else listener(it.lessons, true)
+    fun getWeekScheduleForSubgroup(subgroupId: Int, gradeId: Int, doDouble: Boolean = false, listener: (ScheduleJson?) -> Unit) {
+        RetrofitManager.getWeekScheduleForSubgroup(subgroupId, gradeId, doDouble) {
+            listener(it)
         }
     }
 
-    fun getTodaySchedule(subgroupId: Int, gradeId: Int, weekday: Int, doDouble: Boolean, listener: (List<LessonJson>?) -> Unit) {
-        RetrofitManager.getTodaySchedule(subgroupId, gradeId, weekday, doDouble) {
-            listener(it?.lessons)
+    fun getDayScheduleForSubgroup(subgroupId: Int, gradeId: Int, weekday: Int, doDouble: Boolean = false, listener: (ScheduleJson?) -> Unit) {
+        RetrofitManager.getDayScheduleForSubgroup(subgroupId, gradeId, weekday, doDouble) {
+            listener(it)
+        }
+    }
+
+    fun getNearestDayScheduleForSubgroup(subgroupId: Int, gradeId: Int, doDouble: Boolean = false, listener: (ScheduleJson?) -> Unit) {
+        RetrofitManager.getNearestDaySchedule(subgroupId, gradeId, doDouble) {
+            listener(it)
         }
     }
 
@@ -120,13 +122,46 @@ object RequestManager {
     }
 
     //we use this method in ScheduleFragment, when the certain tab in tabLayout was chosen and we need to show a schedule for a day in viewPager
-    fun getLessonsForDefiniteDay(lessons: List<LessonJson>, week: Boolean, dayCalendarFormat: Int): List<LessonJson> {
-        val day0to6 = dayCalendarFormatTo0to6(dayCalendarFormat)
-        val result = arrayListOf<LessonJson>()
-        for(lesson in lessons) {
-            if(lesson.week==week && lesson.weekday==day0to6) result.add(lesson)
+    fun getLessonsForDefiniteDay(lessons: List<LessonJson>, weekday: Int, listener: (List<LessonJson>) -> Unit): Job {
+        return CoroutineScope(Dispatchers.Main).launch {
+            val deferred = CoroutineScope(Dispatchers.IO).async {
+                val result = arrayListOf<LessonJson>()
+                for(lesson in lessons) {
+                    if(lesson.weekday==weekday) result.add(lesson)
+                }
+                delay(100L)
+                return@async result
+            }
+            listener(deferred.await())
         }
-        return result
+
+    }
+
+    fun getArrayOfDayLessons(lessons: List<LessonJson>, listener: (Array<MutableList<LessonJson>>) -> Unit) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val deferred = CoroutineScope(Dispatchers.IO).async {
+                val result = Array<MutableList<LessonJson>>(7) { mutableListOf() }
+                for(lesson in lessons) {
+                    result[lesson.weekday].add(lesson)
+                }
+                return@async result
+            }
+            listener(deferred.await())
+        }
+    }
+
+    fun checkIfLessonsToday(weekLessons: List<LessonJson>, weekday: Int, listener: (Boolean) -> Unit) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val deferred = CoroutineScope(Dispatchers.IO).async {
+                for(lesson in weekLessons) {
+                    if(lesson.weekday==weekday) {
+                        return@async true
+                    }
+                }
+                return@async false
+            }
+            listener(deferred.await())
+        }
     }
 
     fun day0to6toCalendarFormat(day0to6: Int): Int {

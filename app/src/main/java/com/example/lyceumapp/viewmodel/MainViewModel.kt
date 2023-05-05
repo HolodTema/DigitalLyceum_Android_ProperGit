@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import com.example.lyceumapp.const
 import com.example.lyceumapp.RequestManager
 import com.example.lyceumapp.SH_PREFERENCES_KEY_SUBGROUP_ID
 import com.example.lyceumapp.SH_PREFERENCES_NAME
@@ -92,7 +91,7 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
     //default value of chosenSchool is the first object from the list of schools
     private fun downloadSchools() {
         RequestManager.getSchools{
-            if(it!=null && it.isNotEmpty()) {
+            if(!it.isNullOrEmpty()) {
                 chosenSchool = it[0]
             }
             liveDataListSchools.value = it

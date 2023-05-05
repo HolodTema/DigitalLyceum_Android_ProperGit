@@ -22,13 +22,25 @@ class TeachersFragment : Fragment() {
     ): View {
         val viewModel: MainMenuViewModel by activityViewModels()
         val binding = FragmentTeachersBinding.inflate(layoutInflater)
-
         viewModel.liveDataTeachers.observe(requireActivity()) { teachers ->
-            if(teachers!=null) {
-                val adapter = TeacherAdapter(teachers, layoutInflater)
+            binding.progressTeachers.visibility = View.GONE
+            if(!teachers.isNullOrEmpty()) {
+                binding.editSearchTeachers.visibility = View.VISIBLE
+                binding.recyclerTeachers.visibility = View.VISIBLE
+
+                teachers[0].name = "Зубакова Мария Алексанровна"
+                val mutableTeachers = teachers.toMutableList()
+                mutableTeachers.add(TeacherJson(1,"Астраханцева Наталья Александровна"))
+                mutableTeachers.add(TeacherJson(2, "Ложникова Юлия Владимировна"))
+
+
+                val adapter = TeacherAdapter(mutableTeachers, layoutInflater)
                 binding.recyclerTeachers.layoutManager = LinearLayoutManager(activity)
                 binding.recyclerTeachers.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
                 binding.recyclerTeachers.adapter = adapter
+            }
+            else {
+                binding.textNoTeachers.visibility = View.VISIBLE
             }
         }
 
@@ -40,7 +52,7 @@ class TeachersFragment : Fragment() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = Holder(RecyclerElementTeachersBinding.inflate(inflater))
 
         override fun onBindViewHolder(holder: Holder, position: Int) {
-//            holder.binding.textName.text = teachers[position]
+            holder.binding.textName.text = teachers[position].name
         }
 
         override fun getItemCount() = teachers.size
